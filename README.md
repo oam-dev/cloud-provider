@@ -1,2 +1,3 @@
-# cloud-provider
-Cloud provider implementation of OAM
+# OAM Cloud Provider
+
+This repo contains cloud provider implementation of OAM.
