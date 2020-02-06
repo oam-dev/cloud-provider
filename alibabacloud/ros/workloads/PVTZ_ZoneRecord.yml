@@ -1,0 +1,67 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: pvtz-zonerecord
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: PVTZ_ZoneRecord
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Status",
+        "Value",
+        "Rr",
+        "Type",
+        "ZoneId"
+      ],
+      "properties": {
+        "Priority": {
+          "type": "integer",
+          "description": "MX record priority, value range [1,10]. Default to 10.",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 10
+        },
+        "Rr": {
+          "type": "string",
+          "description": "Host record, if you want to resolve @.exmaple.com, the host record should fill in \"@\" instead of empty"
+        },
+        "Status": {
+          "type": "string",
+          "description": "Allowed values: [ENABLE, DISABLE]",
+          "default": "ENABLE",
+          "Enum": [
+            "DISABLE",
+            "ENABLE"
+          ]
+        },
+        "Ttl": {
+          "type": "integer",
+          "description": "Survival time, default is 60",
+          "default": 60
+        },
+        "Type": {
+          "type": "string",
+          "description": "Analyze record type, currently only supports A, CNAME, TXT, MX, PTR",
+          "Enum": [
+            "A",
+            "CNAME",
+            "MX",
+            "PTR",
+            "TXT"
+          ]
+        },
+        "Value": {
+          "type": "string",
+          "description": "Record value"
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "Zone Id"
+        }
+      }
+    }

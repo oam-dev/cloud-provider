@@ -1,0 +1,107 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: fc-function
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FC_Function
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ServiceName",
+        "FunctionName",
+        "Code",
+        "Handler",
+        "Runtime"
+      ],
+      "properties": {
+        "Code": {
+          "type": "object",
+          "properties": {
+            "OssBucketName": {
+              "type": "string",
+              "description": "OSS bucket name.\nPriority: ZipFile \u003e SourceCode \u003e OssBucketName\u0026OssObjectName."
+            },
+            "OssObjectName": {
+              "type": "string",
+              "description": "OSS object name.\nPriority: ZipFile \u003e SourceCode \u003e OssBucketName\u0026OssObjectName."
+            },
+            "SourceCode": {
+              "type": "string",
+              "description": "(Node.js, PHP and Python) The source code for your FC function. If you include this parameter in a function source inline, ROS places it in a file called index (utf-8 encoded) and then compresses it to create a deployment package. For the Handler property, the first part of the handler identifier must be index. For example: index.handler.\nYour source code can contain up to 4096 characters. For JSON, you must use backslashes to escape quotes and special characters, such as line breaks.\nPriority: ZipFile \u003e SourceCode \u003e OssBucketName\u0026OssObjectName.",
+              "maxLength": 4096
+            },
+            "ZipFile": {
+              "type": "string",
+              "description": "Base64 encoded zip file content.\nPriority: ZipFile \u003e SourceCode \u003e OssBucketName\u0026OssObjectName."
+            }
+          }
+        },
+        "Description": {
+          "type": "string",
+          "description": "Function description"
+        },
+        "EnvironmentVariables": {},
+        "FunctionName": {
+          "type": "string",
+          "description": "Function name"
+        },
+        "Handler": {
+          "type": "string",
+          "description": "The function execution entry point."
+        },
+        "InitializationTimeout": {
+          "type": "integer",
+          "description": "the max execution time of the initializer, in second"
+        },
+        "Initializer": {
+          "type": "string",
+          "description": "the entry point of the initializer"
+        },
+        "InstanceConcurrency": {
+          "type": "integer",
+          "description": "Function instance concurrency. Value can be between 1 to 100.",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "MemorySize": {
+          "type": "integer",
+          "description": "The amount of memory that’s used to run function, in MB. Function Compute uses this value to allocate CPU resources proportionally. Defaults to 128 MB. It can be multiple of 64 MB and between 128 MB and 3072 MB.",
+          "default": 128,
+          "minimum": 128,
+          "maximum": 3072
+        },
+        "Runtime": {
+          "type": "string",
+          "description": "The function runtime environment. Supporting nodejs6, nodejs8, python2.7, python3, java8",
+          "Enum": [
+            "nodejs6",
+            "nodejs8",
+            "python2.7",
+            "python3",
+            "java8",
+            "dotnetcore2.1",
+            "custom",
+            "php7.2",
+            "nodejs10"
+          ]
+        },
+        "ServiceName": {
+          "type": "string",
+          "description": "Service name",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "Timeout": {
+          "type": "integer",
+          "description": "The maximum time duration a function can run, in seconds. After which Function Compute terminates the execution. Defaults to 3 seconds, and can be between 1 to 600 seconds.",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 600
+        }
+      }
+    }

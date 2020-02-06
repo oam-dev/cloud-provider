@@ -1,0 +1,88 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-securitygroupingress
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_SecurityGroupIngress
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "PortRange",
+        "IpProtocol"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Description of the security group rule, [1, 512] characters. The default is empty.",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "IpProtocol": {
+          "type": "string",
+          "description": "Ip protocol for in rule.",
+          "Enum": [
+            "tcp",
+            "udp",
+            "icmp",
+            "gre",
+            "all"
+          ]
+        },
+        "Ipv6SourceCidrIp": {
+          "type": "string",
+          "description": "Source IPv6 CIDR address segment. Supports IP address ranges in CIDR format and IPv6 format.\nNote Only VPC type IP addresses are supported."
+        },
+        "NicType": {
+          "type": "string",
+          "description": "Network type, could be 'internet' or 'intranet'. Default value is internet.",
+          "Enum": [
+            "internet",
+            "intranet"
+          ]
+        },
+        "Policy": {
+          "type": "string",
+          "description": "Authorization policies, parameter values can be: accept (accepted access), drop (denied access). Default value is accept.",
+          "Enum": [
+            "accept",
+            "drop"
+          ]
+        },
+        "PortRange": {
+          "type": "string",
+          "description": "Ip protocol relative port range. For tcp and udp, the port rang is [1,65535], using format '1/200'For icmp|gre|all protocel, the port range should be '-1/-1'"
+        },
+        "Priority": {
+          "type": "integer",
+          "description": "Authorization policies priority range[1, 100]",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "Id of the security group."
+        },
+        "SourceCidrIp": {
+          "type": "string",
+          "description": "Source CIDR Ip Address range. Only IPV4 supported."
+        },
+        "SourceGroupId": {
+          "type": "string",
+          "description": "Source Group Id"
+        },
+        "SourceGroupOwnerId": {
+          "type": "string",
+          "description": "Source Group Owner Account ID"
+        },
+        "SourcePortRange": {
+          "type": "string",
+          "description": "The range of the ports enabled by the source security group for the transport layer protocol. Valid values: TCP/UDP: Value range: 1 to 65535. The start port and the end port are separated by a slash (/). Correct example: 1/200. Incorrect example: 200/1.ICMP: -1/-1.GRE: -1/-1.ALL: -1/-1."
+        }
+      }
+    }

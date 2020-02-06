@@ -1,0 +1,45 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: rds-accountprivilege
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RDS_AccountPrivilege
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AccountPrivilege",
+        "DBInstanceId",
+        "AccountName",
+        "DBName"
+      ],
+      "properties": {
+        "AccountName": {
+          "type": "string",
+          "description": "RDS account name."
+        },
+        "AccountPrivilege": {
+          "type": "string",
+          "description": "RDS account privilege",
+          "Enum": [
+            "ReadOnly",
+            "ReadWrite",
+            "DDLOnly",
+            "DMLOnly",
+            "DBOwner"
+          ]
+        },
+        "DBInstanceId": {
+          "type": "string",
+          "description": "RDS instance ID."
+        },
+        "DBName": {
+          "type": "string",
+          "description": "RDS database name"
+        }
+      }
+    }

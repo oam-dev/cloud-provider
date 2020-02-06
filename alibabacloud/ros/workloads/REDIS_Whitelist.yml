@@ -1,0 +1,39 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: redis-whitelist
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: REDIS_Whitelist
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SecurityIps",
+        "InstanceId"
+      ],
+      "properties": {
+        "InstanceId": {
+          "type": "string",
+          "description": "Instance ID (globally unique)"
+        },
+        "SecurityIpGroupAttribute": {
+          "type": "string",
+          "description": "The default is empty. For distinguishing between different attribute values, the console will not display the value of hidden whitelist packet."
+        },
+        "SecurityIpGroupName": {
+          "type": "string",
+          "description": "Whitelist group",
+          "minLength": 2,
+          "maxLength": 32,
+          "pattern": "[a-z][a-zA-Z0-9_]*[a-zA-Z0-9]"
+        },
+        "SecurityIps": {
+          "type": "string",
+          "description": "IP address whitelist to be modified"
+        }
+      }
+    }

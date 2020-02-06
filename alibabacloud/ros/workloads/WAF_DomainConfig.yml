@@ -1,0 +1,94 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: waf-domainconfig
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: WAF_DomainConfig
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "InstanceId",
+        "Domain",
+        "IsAccessProduct",
+        "Protocols"
+      ],
+      "properties": {
+        "Domain": {
+          "type": "string",
+          "description": "Domain name."
+        },
+        "HttpPort": {
+          "type": "string",
+          "description": "HTTP protocol configuration port. When specifying a plurality of HTTP port \",\" separated. Example values: [80].\nConfigure the HTTP protocol, this parameter is required. The default value is 80. HttpPort HttpsPort with at least two parameters need to fill a request."
+        },
+        "HttpToUserIp": {
+          "type": "integer",
+          "description": "Whether to open HTTPS access request is forwarded back to the source station via the HTTP protocol, the value of:\n0: off (default)\n1: Turn\nNote If your site does not support HTTPS back to the source, open source HTTP return (default back to the source port is port 80) function key, can be realized by WAF HTTPS access.",
+          "Enum": [
+            0,
+            1
+          ]
+        },
+        "HttpsPort": {
+          "type": "string",
+          "description": "HTTPS protocol configuration port. When specifying a plurality HTTPS port, using the \",\" separated. Example values: [443].\nConfigure the protocol is HTTPS, this parameter is required. The default value is 443. HttpPort HttpsPort with at least two parameters need to fill a request."
+        },
+        "HttpsRedirect": {
+          "type": "integer",
+          "description": "HTTPS is turned forcefully jump the argument:\n0: off (default)\n1: Turn\nDescription required to complete the request parameters using only HTTPS access protocol. After opening force will show a jump HTTP request is HTTPS, a default jump to 443.",
+          "Enum": [
+            0,
+            1
+          ]
+        },
+        "InstanceId": {
+          "type": "string",
+          "description": "WAF instance ID.\nDescription Interface You can view your current WAF instance ID by calling DescribePayInfo."
+        },
+        "IsAccessProduct": {
+          "type": "integer",
+          "description": "The domain before WAF is configured with seven agents (eg, high defense, CDN, etc.), the value of:\n0: none.\n1: expressed.",
+          "Enum": [
+            0,
+            1
+          ]
+        },
+        "LoadBalancing": {
+          "type": "integer",
+          "description": "Back to the source load balancing policy values:\n0: IP Hash way.\n1: represents a polling mode.",
+          "Enum": [
+            0,
+            1
+          ]
+        },
+        "Protocols": {
+          "type": "string",
+          "description": "The domain supports access protocols, values:\nhttp: expressed support for the HTTP protocol.\nhttps: support for HTTPS protocol.\nhttp, https: supports HTTP, HTTPS protocol."
+        },
+        "Region": {
+          "type": "string",
+          "description": "Examples of areas where the WAF. Value:\ncn: said China mainland (default)\ncn-hongkong: overseas representation",
+          "Enum": [
+            "cn",
+            "cn-hongkong"
+          ]
+        },
+        "RsType": {
+          "type": "integer",
+          "description": "Back to the source address type the domain name values:\n0: back to the source to IP.\n1: Indicates the domain name back to the source.",
+          "Enum": [
+            0,
+            1
+          ]
+        },
+        "SourceIps": {
+          "type": "string",
+          "description": "Source station IP, supports a plurality of specified IP. Example values: [ \"1.1.1.1\"]."
+        }
+      }
+    }

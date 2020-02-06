@@ -1,0 +1,53 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-forwardentry
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_ForwardEntry
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ExternalPort",
+        "InternalPort",
+        "InternalIp",
+        "IpProtocol",
+        "ExternalIp",
+        "ForwardTableId"
+      ],
+      "properties": {
+        "ExternalIp": {
+          "type": "string",
+          "description": "Source IP, must belongs to bandwidth package internet IP"
+        },
+        "ExternalPort": {
+          "type": "string",
+          "description": "Source port, now support [1-65535]|Any"
+        },
+        "ForwardTableId": {
+          "type": "string",
+          "description": "Create forward entry in specified forward table."
+        },
+        "InternalIp": {
+          "type": "string",
+          "description": "Destination IP, must belong to VPC private IP"
+        },
+        "InternalPort": {
+          "type": "string",
+          "description": "Destination port, now support [1-65535]|Any"
+        },
+        "IpProtocol": {
+          "type": "string",
+          "description": "Supported protocol, Now support 'TCP|UDP|Any'",
+          "Enum": [
+            "TCP",
+            "UDP",
+            "Any"
+          ]
+        }
+      }
+    }

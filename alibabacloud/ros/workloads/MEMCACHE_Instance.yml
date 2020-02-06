@@ -1,0 +1,61 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: memcache-instance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: MEMCACHE_Instance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Password",
+        "Capacity"
+      ],
+      "properties": {
+        "Capacity": {
+          "type": "integer",
+          "description": "The capacity for cache instance. Allowed values: 1024MB, 2048MB, 4096MB, 8192MB, 16384MB, 32768MB. Unit in MB"
+        },
+        "InstanceName": {
+          "type": "string",
+          "description": "Specifies the intance name, containing up to 128 characters."
+        },
+        "NetworkType": {
+          "type": "string",
+          "description": "The ocs instance network type. Support 'CLASSIC' and 'VPC' only, default is 'CLASSIC'.",
+          "default": "CLASSIC",
+          "Enum": [
+            "CLASSIC",
+            "VPC"
+          ]
+        },
+        "Password": {
+          "type": "string",
+          "description": "Password of created ocs instance. Must contain at least 3 types of special character, lower character, upper character, number."
+        },
+        "PrivateIpAddr": {
+          "type": "string",
+          "description": "Private network IP address type of VPC OCS instance that is valid when the NetworkType parameter is VPC.If this parameter is not provided, the system is automatically assigned by VpcId and VSwitchId.If this parameter corresponds to the private network IP address which is not included in the IP VSwitchId address segment, then create a failure."
+        },
+        "SecurityIPArray": {
+          "type": "string",
+          "description": "Security ips to add or remove."
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The vSwitch Id to create ocs instance."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The VPC id to create ocs instance."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "current zone to create the instance."
+        }
+      }
+    }

@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-networkinterfaceattachment
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_NetworkInterfaceAttachment
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "InstanceId",
+        "NetworkInterfaceId"
+      ],
+      "properties": {
+        "InstanceId": {
+          "type": "string",
+          "description": "ECS instance id"
+        },
+        "NetworkInterfaceId": {
+          "type": "string",
+          "description": "Network interface id"
+        }
+      }
+    }

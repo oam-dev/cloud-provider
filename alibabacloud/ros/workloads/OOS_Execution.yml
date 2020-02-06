@@ -1,0 +1,78 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: oos-execution
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: OOS_Execution
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "TemplateName"
+      ],
+      "properties": {
+        "Mode": {
+          "type": "string",
+          "description": "Execution mode.",
+          "default": "Automatic",
+          "Enum": [
+            "Automatic",
+            "Debug"
+          ]
+        },
+        "Parameters": {},
+        "ParentExecutionId": {
+          "type": "string",
+          "description": "Parent execution ID."
+        },
+        "ResourceOptions": {
+          "type": "object",
+          "properties": {
+            "CancelOnDelete": {
+              "type": "boolean",
+              "description": "Whether to cancel execution for resource deletion, if the execution is not completed. Default to false.",
+              "default": false
+            },
+            "FailureStatuses": {
+              "type": "array",
+              "description": "It is used for ROS to judge if resource creation fails.\nDefault to [Failed, Cancelled].\nROS will wait util some status in SuccessStatuses or FailureStatuses.\nFailureStatuses has higher priority.",
+              "items": {}
+            },
+            "SuccessStatuses": {
+              "type": "array",
+              "description": "It is used for ROS to judge if resource creation is successful.\nDefault to [Success].\nROS will wait util some status in SuccessStatuses or FailureStatuses.\nFailureStatuses has higher priority.\nSpecified all statuses(Started,Queued,Running,Waiting,Success,Failed,Cancelled) if you do not want to wait for the completion of execution.",
+              "items": {}
+            },
+            "Timeout": {
+              "type": "number",
+              "description": "Timeout seconds before the completion of execution. Default to 1800.",
+              "default": 1800,
+              "minimum": 10,
+              "maximum": 43200
+            }
+          }
+        },
+        "SafetyCheck": {
+          "type": "string",
+          "description": "Security check mode. Allowed values:\n- Skip: This option means that customers understand the risks, you can do anything without confirmation Action, no matter what the level of risk. It takes effect only if Mode is Automatic.\n- ConfirmEveryHighRiskAction (default): This option would require customers to confirm each Action a high risk. NotifyExecution by calling customer interface to confirm or cancel.",
+          "default": "ConfirmEveryHighRiskAction",
+          "Enum": [
+            "ConfirmEveryHighRiskAction",
+            "Skip"
+          ]
+        },
+        "TemplateName": {
+          "type": "string",
+          "description": "Template name. Content is limited to letters, numbers, underlined, underline, the length of 200 characters, and can not begin to ALIYUN, ACS, ALIBABA.",
+          "maxLength": 200
+        },
+        "TemplateVersion": {
+          "type": "string",
+          "description": "Version number of template. Default to the latest version."
+        }
+      }
+    }

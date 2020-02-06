@@ -1,0 +1,70 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-scheduledtask
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_ScheduledTask
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ScheduledAction",
+        "LaunchTime"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Description of the scheduled task, which is 2-200 characters (English or Chinese) long.",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "LaunchExpirationTime": {
+          "type": "integer",
+          "description": "Time period within which the failed scheduled task is retried.\nThe default value is 600s.\nValue range: [0, 21600]",
+          "maximum": 21600
+        },
+        "LaunchTime": {
+          "type": "string",
+          "description": "Time point at which the scheduled task is triggered.\nThe date format follows the ISO8601 standard and uses UTC time. It is in the format of YYYY-MM-DDThh:mmZ.\nIf RecurrenceType is specified, the time point specified by this attribute is the default time point at which the circle is executed. If RecurrenceType is not specified, the task is executed once on the designated date and time.\nA time point 90 days after creation or modification cannot be entered.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}[:]\\d{2}Z$"
+        },
+        "RecurrenceEndTime": {
+          "type": "string",
+          "description": "End time of the scheduled task to be repeated.\nThe date format follows the ISO8601 standard and uses UTC time. It is in the format of YYYY-MM-DDThh:mmZ.\nA time point 90 days after creation or modification cannot be entered.\nRecurrenceType, RecurrenceValue and RecurrenceEndTime must be specified.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}[:]\\d{2}Z$"
+        },
+        "RecurrenceType": {
+          "type": "string",
+          "description": "Type of the scheduled task to be repeated. Optional values:\n- Daily: Recurrence interval by day for a scheduled task.\n- Weekly: Recurrence interval by week for a scheduled task.\n- Monthly: Recurrence interval by month for a scheduled task.\nRecurrenceType, RecurrenceValue and RecurrenceEndTime must be specified.",
+          "Enum": [
+            "Daily",
+            "Weekly",
+            "Monthly"
+          ]
+        },
+        "RecurrenceValue": {
+          "type": "string",
+          "description": "Value of the scheduled task to be repeated.\n- Daily: Only one value in the range [1,31] can be filled.\n- Weekly: Multiple values can be filled. The values of Sunday to Saturday are 0 to 6 in sequence. Multiple values shall be separated by a comma \",\".\n- Monthly: In the format of A-B. The value range of A and B is 1 to 31, and the B value must be greater than the A value.\nRecurrenceType, RecurrenceValue and RecurrenceEndTime must be specified.",
+          "maxLength": 50,
+          "pattern": "^(\\d{1,2})$|^([0-6](,\\s*[0-6]){,6})$|^(\\d{1,2}[-]\\d{1,2})$"
+        },
+        "ScheduledAction": {
+          "type": "string",
+          "description": "Operations performed when the scheduled task is triggered. Fill in the unique identifier of the scaling rule.",
+          "maxLength": 200
+        },
+        "ScheduledTaskName": {
+          "type": "string",
+          "description": "Display name of the scheduled task, which must be 2-40 characters (English or Chinese) long. It must begin with a number, an upper/lower-case letter or a Chinese character and may contain numbers, \"_\", \"-\" or \".\".\nThe account name is unique in the same region.\nIf this parameter is not specified, the default value ScheduledScalingTaskId is used.",
+          "pattern": "^[a-zA-Z0-9\\u4e00-\\u9fa5][-_.a-zA-Z0-9\\u4e00-\\u9fa5]{1,63}$"
+        },
+        "TaskEnabled": {
+          "type": "boolean",
+          "description": "Whether to enable the scheduled task.\n- When the parameter is set to true, the task is enabled.\n- When the parameter is set to false, the task is disabled.\nThe default value is true."
+        }
+      }
+    }

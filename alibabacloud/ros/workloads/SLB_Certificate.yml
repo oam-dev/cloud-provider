@@ -1,0 +1,52 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-certificate
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_Certificate
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Certificate"
+      ],
+      "properties": {
+        "AliCloudCertificateId": {
+          "type": "string",
+          "description": "The ID of the Alibaba Cloud certificate."
+        },
+        "AliCloudCertificateName": {
+          "type": "string",
+          "description": "The name of the Alibaba Cloud certificate."
+        },
+        "Certificate": {
+          "type": "string",
+          "description": "The content of the certificate public key."
+        },
+        "CertificateName": {
+          "type": "string",
+          "description": "The name of the certificate."
+        },
+        "CertificateType": {
+          "type": "string",
+          "description": "The type of the certificate.",
+          "default": "Server",
+          "Enum": [
+            "Server",
+            "CA"
+          ]
+        },
+        "PrivateKey": {
+          "type": "string",
+          "description": "The private key."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        }
+      }
+    }

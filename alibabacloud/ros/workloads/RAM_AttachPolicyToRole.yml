@@ -1,0 +1,37 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ram-attachpolicytorole
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RAM_AttachPolicyToRole
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "PolicyName",
+        "PolicyType",
+        "RoleName"
+      ],
+      "properties": {
+        "PolicyName": {
+          "type": "string",
+          "description": "Authorization policy name."
+        },
+        "PolicyType": {
+          "type": "string",
+          "description": "Authorization policy type. Value: \"System\" or \"Custom\".",
+          "Enum": [
+            "System",
+            "Custom"
+          ]
+        },
+        "RoleName": {
+          "type": "string",
+          "description": "Role name.Example: dev."
+        }
+      }
+    }

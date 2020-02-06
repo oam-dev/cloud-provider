@@ -1,0 +1,27 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-app
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_App
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AppName"
+      ],
+      "properties": {
+        "AppName": {
+          "type": "string",
+          "description": "The name of the App.Need [4, 15] Chinese\\English\\Number characters or \"_\",and should start with Chinese/English character."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the App, less than 180 characters."
+        }
+      }
+    }

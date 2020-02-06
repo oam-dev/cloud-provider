@@ -1,0 +1,32 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-deploymentset
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_DeploymentSet
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "DeploymentSetName": {
+          "type": "string",
+          "description": "The name of the deployment set. It must be 2 to 128 characters in length. It must\nstart with a letter and cannot start with http:// or https://. It can contain letters,\ndigits, colons (:), underscores (_), and hyphens (-)."
+        },
+        "Description": {
+          "type": "string",
+          "description": "The description of the deployment set. It must be 2 to 256 characters in length. It\ncannot start with http:// or https://."
+        },
+        "OnUnableToRedeployFailedInstance": {
+          "type": "string",
+          "description": "The emergency solution to redeploy failed instances in the deployment set. Valid values:\nCancelMembershipAndStart: restarts the instances immediately after they are shut down\nand migrated to other deployment sets. This is the default value.\nKeepStopped: keeps the instances shut down and restarts them after the deployment\nset is replenished.",
+          "Enum": [
+            "CancelMembershipAndStart",
+            "KeepStopped"
+          ]
+        }
+      }
+    }

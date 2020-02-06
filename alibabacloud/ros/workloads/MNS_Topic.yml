@@ -1,0 +1,37 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: mns-topic
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: MNS_Topic
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "TopicName"
+      ],
+      "properties": {
+        "LoggingEnabled": {
+          "type": "boolean",
+          "description": "Whether to enable log management. \"true\" indicates that log management is enabled, whereas \"false\" indicates that log management is disabled. \nThe default value is false",
+          "default": false
+        },
+        "MaximumMessageSize": {
+          "type": "integer",
+          "description": "Maximum body length of a message sent to the topic, in the unit of bytes.\nAn integer in the range of 1,024 (1 KB) to 65, 536 (64 KB); default value: 65,536 (64 KB).",
+          "default": 65536,
+          "minimum": 1024,
+          "maximum": 65536
+        },
+        "TopicName": {
+          "type": "string",
+          "description": "Topic name",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    }

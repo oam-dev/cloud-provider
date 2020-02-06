@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-snatentry
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_SNatEntry
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SNatIp",
+        "SourceVSwitchId",
+        "SNatTableId"
+      ],
+      "properties": {
+        "SNatIp": {
+          "type": "string",
+          "description": "Source IP, must belongs to bandwidth package internet IP"
+        },
+        "SNatTableId": {
+          "type": "string",
+          "description": "Create SNAT entry in specified SNAT table."
+        },
+        "SourceVSwitchId": {
+          "type": "string",
+          "description": "Allow which switch can access internet."
+        }
+      }
+    }

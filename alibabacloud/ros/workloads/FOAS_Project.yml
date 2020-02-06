@@ -1,0 +1,54 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: foas-project
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FOAS_Project
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Name",
+        "ManagerIds",
+        "DeployType"
+      ],
+      "properties": {
+        "ClusterId": {
+          "type": "string",
+          "description": "Cluster ID.",
+          "minLength": 1
+        },
+        "DeployType": {
+          "type": "string",
+          "description": "Cluster type:\nExclusive cluster: cell\nShared cluster: public",
+          "Enum": [
+            "cell",
+            "public"
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "Project description.",
+          "minLength": 1
+        },
+        "ManagerIds": {
+          "type": "string",
+          "description": "Comma delimited account Id list of managers.",
+          "minLength": 1
+        },
+        "Name": {
+          "type": "string",
+          "description": "Project name. It begins with a letter, and contains only lowercase English letters, numbers, underscores (_), and is limited to 3-64 characters.",
+          "pattern": "[a-z][a-z0-9_]{2,63}"
+        },
+        "OrderId": {
+          "type": "string",
+          "description": "Order Id of Shared cluster.",
+          "minLength": 1
+        }
+      }
+    }

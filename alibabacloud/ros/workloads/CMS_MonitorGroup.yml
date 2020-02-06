@@ -1,0 +1,27 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cms-monitorgroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CMS_MonitorGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "GroupName"
+      ],
+      "properties": {
+        "ContactGroups": {
+          "type": "string",
+          "description": "The alert contact group. Alert notifications for the application group are sent to\nthe specified alert contact group."
+        },
+        "GroupName": {
+          "type": "string",
+          "description": "The name of the application group."
+        }
+      }
+    }

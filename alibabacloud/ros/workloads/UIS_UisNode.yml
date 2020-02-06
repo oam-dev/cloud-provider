@@ -1,0 +1,50 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: uis-uisnode
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: UIS_UisNode
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "UisNodeAreaId",
+        "IpAddrsNum",
+        "UisId",
+        "UisNodeBandwidth"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Description of the instance of the boarding point."
+        },
+        "IpAddrsNum": {
+          "type": "integer",
+          "description": "The number of IPs available at the boarding point. The default is 2, the maximum is 10, if you need more quota, please submit the work order.",
+          "default": 2,
+          "minimum": 2
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the instance of the boarding point."
+        },
+        "UisId": {
+          "type": "string",
+          "description": "The instance ID to which the boarding point belongs."
+        },
+        "UisNodeAreaId": {
+          "type": "string",
+          "description": "Specifies the territory ID of the node. You can query the supported territories through the DescribeRegions interface."
+        },
+        "UisNodeBandwidth": {
+          "type": "integer",
+          "description": "Specify the bandwidth bandwidth value for this pick-up point, even if the Internet bandwidth.\nIf you do not specify a bandwidth, the default value is 20Mbps.",
+          "default": 20,
+          "minimum": 1
+        }
+      }
+    }

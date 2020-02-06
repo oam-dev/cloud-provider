@@ -1,0 +1,37 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-invocation
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_Invocation
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "CommandId",
+        "InstanceIds"
+      ],
+      "properties": {
+        "CommandId": {
+          "type": "string",
+          "description": "The id of command."
+        },
+        "Frequency": {
+          "type": "string",
+          "description": "The frequency of timing execution (the shortest frequency is performed every 1 minute). It iss mandatory when Timing is True.The value rule follows the rules of the cron expression. "
+        },
+        "InstanceIds": {
+          "type": "array",
+          "description": "The instance id list. Select up to 20 instances at a time.Instances status must be running.",
+          "items": {}
+        },
+        "Timed": {
+          "type": "boolean",
+          "description": "Whether it is timed execution. Default is False."
+        }
+      }
+    }

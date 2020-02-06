@@ -1,0 +1,37 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: nas-accessgroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: NAS_AccessGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AccessGroupType",
+        "AccessGroupName"
+      ],
+      "properties": {
+        "AccessGroupName": {
+          "type": "string",
+          "description": "Permission group name",
+          "pattern": "^[_a-zA-Z0-9-]{3,64}$"
+        },
+        "AccessGroupType": {
+          "type": "string",
+          "description": "Permission group type, including the Vpc and Classic types",
+          "Enum": [
+            "Vpc",
+            "Classic"
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "Permission group description. It is the same as the permission group name by default."
+        }
+      }
+    }

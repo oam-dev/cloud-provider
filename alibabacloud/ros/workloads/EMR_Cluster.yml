@@ -1,0 +1,386 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: emr-cluster
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: EMR_Cluster
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ZoneId",
+        "HostGroup",
+        "NetType",
+        "EmrVer",
+        "ClusterType",
+        "ChargeType",
+        "UseLocalMetaDb",
+        "Name"
+      ],
+      "properties": {
+        "AuthorizeContent": {
+          "type": "string",
+          "description": "Not required."
+        },
+        "AutoRenew": {
+          "type": "boolean",
+          "description": "Indicates whether the subscription cluster is auto-renewed."
+        },
+        "BootstrapAction": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Arg": {
+                "type": "string",
+                "description": "The argument that you pass into the bootstrap action."
+              },
+              "Name": {
+                "type": "string",
+                "description": "The name of the bootstrap action."
+              },
+              "Path": {
+                "type": "string",
+                "description": "The path where the bootstrap action script is stored."
+              }
+            }
+          }
+        },
+        "ChargeType": {
+          "type": "string",
+          "description": "The billing method. Valid values: PostPaid and PrePaid. PostPaid: pay-as-you-go. PrePaid:\nsubscription.",
+          "Enum": [
+            "PostPaid",
+            "PrePaid"
+          ]
+        },
+        "ClusterType": {
+          "type": "string",
+          "description": "The type of the cluster. Allowd values: HADOOP, KAFKA, DRUID, ZOOKEEPER, DATA_SCIENCE, GATEWAY.",
+          "Enum": [
+            "HADOOP",
+            "KAFKA",
+            "DRUID",
+            "ZOOKEEPER",
+            "DATA_SCIENCE",
+            "GATEWAY"
+          ]
+        },
+        "Config": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ConfigKey": {
+                "type": "string",
+                "description": "The key of the custom configuration item."
+              },
+              "ConfigValue": {
+                "type": "string",
+                "description": "The value of the custom configuration item."
+              },
+              "Encrypt": {
+                "type": "string",
+                "description": "A reserved parameter."
+              },
+              "FileName": {
+                "type": "string",
+                "description": "The name of the file that contains the configuration item."
+              },
+              "Replace": {
+                "type": "string",
+                "description": "A reserved parameter."
+              },
+              "ServiceName": {
+                "type": "string",
+                "description": "The name (capitalized) of the service that is configured by using the custom configuration\nitem."
+              }
+            }
+          }
+        },
+        "Configurations": {
+          "type": "string",
+          "description": "Not required."
+        },
+        "DepositType": {
+          "type": "string",
+          "description": "The hosting type."
+        },
+        "EasEnable": {
+          "type": "boolean",
+          "description": "Indicates whether the cluster is a high-security cluster."
+        },
+        "EmrVer": {
+          "type": "string",
+          "description": "The version of EMR."
+        },
+        "HighAvailabilityEnable": {
+          "type": "boolean",
+          "description": "Indicates whether the cluster is a high-availability cluster. A value of true indicates\nthat two master nodes are required."
+        },
+        "HostGroup": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "DiskCount",
+              "ChargeType",
+              "HostGroupType",
+              "SysDiskType",
+              "DiskCapacity",
+              "InstanceType",
+              "NodeCount",
+              "SysDiskCapacity",
+              "DiskType"
+            ],
+            "properties": {
+              "AutoRenew": {
+                "type": "boolean",
+                "description": "Indicates whether the instance group is auto-renewed."
+              },
+              "ChargeType": {
+                "type": "string",
+                "description": "The billing method for the instance group.",
+                "Enum": [
+                  "PostPaid",
+                  "PrePaid"
+                ]
+              },
+              "ClusterId": {
+                "type": "string",
+                "description": "A reserved parameter. Not required."
+              },
+              "Comment": {
+                "type": "string",
+                "description": "A reserved parameter. Not required."
+              },
+              "CreateType": {
+                "type": "string",
+                "description": "A reserved parameter. Not required."
+              },
+              "DiskCapacity": {
+                "type": "integer",
+                "description": "The data disk capacity of the instance group."
+              },
+              "DiskCount": {
+                "type": "integer",
+                "description": "The data disk number of the instance group.",
+                "minimum": 1
+              },
+              "DiskType": {
+                "type": "string",
+                "description": "The data disk type of the instance group.",
+                "Enum": [
+                  "CLOUD",
+                  "CLOUD_EFFICIENCY",
+                  "CLOUD_SSD"
+                ]
+              },
+              "GpuDriver": {
+                "type": "string",
+                "description": "The GPU driver."
+              },
+              "HostGroupId": {
+                "type": "string",
+                "description": "A reserved parameter."
+              },
+              "HostGroupName": {
+                "type": "string",
+                "description": "The name of the instance group."
+              },
+              "HostGroupType": {
+                "type": "string",
+                "description": "The type of the instance group. Valid values: MASTER, CORE, and TASK. Currently, you\ncan only create a maximum of one master instance group and core instance group.",
+                "Enum": [
+                  "MASTER",
+                  "CORE",
+                  "TASK"
+                ]
+              },
+              "HostKeyPairName": {
+                "type": "string",
+                "description": "The key pair name of the host group. Currently, only gateways are supported."
+              },
+              "HostPassword": {
+                "type": "string",
+                "description": "The password of the host. Currently, only gateways are supported."
+              },
+              "InstanceType": {
+                "type": "string",
+                "description": "The instance type of the instance group."
+              },
+              "NodeCount": {
+                "type": "integer",
+                "description": "The number of nodes in the node group."
+              },
+              "Period": {
+                "type": "integer",
+                "description": "The length of the subscription. Unit: months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8,\n9, 12, 24, and 36. A value is required when HostGroup.n.ChargeType=PrePaid.",
+                "Enum": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  12,
+                  24,
+                  36
+                ]
+              },
+              "SysDiskCapacity": {
+                "type": "integer",
+                "description": "The system disk capacity of the instance group."
+              },
+              "SysDiskType": {
+                "type": "string",
+                "description": "The system disk type of the instance group."
+              },
+              "VSwitchId": {
+                "type": "string",
+                "description": "The ID of the VSwitch. A value is required when NetType=vpc."
+              }
+            }
+          }
+        },
+        "InitCustomHiveMetaDB": {
+          "type": "boolean",
+          "description": "A reserved parameter. Not required."
+        },
+        "InstanceGeneration": {
+          "type": "string",
+          "description": "The generation of the ECS instances."
+        },
+        "IoOptimized": {
+          "type": "boolean",
+          "description": "Indicates wether I/O optimization is enabled. Default value: true.",
+          "default": true
+        },
+        "IsOpenPublicIp": {
+          "type": "boolean",
+          "description": "Indicates whether a public IP address is assigned. A value of true indicates that\na bandwidth of 8 MB is set by default."
+        },
+        "KeyPairName": {
+          "type": "string",
+          "description": "The name of the key pair."
+        },
+        "LogPath": {
+          "type": "string",
+          "description": "The log path in OSS."
+        },
+        "MachineType": {
+          "type": "string",
+          "description": "The type of the machine."
+        },
+        "MasterPwd": {
+          "type": "string",
+          "description": "The SSH password for the master node. The password must meet the following requirements.\nLength constraints: Minimum length of 8 characters. Maximum length of 30 characters.\nIt must contain three types of characters (uppercase letters, lowercase letters, numbers,\nand special symbols).",
+          "minLength": 8,
+          "maxLength": 30
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the cluster. The name can be 1 to 64 characters in length and only contain\nChinese characters, letters, numbers, hyphens (-), and underscores (_)."
+        },
+        "NetType": {
+          "type": "string",
+          "description": "The type of the network."
+        },
+        "OptionSoftWareList": {
+          "type": "array",
+          "description": "The list of optional services.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Period": {
+          "type": "integer",
+          "description": "The length of the subscription. Unit: months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8,\n9, 12, 24, and 36. A value is required when ChargeType=PrePaid.",
+          "Enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12,
+            24,
+            36
+          ]
+        },
+        "RelatedClusterId": {
+          "type": "string",
+          "description": "The ID of the primary cluster (when the cluster that you create is a Gateway cluster)."
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "The ID of the security group. You can create a security group in the ECS console and\nuse it. Note: If you use an existing security group, the default security group policy\nis applied to this security group: Only port 22 is open at the inbound and all ports\nare open at the outbound. You need to specify either SecurityGroupId or SecurityGroupName."
+        },
+        "SecurityGroupName": {
+          "type": "string",
+          "description": "The name of the security group to create. If the ID of the security group is not specified,\nthis name is used to create a new security group. After the cluster is created, you\ncan view the ID of the security group on the Cluster Management page. The default\nsecurity group policy is applied to this security group: Only port 22 is open at the\ninbound and all ports are open at the outbound. You need to specify either SecurityGroupId\nor SecurityGroupName."
+        },
+        "SshEnable": {
+          "type": "boolean",
+          "description": "Indicates whether SSH is enabled."
+        },
+        "UseCustomHiveMetaDB": {
+          "type": "boolean",
+          "description": "A reserved parameter. Not required."
+        },
+        "UseLocalMetaDb": {
+          "type": "boolean",
+          "description": "Indicates whether the local Hive metadatabase is used."
+        },
+        "UserDefinedEmrEcsRole": {
+          "type": "string",
+          "description": "The role that is assigned to EMR for calling ECS resources."
+        },
+        "UserInfo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Password": {
+                "type": "string",
+                "description": "The password of the cluster."
+              },
+              "UserId": {
+                "type": "string",
+                "description": "The ID of the Alibaba Cloud account for Knox."
+              },
+              "UserName": {
+                "type": "string",
+                "description": "The username for Knox."
+              }
+            }
+          }
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The ID of the Vswitch. A value is required when NetType=vpc."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The ID of the VPC. A value is required when NetType=vpc."
+        },
+        "WhiteListType": {
+          "type": "string",
+          "description": "Not required."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The zone ID."
+        }
+      }
+    }

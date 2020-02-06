@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-peeringrouterinterfaceconnection
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_PeeringRouterInterfaceConnection
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "OppositeInterfaceId",
+        "RouterInterfaceId"
+      ],
+      "properties": {
+        "OppositeInterfaceId": {
+          "type": "string",
+          "description": "The Receiver RouterInterface ID to accept peer RouterInterface."
+        },
+        "RouterInterfaceId": {
+          "type": "string",
+          "description": "The Initiator RouterInterface ID to connect peer RouterInterface."
+        }
+      }
+    }

@@ -1,0 +1,16 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: ecs-vpc
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the ecs vpc.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.ECS_VPC
+  osType: "linux"
+  arch: "x86"
+  containers: []
+  parameters: []
+  workloadSettings:
+    CidrBlock: 10.0.0.0/8

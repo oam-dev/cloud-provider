@@ -1,0 +1,307 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-instance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_Instance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "InstanceType",
+        "ImageId",
+        "SecurityGroupId"
+      ],
+      "properties": {
+        "AllocatePublicIP": {
+          "type": "boolean",
+          "description": "The public ip for ecs instance, if properties is true, will allocate public ip. If property InternetMaxBandwidthOut set to 0, it will not assign public ip.",
+          "default": true
+        },
+        "AutoRenew": {
+          "type": "string",
+          "description": "Whether renew the fee automatically? When the parameter InstanceChargeType is PrePaid, it will take effect. Range of value:True: automatic renewal.False: no automatic renewal. Default value is False.",
+          "default": "False",
+          "Enum": [
+            "True",
+            "False"
+          ]
+        },
+        "AutoRenewPeriod": {
+          "type": "number",
+          "description": "The time period of auto renew. When the parameter InstanceChargeType is PrePaid, it will take effect.It could be 1, 2, 3, 6, 12. Default value is 1.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            6,
+            12
+          ]
+        },
+        "DedicatedHostId": {
+          "type": "string",
+          "description": "which dedicated host will be deployed"
+        },
+        "DeletionProtection": {
+          "type": "boolean",
+          "description": "Whether an instance can be released manually through the console or API, deletion protection only support postPaid instance",
+          "Enum": [
+            true,
+            false
+          ]
+        },
+        "DeploymentSetId": {
+          "type": "string",
+          "description": "Deployment set ID."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the instance, [2, 256] characters. Do not fill or empty, the default is empty."
+        },
+        "DiskMappings": {
+          "type": "array",
+          "description": "Disk mappings to attach to instance. Max support 16 disks.\nIf the image contains a data disk, you can specify other parameters of the data disk via the same value of parameter \"Device\". If parameter \"Category\" is not specified, it will be cloud_efficiency instead of \"Category\" of data disk in the image.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Size"
+            ],
+            "properties": {
+              "Category": {
+                "type": "string",
+                "description": "The volume type.Now support: cloud|cloud_efficiency|cloud_ssd|cloud_essd|ephemeral_ssd. Default is cloud_efficiency.",
+                "default": "cloud_efficiency",
+                "Enum": [
+                  "cloud",
+                  "cloud_efficiency",
+                  "cloud_ssd",
+                  "cloud_essd",
+                  "ephemeral_ssd"
+                ]
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the disk, [2, 256] characters. Do not fill or empty, the default is empty."
+              },
+              "Device": {
+                "type": "string",
+                "description": "The device where the volume is exposed on the instance. could be /dev/xvd[a-z]. If not specification, will use default value."
+              },
+              "DiskName": {
+                "type": "string",
+                "description": "Display name of the disk, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'."
+              },
+              "PerformanceLevel": {
+                "type": "string",
+                "description": "The performance level of the enhanced SSD used as the Nth data disk.Default value: PL1. Valid values:PL1: A single enhanced SSD delivers up to 50,000 random read/write IOPS.PL2: A single enhanced SSD delivers up to 100,000 random read/write IOPS.PL3: A single enhanced SSD delivers up to 1,000,000 random read/write IOPS."
+              },
+              "Size": {
+                "type": "string",
+                "description": "The size of the volume, unit in GB.Value range: cloud: [5,2000], cloud_efficiency: [20,32768], cloud_ssd: [20,32768], cloud_essd: [20,32768], ephemeral_ssd: [5,800].The value should be equal to or greater than the specific snapshot."
+              },
+              "SnapshotId": {
+                "type": "string",
+                "description": "ID of the snapshot to create the volume."
+              }
+            }
+          },
+          "maxItems": 16
+        },
+        "HostName": {
+          "type": "string",
+          "description": "Host name of created ecs instance. at least 2 characters, and '.' '-' Is not the first and last characters as hostname, not continuous use. Windows platform can be up to 15 characters, allowing letters (without limiting case), numbers and '-', and does not support the number of points, not all is digital ('.').Other (Linux, etc.) platform up to 30 characters, allowing support number multiple points for the period between the points, each permit letters (without limiting case), numbers and '-' components."
+        },
+        "HpcClusterId": {
+          "type": "string",
+          "description": "The HPC cluster ID to which the instance belongs."
+        },
+        "ImageId": {
+          "type": "string",
+          "description": "Image ID to create ecs instance."
+        },
+        "InstanceChargeType": {
+          "type": "string",
+          "description": "Instance Charge type, allowed value: Prepaid and Postpaid. If specified Prepaid, please ensure you have sufficient balance in your account. Or instance creation will be failure. Default value is Postpaid.",
+          "default": "PostPaid",
+          "Enum": [
+            "PrePaid",
+            "PostPaid"
+          ]
+        },
+        "InstanceName": {
+          "type": "string",
+          "description": "Display name of the instance, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'"
+        },
+        "InstanceType": {
+          "type": "string",
+          "description": "Ecs instance supported instance type, make sure it should be correct."
+        },
+        "InternetChargeType": {
+          "type": "string",
+          "description": "Instance internet access charge type.Support 'PayByBandwidth' and 'PayByTraffic' only. Default is PayByTraffic",
+          "default": "PayByTraffic",
+          "Enum": [
+            "PayByBandwidth",
+            "PayByTraffic"
+          ]
+        },
+        "InternetMaxBandwidthIn": {
+          "type": "integer",
+          "description": "Max internet out band width setting, unit in Mbps(Mega bit per second). The range is [1,200], default is 200 Mbps.",
+          "default": 200,
+          "minimum": 1,
+          "maximum": 200
+        },
+        "InternetMaxBandwidthOut": {
+          "type": "integer",
+          "description": "Set internet output bandwidth of instance. Unit is Mbps(Mega bit per second). Range is [0,200]. Default is 1.While the property is not 0, public ip will be assigned for instance.",
+          "default": 1,
+          "maximum": 200
+        },
+        "IoOptimized": {
+          "type": "string",
+          "description": "The 'optimized' instance can provide better IO performance. Support 'none' and 'optimized' only, default is 'optimized'.",
+          "default": "optimized",
+          "Enum": [
+            "none",
+            "optimized"
+          ]
+        },
+        "KeyPairName": {
+          "type": "string",
+          "description": "SSH key pair name."
+        },
+        "Password": {
+          "type": "string",
+          "description": "Password of created ecs instance. Must contain at least 3 types of special character, lower character, upper character, number."
+        },
+        "Period": {
+          "type": "number",
+          "description": "Prepaid time period. Unit is month, it could be from 1 to 9 or 12, 24, 36, 48, 60. Default value is 1.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12,
+            24,
+            36,
+            48,
+            60
+          ]
+        },
+        "PeriodUnit": {
+          "type": "string",
+          "description": "Unit of prepaid time period, it could be Week/Month. Default value is Month.",
+          "default": "Month",
+          "Enum": [
+            "Week",
+            "Month"
+          ]
+        },
+        "PrivateIpAddress": {
+          "type": "string",
+          "description": "Private IP for the instance created. Only works for VPC instance and cannot duplicated with existing instance."
+        },
+        "RamRoleName": {
+          "type": "string",
+          "description": "Instance RAM role name. The name is provided and maintained by Resource Access Management (RAM) and can be queried using ListRoles. For more information, see RAM API CreateRole and ListRoles."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "Security group to create ecs instance. For classic instance need the security group not belong to VPC, for VPC instance, please make sure the security group belong to specified VPC."
+        },
+        "SpotPriceLimit": {
+          "type": "string",
+          "description": "The hourly price threshold of a instance, and it takes effect only when parameter InstanceChargeType is PostPaid. Three decimals is allowed at most. "
+        },
+        "SpotStrategy": {
+          "type": "string",
+          "description": "The spot strategy of a Pay-As-You-Go instance, and it takes effect only when parameter InstanceChargeType is PostPaid. Value range: \"NoSpot: A regular Pay-As-You-Go instance\", \"SpotWithPriceLimit: A price threshold for a spot instance, \"\"SpotAsPriceGo: A price that is based on the highest Pay-As-You-Go instance. \"Default value: NoSpot.",
+          "Enum": [
+            "NoSpot",
+            "SpotWithPriceLimit",
+            "SpotAsPriceGo"
+          ]
+        },
+        "SystemDiskCategory": {
+          "type": "string",
+          "description": "Category of system disk. Default is cloud_efficiency. support cloud|cloud_efficiency|cloud_ssd|cloud_essd|ephemeral_ssd",
+          "default": "cloud_efficiency",
+          "Enum": [
+            "cloud",
+            "cloud_efficiency",
+            "cloud_ssd",
+            "cloud_essd",
+            "ephemeral_ssd"
+          ]
+        },
+        "SystemDiskDescription": {
+          "type": "string",
+          "description": "Description of created system disk."
+        },
+        "SystemDiskDiskName": {
+          "type": "string",
+          "description": "Name of created system disk."
+        },
+        "SystemDiskPerformanceLevel": {
+          "type": "string",
+          "description": "The performance level of the enhanced SSD used as the system disk.Default value: PL1. Valid values:PL1: A single enhanced SSD delivers up to 50,000 random read/write IOPS.PL2: A single enhanced SSD delivers up to 100,000 random read/write IOPS.PL3: A single enhanced SSD delivers up to 1,000,000 random read/write IOPS."
+        },
+        "SystemDiskSize": {
+          "type": "number",
+          "description": "Disk size of the system disk, range from 20 to 500 GB. If you specify with your own image, make sure the system disk size bigger than image size. ",
+          "minimum": 20
+        },
+        "Tags": {
+          "type": "array",
+          "description": "Tags to attach to instance. Max support 20 tags to add during create instance. Each tag with two properties Key and Value, and Key is required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "UserData": {
+          "type": "string",
+          "description": "User data to pass to instance. [1, 16KB] characters.User data should not be base64 encoded. If you want to pass base64 encoded string to the property, use function Fn::Base64Decode to decode the base64 string first."
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The vSwitch Id to create ecs instance."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The VPC id to create ecs instance."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "current zone to create the instance."
+        }
+      }
+    }

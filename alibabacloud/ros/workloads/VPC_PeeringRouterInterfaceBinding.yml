@@ -1,0 +1,36 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-peeringrouterinterfacebinding
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_PeeringRouterInterfaceBinding
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RouterInterfaceId",
+        "OppositeInterfaceId"
+      ],
+      "properties": {
+        "OppositeInterfaceId": {
+          "type": "string",
+          "description": "The connection peer RouterInterface ID."
+        },
+        "OppositeInterfaceOwnerId": {
+          "type": "string",
+          "description": "Owner account ID of the connection peer RouterInterface."
+        },
+        "OppositeRouterId": {
+          "type": "string",
+          "description": "Router ID of the connection peer RouterInterface."
+        },
+        "RouterInterfaceId": {
+          "type": "string",
+          "description": "The RouterInterface is set the parameters of the connection peer RouterInterface."
+        }
+      }
+    }

@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-sshkeypairattachment
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_SSHKeyPairAttachment
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "InstanceIds",
+        "KeyPairName"
+      ],
+      "properties": {
+        "InstanceIds": {
+          "type": "array",
+          "description": "The comma delimited ECS instance id list. Only support Linux.",
+          "items": {}
+        },
+        "KeyPairName": {
+          "type": "string",
+          "description": "SSH key pair name."
+        }
+      }
+    }

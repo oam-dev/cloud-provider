@@ -1,0 +1,120 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-loadbalancer
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_LoadBalancer
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AddressType": {
+          "type": "string",
+          "description": "Loader balancer address type. Support 'internet' and 'intranet' only, default is 'internet'.",
+          "default": "internet",
+          "Enum": [
+            "internet",
+            "intranet"
+          ]
+        },
+        "AutoPay": {
+          "type": "boolean",
+          "description": "Optional. Indicates whether to automatically pay the bill for the Subscription-billed Internet instance to be created.\nValid values: true | false (default value)",
+          "default": false
+        },
+        "Bandwidth": {
+          "type": "integer",
+          "description": "The bandwidth for network, unit in Mbps(Mega bit per second). Range is 1 to 1000, default is 1. If InternetChargeType is specified as \"paybytraffic\", this property will be ignore and please specify the \"Bandwidth\" in ALIYUN::SLB::Listener.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "DeletionProtection": {
+          "type": "boolean",
+          "description": "Whether to enable deletion protection.",
+          "default": false
+        },
+        "Duration": {
+          "type": "number",
+          "description": "Optional. The subscription duration of a Subscription Internet instance.\nValid values:\nIf PricingCycle is month, the valid range is 1 to 9.\nIf PricingCycle is year, the value range is 1 to 3.",
+          "minimum": 1,
+          "maximum": 9
+        },
+        "InternetChargeType": {
+          "type": "string",
+          "description": "Instance internet access charge type.Support 'paybybandwidth' and 'paybytraffic' only. Default is 'paybytraffic'. If load balancer is created in VPC, the charge type will be set as 'paybytraffic' by default.",
+          "default": "paybytraffic",
+          "Enum": [
+            "paybybandwidth",
+            "paybytraffic"
+          ]
+        },
+        "LoadBalancerName": {
+          "type": "string",
+          "description": "Name of created load balancer. Length is limited to 1-80 characters, allowed to contain letters, numbers, '-, /, _,.' When not specified, a default name will be assigned."
+        },
+        "LoadBalancerSpec": {
+          "type": "string",
+          "description": "The specification of the Server Load Balancer instance. Allowed value: slb.s1.small|slb.s2.small|slb.s2.medium|slb.s3.small|slb.s3.medium|slb.s3.large|slb.s3.xlarge|slb.s3.xxlarge. Default value: slb.s1.small. The supported performance specification in each region is different, two specifications are supported in the US East 1 region. If the region does not support the performance-guaranteed instances, the value will not take effect."
+        },
+        "MasterZoneId": {
+          "type": "string",
+          "description": "The master zone id to create load balancer instance."
+        },
+        "PayType": {
+          "type": "string",
+          "description": "Optional. The billing method of the instance to be created.\nValid value: PayOnDemand (Pay-As-You-Go) | PrePay (Subscription)",
+          "Enum": [
+            "PayOnDemand",
+            "PrePay"
+          ]
+        },
+        "PricingCycle": {
+          "type": "string",
+          "description": "Optional. The duration of the Subscription-billed Internet instance to be created.\nValid values: month | year.",
+          "Enum": [
+            "month",
+            "year"
+          ]
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "SlaveZoneId": {
+          "type": "string",
+          "description": "The slave zone id to create load balancer instance."
+        },
+        "Tags": {
+          "type": "array",
+          "description": "Tags to attach to slb. Max support 5 tags to add during create slb. Each tag with two properties Key and Value, and Key is required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 5
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The VSwitch id to create load balancer instance. For VPC network only."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The VPC id to create load balancer instance. For VPC network only."
+        }
+      }
+    }

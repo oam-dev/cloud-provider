@@ -1,0 +1,145 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cms-eventruletargets
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CMS_EventRuleTargets
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RuleName"
+      ],
+      "properties": {
+        "ContactParameters": {
+          "type": "array",
+          "description": "CONTACT configuration.A maximum of 5 parameters",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ContactGroupName": {
+                "type": "string",
+                "description": "The name of the alert contact group."
+              },
+              "Id": {
+                "type": "string",
+                "description": "The unique ID of the alert contact group notification."
+              },
+              "Level": {
+                "type": "string",
+                "description": "The method of alert notification. Valid values: 2, 3, and 4.2: DingTalk Chatbot and email.3: DingTalk Chatbot and email.4: DingTalk Chatbot and email."
+              }
+            }
+          },
+          "maxItems": 5
+        },
+        "FcParameters": {
+          "type": "array",
+          "description": "FC configuration.A maximum of 5 parameters.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "FunctionName": {
+                "type": "string",
+                "description": "The name of the function."
+              },
+              "Id": {
+                "type": "string",
+                "description": "The unique ID of the Function Compute notification."
+              },
+              "Region": {
+                "type": "string",
+                "description": "The region where Function Compute is deployed."
+              },
+              "ServiceName": {
+                "type": "string",
+                "description": "The name of the Function Compute service. "
+              }
+            }
+          },
+          "maxItems": 5
+        },
+        "MnsParameters": {
+          "type": "array",
+          "description": "MNS configuration.A maximum of 5 parameters",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The unique ID of the Message Service (MNS) notification."
+              },
+              "Queue": {
+                "type": "string",
+                "description": "The name of the MNS queue."
+              },
+              "Region": {
+                "type": "string",
+                "description": "The region where MNS is deployed."
+              }
+            }
+          },
+          "maxItems": 5
+        },
+        "RuleName": {
+          "type": "string",
+          "description": "The name of the alert rule."
+        },
+        "SlsParameters": {
+          "type": "array",
+          "description": "SLS configuration.A maximum of 5 parameters.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The unique ID of the Log Service notification."
+              },
+              "LogStore": {
+                "type": "string",
+                "description": "The logstore corresponding to Log Service."
+              },
+              "Project": {
+                "type": "string",
+                "description": "The project corresponding to Log Service."
+              },
+              "Region": {
+                "type": "string",
+                "description": "The region where Log Service is deployed."
+              }
+            }
+          },
+          "maxItems": 5
+        },
+        "WebhookParameters": {
+          "type": "array",
+          "description": "WEBHOOK configuration.A maximum of 5 parameters.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The unique ID of the HTTP callback notification."
+              },
+              "Method": {
+                "type": "string",
+                "description": "The request method of the HTTP callback. Valid values: GET and POST."
+              },
+              "Protocol": {
+                "type": "string",
+                "description": "The name of the protocol."
+              },
+              "Url": {
+                "type": "string",
+                "description": "The callback URL."
+              }
+            }
+          },
+          "maxItems": 5
+        }
+      }
+    }

@@ -1,0 +1,117 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: fc-service
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FC_Service
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ServiceName"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Service description"
+        },
+        "InternetAccess": {
+          "type": "boolean",
+          "description": "Set it to true to enable Internet access."
+        },
+        "LogConfig": {
+          "type": "object",
+          "properties": {
+            "Logstore": {
+              "type": "string",
+              "description": "The log store name of Logs service"
+            },
+            "Project": {
+              "type": "string",
+              "description": "The project name of Logs service"
+            }
+          }
+        },
+        "NasConfig": {
+          "type": "object",
+          "required": [
+            "MountPoints",
+            "UserId",
+            "GroupId"
+          ],
+          "properties": {
+            "GroupId": {
+              "type": "integer",
+              "description": "Group ID",
+              "minimum": -1,
+              "maximum": 65534
+            },
+            "MountPoints": {
+              "type": "array",
+              "description": "Mount points",
+              "items": {
+                "type": "object",
+                "required": [
+                  "MountDir",
+                  "ServerAddr"
+                ],
+                "properties": {
+                  "MountDir": {
+                    "type": "string",
+                    "description": "A local mount point."
+                  },
+                  "ServerAddr": {
+                    "type": "string",
+                    "description": "The address of NAS instance."
+                  }
+                }
+              }
+            },
+            "UserId": {
+              "type": "integer",
+              "description": "User ID",
+              "minimum": -1,
+              "maximum": 65534
+            }
+          }
+        },
+        "Role": {
+          "type": "string",
+          "description": "The role grants Function Compute the permission to access user’s cloud resources, such as pushing logs to user’s log store. The temporary STS token generated from this role can be retrieved from function context and used to access cloud resources. "
+        },
+        "ServiceName": {
+          "type": "string",
+          "description": "Service name",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "VpcConfig": {
+          "type": "object",
+          "required": [
+            "VSwitchIds",
+            "VpcId",
+            "SecurityGroupId"
+          ],
+          "properties": {
+            "SecurityGroupId": {
+              "type": "string",
+              "description": "Security group ID"
+            },
+            "VSwitchIds": {
+              "type": "array",
+              "description": "List of VSwitch IDs\t",
+              "items": {},
+              "minItems": 1
+            },
+            "VpcId": {
+              "type": "string",
+              "description": "VPC ID"
+            }
+          }
+        }
+      }
+    }

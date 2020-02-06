@@ -1,0 +1,591 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-api
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_Api
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RequestConfig",
+        "Visibility",
+        "ResultSample",
+        "ApiName",
+        "GroupId",
+        "ServiceConfig",
+        "ResultType"
+      ],
+      "properties": {
+        "ApiName": {
+          "type": "string",
+          "description": "The name of the API.Need [4, 50] Chinese\\English\\Number characters or \"_\",and should start with Chinese/English character."
+        },
+        "AuthType": {
+          "type": "string",
+          "description": "Type of authorization of the API . \"APP\",\"ANONYMOUS\", or \"APPOPENID\"",
+          "Enum": [
+            "APP",
+            "ANONYMOUS",
+            "APPOPENID"
+          ]
+        },
+        "ConstParameters": {
+          "type": "array",
+          "description": "The const parameters.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServiceParameterName",
+              "ConstValue",
+              "Location"
+            ],
+            "properties": {
+              "ConstValue": {
+                "type": "string",
+                "description": "The value of the parameter."
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the const parameter, less than 180 characters."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The location of the parameter. Default is HEAD. ",
+                "default": "HEAD",
+                "Enum": [
+                  "BODY",
+                  "HEAD"
+                ]
+              },
+              "ServiceParameterName": {
+                "type": "string",
+                "description": "The service parameter name."
+              }
+            }
+          }
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the API, less than 180 characters."
+        },
+        "ErrorCodeSamples": {
+          "type": "array",
+          "description": "The Error Code samples.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Message",
+              "Code"
+            ],
+            "properties": {
+              "Code": {
+                "type": "string",
+                "description": "Error code."
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the ERROR, less than 180 characters."
+              },
+              "Message": {
+                "type": "string",
+                "description": "Error message."
+              }
+            }
+          }
+        },
+        "FailResultSample": {
+          "type": "string",
+          "description": "The sample of the fail result."
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The id of the Group."
+        },
+        "OpenIdConnectConfig": {
+          "type": "object",
+          "required": [
+            "OpenIdApiType"
+          ],
+          "properties": {
+            "IdTokenParamName": {
+              "type": "string",
+              "description": "The token's parameter name."
+            },
+            "OpenIdApiType": {
+              "type": "string",
+              "description": "The type of the open id. \"IDTOKEN\" or \"BUSINESS\". If OpenIdApiType is specified as IDTOKEN, PublicKey and PublicKeyId are required. If OpenIdApiType is specified as BUSINESS, IdTokenParamName is required.",
+              "Enum": [
+                "IDTOKEN",
+                "BUSINESS"
+              ]
+            },
+            "PublicKey": {
+              "type": "string",
+              "description": "The public key."
+            },
+            "PublicKeyId": {
+              "type": "string",
+              "description": "The public key id."
+            }
+          }
+        },
+        "RequestConfig": {
+          "type": "object",
+          "required": [
+            "RequestPath",
+            "RequestMode",
+            "RequestHttpMethod",
+            "RequestProtocol"
+          ],
+          "properties": {
+            "BodyFormat": {
+              "type": "string",
+              "description": "Describe how data transform to the server, \"FORM\" for k-v and \"STREAM\" for bit stream.BodyFormat is required if RequestMode is specified as MAPPING and RequestHttpMethod is POST/PUT/PATCH.",
+              "Enum": [
+                "FORM",
+                "STREAM"
+              ]
+            },
+            "PostBodyDescription": {
+              "type": "string",
+              "description": "Description of the post body."
+            },
+            "RequestHttpMethod": {
+              "type": "string",
+              "description": "The HTTP method of the request. Default is GET.",
+              "default": "GET",
+              "Enum": [
+                "GET",
+                "POST",
+                "DELETE",
+                "PUT",
+                "HEAD",
+                "TRACE",
+                "PATCH",
+                "CONNECT",
+                "OPTIONS"
+              ]
+            },
+            "RequestMode": {
+              "type": "string",
+              "description": "API request mode. \"MAPPING\" or \"PASSTHROUGH\". Default is \"MAPPING\".",
+              "default": "MAPPING",
+              "Enum": [
+                "MAPPING",
+                "PASSTHROUGH"
+              ]
+            },
+            "RequestPath": {
+              "type": "string",
+              "description": "API Path."
+            },
+            "RequestProtocol": {
+              "type": "string",
+              "description": "The protocol of the request, \"HTTP\", \"HTTPS\", or \"HTTP,HTTPS\", Default is \"HTTP\".",
+              "default": "HTTP",
+              "Enum": [
+                "HTTP",
+                "HTTPS",
+                "HTTP,HTTPS"
+              ]
+            }
+          }
+        },
+        "RequestParameters": {
+          "type": "array",
+          "description": "The request parameters.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "required": [
+              "Required",
+              "ParameterType",
+              "ApiParameterName",
+              "Location"
+            ],
+            "properties": {
+              "ApiParameterName": {
+                "type": "string",
+                "description": "The name of the request parameter."
+              },
+              "DefaultValue": {
+                "type": "string",
+                "description": "The default value of the request parameter."
+              },
+              "DemoValue": {
+                "type": "string",
+                "description": "The demo value of the request parameter."
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the API, less than 180 characters."
+              },
+              "DocOrder": {
+                "type": "integer",
+                "description": "The order of the doc."
+              },
+              "DocShow": {
+                "type": "string",
+                "description": "Visiablity of the Doc. \"PUBLIC\" or \"PRIVATE\"",
+                "Enum": [
+                  "PUBLIC",
+                  "PRIVATE"
+                ]
+              },
+              "EnumValue": {
+                "type": "string",
+                "description": "Allowed parameter value, split with ',' like \"1,2,3,4\""
+              },
+              "JsonScheme": {
+                "type": "string",
+                "description": "The json scheme of the parameter when it is String."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The location of the reqest parameter.",
+                "Enum": [
+                  "BODY",
+                  "HEAD",
+                  "QUERY",
+                  "PATH"
+                ]
+              },
+              "MaxLength": {
+                "type": "integer",
+                "description": "The max length of the parameter when it is String."
+              },
+              "MaxValue": {
+                "type": "integer",
+                "description": "The max value of the parameter when it is Int, Long, Float or Double."
+              },
+              "MinLength": {
+                "type": "integer",
+                "description": "The min length of the parameter when it is String."
+              },
+              "MinValue": {
+                "type": "integer",
+                "description": "The min value of the parameter when it is Int, Long, Float or Double."
+              },
+              "ParameterType": {
+                "type": "string",
+                "description": "The type of the parameter",
+                "Enum": [
+                  "String",
+                  "Int",
+                  "Long",
+                  "Float",
+                  "Double",
+                  "Boolean"
+                ]
+              },
+              "RegularExpression": {
+                "type": "string",
+                "description": "The regular expression of the parameter when it is String."
+              },
+              "Required": {
+                "type": "string",
+                "description": "If required. \"REQUIRED\", \"OPTION\"",
+                "Enum": [
+                  "REQUIRED",
+                  "OPTION"
+                ]
+              }
+            }
+          }
+        },
+        "ResultSample": {
+          "type": "string",
+          "description": "The sample of the result."
+        },
+        "ResultType": {
+          "type": "string",
+          "description": "The format of service's response, \"JSON\", \"TEXT\", \"BINARY\", \"XML\", \"HTML\" or \"PASSTHROUGH\". Default is \"JSON\".",
+          "default": "JSON",
+          "Enum": [
+            "JSON",
+            "TEXT",
+            "BINARY",
+            "XML",
+            "HTML",
+            "PASSTHROUGH"
+          ]
+        },
+        "ServiceConfig": {
+          "type": "object",
+          "properties": {
+            "AoneAppName": {
+              "type": "string",
+              "description": "Aone APP Name."
+            },
+            "ContentTypeCatagory": {
+              "type": "string",
+              "description": "Specify how to determine ContentType header when using service. \"DEFAULT\" to use API Gateway's default value. \"CUSTOM\" to use self defined value. \"CLIENT\" to use client's ContentType header. Default is CLIENT.",
+              "default": "CLIENT",
+              "Enum": [
+                "DEFAULT",
+                "CUSTOM",
+                "CLIENT"
+              ]
+            },
+            "ContentTypeValue": {
+              "type": "string",
+              "description": "ContentTypeValue is required if ContentTypeCatagory is DEFAULT or CUSTOM."
+            },
+            "FunctionComputeConfig": {
+              "type": "object",
+              "required": [
+                "serviceName",
+                "roleArn",
+                "fcRegionId",
+                "functionName"
+              ],
+              "properties": {
+                "fcRegionId": {
+                  "type": "string",
+                  "description": "The region id of function compute."
+                },
+                "functionName": {
+                  "type": "string",
+                  "description": "The function name of function compute."
+                },
+                "roleArn": {
+                  "type": "string",
+                  "description": "Ram authorizes the arn of the API gateway access function compute."
+                },
+                "serviceName": {
+                  "type": "string",
+                  "description": "The service name of function compute."
+                }
+              }
+            },
+            "Mock": {
+              "type": "string",
+              "description": "Whether to use Mock model. \"TRUE\" or \"FALSE\". Default is FALSE.",
+              "default": "FALSE",
+              "Enum": [
+                "TRUE",
+                "FALSE"
+              ]
+            },
+            "MockHeaders": {
+              "type": "array",
+              "description": "Custom Mock response header related information when Mock is enabled.",
+              "items": {
+                "type": "object",
+                "required": [
+                  "HeaderName",
+                  "HeaderValue"
+                ],
+                "properties": {
+                  "HeaderName": {
+                    "type": "string",
+                    "description": "Response header name"
+                  },
+                  "HeaderValue": {
+                    "type": "string",
+                    "description": "Response header value"
+                  }
+                }
+              }
+            },
+            "MockResult": {
+              "type": "string",
+              "description": "The returned value when using Mock model."
+            },
+            "MockStatusCode": {
+              "type": "integer",
+              "description": "Status code, returned in the format compatible with HTTP 1.1 response status code and its status"
+            },
+            "ServiceAddress": {
+              "type": "string",
+              "description": "Backend service call address. If the complete backend service address is http://api.a.com:8080/object/add?key1=value1\u0026key2=value2, ServiceAddress corresponds to http://api.a.com:8080."
+            },
+            "ServiceHttpMethod": {
+              "type": "string",
+              "description": "The HTTP method to the service. Default is GET.",
+              "default": "GET",
+              "Enum": [
+                "GET",
+                "POST",
+                "DELETE",
+                "PUT",
+                "HEAD",
+                "TRACE",
+                "PATCH",
+                "CONNECT",
+                "OPTIONS",
+                "ANY"
+              ]
+            },
+            "ServicePath": {
+              "type": "string",
+              "description": "Backend service call path. If the complete backend service address is http://api.a.com:8080/object/add?key1=value1\u0026key2=value2, ServicePath corresponds to /object/add."
+            },
+            "ServiceProtocol": {
+              "type": "string",
+              "description": "Backend service protocol type, which must be HTTP, HTTPS or FunctionCompute currently.",
+              "default": "HTTP",
+              "Enum": [
+                "HTTP",
+                "HTTPS",
+                "FunctionCompute"
+              ]
+            },
+            "ServiceTimeOut": {
+              "type": "integer",
+              "description": "Time out (ms) when using service."
+            },
+            "ServiceVpcEnable": {
+              "type": "string",
+              "description": "Whether to use VPC. \"TRUE\" or \"FALSE\". Default is FALSE.",
+              "default": "FALSE",
+              "Enum": [
+                "TRUE",
+                "FALSE"
+              ]
+            },
+            "VpcConfig": {
+              "type": "object",
+              "required": [
+                "VpcId",
+                "Port",
+                "InstanceId"
+              ],
+              "properties": {
+                "InstanceId": {
+                  "type": "string",
+                  "description": "The id of the instance (ECS/SLB)."
+                },
+                "Port": {
+                  "type": "integer",
+                  "description": "The port of the VPC."
+                },
+                "VpcId": {
+                  "type": "string",
+                  "description": "The id of the VPC."
+                }
+              }
+            }
+          }
+        },
+        "ServiceParameters": {
+          "type": "array",
+          "description": "The service parameters.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServiceParameterName",
+              "ParameterType",
+              "Location"
+            ],
+            "properties": {
+              "Location": {
+                "type": "string",
+                "description": "The location of the parameter",
+                "Enum": [
+                  "BODY",
+                  "HEAD",
+                  "QUERY",
+                  "PATH"
+                ]
+              },
+              "ParameterType": {
+                "type": "string",
+                "description": "The type of the parameter.",
+                "Enum": [
+                  "STRING",
+                  "NUMBER",
+                  "BOOLEAN"
+                ]
+              },
+              "ServiceParameterName": {
+                "type": "string",
+                "description": "The name of the parameter"
+              }
+            }
+          }
+        },
+        "ServiceParametersMap": {
+          "type": "array",
+          "description": "The mapping relation between (request parameters\\const parameters\\system parameters) and service parameters.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServiceParameterName",
+              "RequestParameterName"
+            ],
+            "properties": {
+              "RequestParameterName": {
+                "type": "string",
+                "description": "The corresponding request parameter, system parameter or const parameter."
+              },
+              "ServiceParameterName": {
+                "type": "string",
+                "description": "The corresponding service parameter."
+              }
+            }
+          }
+        },
+        "SystemParameters": {
+          "type": "array",
+          "description": "The system parameters.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServiceParameterName",
+              "Location",
+              "ParameterName"
+            ],
+            "properties": {
+              "DemoValue": {
+                "type": "string",
+                "description": "The demo value of the system parameter."
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the system parameter, less than 180 characters."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The location of the system parameter. Default is HEAD. ",
+                "default": "HEAD",
+                "Enum": [
+                  "BODY",
+                  "HEAD"
+                ]
+              },
+              "ParameterName": {
+                "type": "string",
+                "description": "The system parameter name.",
+                "Enum": [
+                  "CaClientIp",
+                  "CaDomain",
+                  "CaRequestHandleTime",
+                  "CaAppId",
+                  "CaRequestId",
+                  "CaHttpSchema",
+                  "CaProxy"
+                ]
+              },
+              "ServiceParameterName": {
+                "type": "string",
+                "description": "The service parameter name."
+              }
+            }
+          }
+        },
+        "Visibility": {
+          "type": "string",
+          "description": "Whether to make the API public. \"PUBLIC\" or \"PRIVATE\".",
+          "Enum": [
+            "PUBLIC",
+            "PRIVATE"
+          ]
+        }
+      }
+    }

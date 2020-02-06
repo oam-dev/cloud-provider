@@ -1,0 +1,92 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-vpngateway
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_VpnGateway
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "VpcId",
+        "Bandwidth"
+      ],
+      "properties": {
+        "AutoPay": {
+          "type": "boolean",
+          "description": "Whether to automatically pay the bill of the VPN gateway, the value:\nTrue: Automatically pays the bill for the VPN gateway.\nFalse (default): Does not automatically pay the bill for the VPN gateway.",
+          "default": false
+        },
+        "Bandwidth": {
+          "type": "integer",
+          "description": "The public network bandwidth of the VPN gateway, in Mbps.\nValue: 5|10|20|50|100.",
+          "Enum": [
+            5,
+            10,
+            20,
+            50,
+            100
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the VPN gateway.\nThe length is 2-256 characters and must start with a letter or Chinese, but cannot start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "EnableIpsec": {
+          "type": "boolean",
+          "description": "Whether to enable IPsec-VPN. The IPsec-VPN feature provides a site-to-site connection. You can securely connect your local data center network to a private network or two proprietary networks by creating an IPsec tunnel. Value:\nTrue (default): Enables the IPsec-VPN feature.\nFalse: The IPsec-VPN function is not enabled.",
+          "default": true
+        },
+        "EnableSsl": {
+          "type": "boolean",
+          "description": "Enable the SSL-VPN function. Provide point-to-site VPN connection, no need to configure customer gateway, terminal directly access. Value:\nTrue: Enable SSL-VPN.\nFalse (default): Does not enable SSL-VPN.",
+          "default": false
+        },
+        "InstanceChargeType": {
+          "type": "string",
+          "description": "Accounting type of the VPN gateway, the value is:\nPREPAY: Prepaid.",
+          "default": "PREPAY",
+          "Enum": [
+            "PREPAY"
+          ]
+        },
+        "Name": {
+          "type": "string",
+          "description": "Name of the VPN gateway. The default value is the ID of the VPN gateway.\nThe length is 2~100 English or Chinese characters. It must start with a large or small letter or Chinese. It can contain numbers, underscores (_) and dashes (-). It cannot start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "Period": {
+          "type": "integer",
+          "description": "Purchase time, value: 1~9|12|24|36.\nWhen the value of the InstanceChargeType parameter is PREPAY, this parameter is mandatory.",
+          "Enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12,
+            24,
+            36
+          ]
+        },
+        "SslConnections": {
+          "type": "integer",
+          "description": "The maximum number of clients allowed to connect at the same time."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "VPC ID to which the VPN gateway belongs."
+        }
+      }
+    }

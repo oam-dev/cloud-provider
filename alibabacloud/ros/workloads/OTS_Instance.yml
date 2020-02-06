@@ -1,0 +1,67 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ots-instance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: OTS_Instance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "InstanceName"
+      ],
+      "properties": {
+        "ClusterType": {
+          "type": "string",
+          "description": "Cluster type, the default is SSD.",
+          "default": "SSD",
+          "Enum": [
+            "SSD",
+            "HYBRID"
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "Instance description.",
+          "maxLength": 256
+        },
+        "InstanceName": {
+          "type": "string",
+          "description": "The name of the instance.",
+          "pattern": "[a-zA-Z][-a-zA-Z0-9]{1,14}[a-zA-Z0-9]"
+        },
+        "Network": {
+          "type": "string",
+          "description": "Instance network type, default is NORMAL.",
+          "default": "NORMAL",
+          "Enum": [
+            "NORMAL",
+            "VPC",
+            "VPC_CONSOLE"
+          ]
+        },
+        "Tags": {
+          "type": "array",
+          "description": "Tags to attach to instance. Max support 5 tags to add during create instance. Each tag with two properties Key and Value, and Key is required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 5
+        }
+      }
+    }

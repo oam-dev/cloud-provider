@@ -1,0 +1,61 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: mns-subscription
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: MNS_Subscription
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SubscriptionName",
+        "TopicName",
+        "Endpoint"
+      ],
+      "properties": {
+        "Endpoint": {
+          "type": "string",
+          "description": "Terminal address of the message recipient for the created subscription.\nCurrently, four types of endpoints are supported: \n1. HttpEndpoint, which must be prefixed with \"http://\"; \n2. QueueEndpoint, in the format of acs:mns:{REGION}:{AccountID}:queues/{QueueName}; \n3. MailEndpoint, in the format of mail:directmail:{MailAddress}; \n4. SmsEndpoint, in the format of sms:directsms:anonymous or sms:directsms:{Phone}."
+        },
+        "FilterTag": {
+          "type": "string",
+          "description": "Message filter tag in the created subscription (Only messages with consistent tags are pushed.)\nThe value is a string of no more than 16 characters. The default value is no message filter.",
+          "maxLength": 16
+        },
+        "NotifyContentFormat": {
+          "type": "string",
+          "description": "Format of the message content pushed to the endpoint.\nXML, JSON, or SIMPLIFIED; default value: XML. For details about message formats, refer to Basic Concepts/NotifyContentFormat.",
+          "default": "XML",
+          "Enum": [
+            "XML",
+            "JSON",
+            "SIMPLIFIED"
+          ]
+        },
+        "NotifyStrategy": {
+          "type": "string",
+          "description": "Retry policy that will be applied when an error occurs during message push to the endpoint.\nBACKOFF_RETRY or EXPONENTIAL_DECAY_RETRY; default value: BACKOFF_RETRY. For details about retry policies, refer to Basic Concepts/NotifyStrategy.",
+          "default": "BACKOFF_RETRY",
+          "Enum": [
+            "BACKOFF_RETRY",
+            "EXPONENTIAL_DECAY_RETRY"
+          ]
+        },
+        "SubscriptionName": {
+          "type": "string",
+          "description": "Subscription name",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "TopicName": {
+          "type": "string",
+          "description": "Topic name",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    }

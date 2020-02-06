@@ -1,0 +1,79 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sag-aclrule
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SAG_ACLRule
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SourcePortRange",
+        "Policy",
+        "DestCidr",
+        "IpProtocol",
+        "AclId",
+        "DestPortRange",
+        "Direction",
+        "SourceCidr"
+      ],
+      "properties": {
+        "AclId": {
+          "type": "string",
+          "description": "Access control ID."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Rule description information, ranging from 1 to 512 characters.",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "DestCidr": {
+          "type": "string",
+          "description": "Destination address, CIDR format and IP address range in IPv4 format."
+        },
+        "DestPortRange": {
+          "type": "string",
+          "description": "Destination port range, 80/80."
+        },
+        "Direction": {
+          "type": "string",
+          "description": "Regular direction.\nValue: in|out",
+          "Enum": [
+            "in",
+            "out"
+          ]
+        },
+        "IpProtocol": {
+          "type": "string",
+          "description": "Protocol, not case sensitive."
+        },
+        "Policy": {
+          "type": "string",
+          "description": "Access: accept|drop",
+          "Enum": [
+            "accept",
+            "drop"
+          ]
+        },
+        "Priority": {
+          "type": "integer",
+          "description": "Priority, ranging from 1 to 100.\nDefault: 1",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "SourceCidr": {
+          "type": "string",
+          "description": "Source address, CIDR format and IP address range in IPv4 format."
+        },
+        "SourcePortRange": {
+          "type": "string",
+          "description": "Source port range, 80/80."
+        }
+      }
+    }

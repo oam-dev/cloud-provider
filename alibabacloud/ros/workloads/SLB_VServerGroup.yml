@@ -1,0 +1,56 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-vservergroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_VServerGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "BackendServers",
+        "LoadBalancerId",
+        "VServerGroupName"
+      ],
+      "properties": {
+        "BackendServers": {
+          "type": "array",
+          "description": "The list of a combination of ECS Instance-Port-Weight.Same ecs instance with different port is allowed, but same ecs instance with same port isn't.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServerId",
+              "Port",
+              "Weight"
+            ],
+            "properties": {
+              "Port": {
+                "type": "integer",
+                "description": "The port of backend server. From 1 to 65535."
+              },
+              "ServerId": {
+                "type": "string",
+                "description": "Need one valid ECS instance id."
+              },
+              "Weight": {
+                "type": "integer",
+                "description": "The weight of backend server of load balancer. From 0 to 100, 0 means offline. Default is 100.",
+                "maximum": 100
+              }
+            }
+          }
+        },
+        "LoadBalancerId": {
+          "type": "string",
+          "description": "The id of load balancer."
+        },
+        "VServerGroupName": {
+          "type": "string",
+          "description": "Display name of the VServerGroup."
+        }
+      }
+    }

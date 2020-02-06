@@ -1,0 +1,27 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: dns-domain
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: DNS_Domain
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DomainName"
+      ],
+      "properties": {
+        "DomainName": {
+          "type": "string",
+          "description": "Domain name"
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "Domain name grouping, the default is the \"default grouping\" GroupId"
+        }
+      }
+    }

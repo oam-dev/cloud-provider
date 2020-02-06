@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: nas-filesystem
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: NAS_FileSystem
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ProtocolType",
+        "StorageType"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "File system description (space characters are not allowed)"
+        },
+        "ProtocolType": {
+          "type": "string",
+          "description": "Type of protocol used. Currently includes the NFS type and the SMB type",
+          "Enum": [
+            "NFS",
+            "SMB"
+          ]
+        },
+        "StorageType": {
+          "type": "string",
+          "description": "The file system type. Currently includes the Performance type and the Capacity type",
+          "Enum": [
+            "Performance",
+            "Capacity"
+          ]
+        }
+      }
+    }

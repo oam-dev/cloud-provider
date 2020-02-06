@@ -1,0 +1,67 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-masterslaveservergroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_MasterSlaveServerGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "MasterSlaveBackendServers",
+        "LoadBalancerId"
+      ],
+      "properties": {
+        "LoadBalancerId": {
+          "type": "string",
+          "description": "The ID of the Server Load Balancer instance."
+        },
+        "MasterSlaveBackendServers": {
+          "type": "array",
+          "description": "A list of active/standby server group.\nAn active/standby server group can only contain two backend servers.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServerId",
+              "Port",
+              "Weight"
+            ],
+            "properties": {
+              "Port": {
+                "type": "integer",
+                "description": "The port used by backend server. From 1 to 65535",
+                "minimum": 1,
+                "maximum": 65535
+              },
+              "ServerId": {
+                "type": "string",
+                "description": "ECS instance ID"
+              },
+              "ServerType": {
+                "type": "string",
+                "description": "The identity of backend server. Could be \"Master\" (default) or \"Slave\"",
+                "Enum": [
+                  "Master",
+                  "Slave"
+                ]
+              },
+              "Weight": {
+                "type": "integer",
+                "description": "The weight of backend server of load balancer. From 0 to 100, 0 means offline. Default is 100.",
+                "maximum": 100
+              }
+            }
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "MasterSlaveServerGroupName": {
+          "type": "string",
+          "description": "The name of the active/standby server group."
+        }
+      }
+    }

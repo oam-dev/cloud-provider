@@ -1,0 +1,46 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-trafficcontrolbinding
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_TrafficControlBinding
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "StageName",
+        "TrafficControlId",
+        "ApiIds",
+        "GroupId"
+      ],
+      "properties": {
+        "ApiIds": {
+          "type": "array",
+          "description": "APIs to bind with the traffic control.",
+          "items": {},
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The id of group."
+        },
+        "StageName": {
+          "type": "string",
+          "description": "Bind traffic in this stage.",
+          "Enum": [
+            "TEST",
+            "RELEASE",
+            "PRE"
+          ]
+        },
+        "TrafficControlId": {
+          "type": "string",
+          "description": "The id of traffic control."
+        }
+      }
+    }

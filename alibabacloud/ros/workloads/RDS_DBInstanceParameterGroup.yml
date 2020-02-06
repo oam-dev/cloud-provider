@@ -1,0 +1,54 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: rds-dbinstanceparametergroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RDS_DBInstanceParameterGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Parameters",
+        "DBInstanceId"
+      ],
+      "properties": {
+        "DBInstanceId": {
+          "type": "string",
+          "description": "Database InstanceId to update properties."
+        },
+        "Forcerestart": {
+          "type": "string",
+          "description": "whether restart database instance.",
+          "default": "false",
+          "Enum": [
+            "true",
+            "false"
+          ]
+        },
+        "Parameters": {
+          "type": "array",
+          "description": "Parameters to update for selected database instance.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Value",
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string",
+                "description": "Key to update for instance property."
+              },
+              "Value": {
+                "type": "string",
+                "description": "Value to update for instance property."
+              }
+            }
+          }
+        }
+      }
+    }

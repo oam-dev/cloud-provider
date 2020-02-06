@@ -1,0 +1,90 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-eip
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_EIP
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "AutoPay": {
+          "type": "boolean",
+          "description": "Automatic Payment. Default is false.",
+          "default": false
+        },
+        "Bandwidth": {
+          "type": "number",
+          "description": "Bandwidth for the output network. Default is 5MB.",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 200
+        },
+        "DeletionProtection": {
+          "type": "boolean",
+          "description": "Whether to enable deletion protection.\nDefault to False.",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "description": "Optional. The description of the EIP. The description must be 2 to 256 characters in length. It must start with a letter. It cannot start with http://  or https://."
+        },
+        "InstanceChargeType": {
+          "type": "string",
+          "description": "The resource charge type. Default value is Postpaid",
+          "default": "Postpaid",
+          "Enum": [
+            "Prepaid",
+            "Postpaid"
+          ]
+        },
+        "InternetChargeType": {
+          "type": "string",
+          "description": "The network charge type. Support 'PayByBandwidth' and 'PayByTraffic' only. Default is PayByBandwidth. PayByTraffic will charge by hour, PayByBandwidth will charge by day. ",
+          "default": "PayByBandwidth",
+          "Enum": [
+            "PayByBandwidth",
+            "PayByTraffic"
+          ]
+        },
+        "Isp": {
+          "type": "string",
+          "description": "ISP tag for finance cloud region. only for cn-hangzhou and cn-qingdao region), if you are not finance cloud user, this value will be ignore.",
+          "Enum": [
+            "BGP_FinanceCloud",
+            "ChinaMobile",
+            "ChinaUnicom",
+            "ChinaTelecom",
+            "BGP_PRO"
+          ]
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the EIP. The name must be 2 to 128 characters in length. It must start with a letter. It can contain numbers, periods (.), underscores (_), and hyphens (-). It cannot start with http://  or https://"
+        },
+        "Period": {
+          "type": "number",
+          "description": "Prepaid time period. While choose by pay by month, it could be from 1 to 9. While choose pay by year, it could be from 1 to 3.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 9
+        },
+        "PricingCycle": {
+          "type": "string",
+          "description": "Price cycle of the resource. This property has no default value. If ChargeType is specified as Postpaid, this value will be ignore.",
+          "default": "Month",
+          "Enum": [
+            "Month",
+            "Year"
+          ]
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        }
+      }
+    }

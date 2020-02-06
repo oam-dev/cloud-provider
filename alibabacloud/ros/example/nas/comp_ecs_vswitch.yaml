@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: ecs-vswitch
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the ecs vswitch.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.ECS_VSwitch
+  osType: "linux"
+  arch: "x86"
+  containers: []
+  parameters: []
+  workloadSettings:
+    ZoneId: cn-hangzhou-b
+    CidrBlock: 10.0.0.0/24

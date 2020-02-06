@@ -1,0 +1,12 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: sls-project
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the sls project.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.SLS_Project
+  workloadSettings:
+    Name: "sls-demo-01"

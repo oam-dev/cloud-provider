@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-dbclusteraccesswhitelist
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_DBClusterAccessWhiteList
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SecurityIps",
+        "DBClusterId"
+      ],
+      "properties": {
+        "DBClusterIPArrayName": {
+          "type": "string",
+          "description": "The name of the IP address whitelist group. If you do not specify this parameter,\nthe Default whitelist group is modified by default.\nNote You can create up to 50 whitelist groups for an ApsaraDB for POLARDB cluster.",
+          "minLength": 1
+        },
+        "DBClusterId": {
+          "type": "string",
+          "description": "The ID of the ApsaraDB for POLARDB cluster whose IP address whitelist is to be modified."
+        },
+        "SecurityIps": {
+          "type": "string",
+          "description": "The IP addresses to be added to the IP address whitelist group to be modified. Each\nwhitelist group can contain a maximum of 1,000 IP addresses. Separate multiple IP\naddresses with a comma (,). The following two formats are supported:\nIP address: for example, 10.23.12.24.\nClassless inter-domain routing (CIDR) block: for example, 10.23.12.24/24, where the\nsuffix /24 indicates the number of bits for the prefix of the IP address. The suffix\nranges from 1 to 32."
+        }
+      }
+    }

@@ -1,0 +1,43 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-customdomain
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_CustomDomain
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "CertificateName",
+        "CertificatePrivateKey",
+        "CertificateBody",
+        "DomainName",
+        "GroupId"
+      ],
+      "properties": {
+        "CertificateBody": {
+          "type": "string",
+          "description": "SSL certificate body."
+        },
+        "CertificateName": {
+          "type": "string",
+          "description": "SSL certificate name.Need [4, 50] Chinese\\English\\Number characters or \"_\",and should start with Chinese/English character."
+        },
+        "CertificatePrivateKey": {
+          "type": "string",
+          "description": "SSL certificate key."
+        },
+        "DomainName": {
+          "type": "string",
+          "description": "Custom domain name."
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The id of the Group."
+        }
+      }
+    }

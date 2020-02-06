@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: uis-uis
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: UIS_Uis
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Description of the instance.\nThe length is 2-256 characters and must start with a letter or Chinese, but cannot start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the instance.\nThe length is 2-128 characters and must start with a letter or Chinese. It can contain numbers, periods (.), underscores (_), and dashes (-). But it can't start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 128
+        }
+      }
+    }

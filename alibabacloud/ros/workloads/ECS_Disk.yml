@@ -1,0 +1,85 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-disk
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_Disk
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ZoneId"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Description of the disk, [2, 256] characters. Do not fill or empty, the default is empty."
+        },
+        "DiskCategory": {
+          "type": "string",
+          "description": "The disk category, now support cloud/cloud_ssd/cloud_essd/cloud_efficiency/san_ssd/san_efficiency, depends the region.",
+          "Enum": [
+            "cloud",
+            "cloud_ssd",
+            "cloud_essd",
+            "cloud_efficiency",
+            "san_ssd",
+            "san_efficiency"
+          ]
+        },
+        "DiskName": {
+          "type": "string",
+          "description": "Display name of the disk, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'"
+        },
+        "PerformanceLevel": {
+          "type": "string",
+          "description": "The performance level you select for an ESSD.Default value: PL1. Valid values:PL1: A single enhanced SSD delivers up to 50,000 random read/write IOPS.PL2: A single enhanced SSD delivers up to 100,000 random read/write IOPS.PL3: A single enhanced SSD delivers up to 1,000,000 random read/write IOPS.",
+          "Enum": [
+            "PL1",
+            "PL3",
+            "PL3"
+          ]
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "Size": {
+          "type": "integer",
+          "description": "The size of the disk unit in GB.",
+          "minimum": 5,
+          "maximum": 2000
+        },
+        "SnapshotId": {
+          "type": "string",
+          "description": "If specified, the backup used as the source to create disk."
+        },
+        "Tags": {
+          "type": "array",
+          "description": "Tags to attach to disk. Max support 4 tags to add during create disk. Each tag with two properties Key and Value, and Key is required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 4
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The availability zone in which the volume will be created."
+        }
+      }
+    }

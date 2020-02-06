@@ -1,0 +1,32 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: rds-dbinstancesecurityips
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RDS_DBInstanceSecurityIps
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DBInstanceIPArrayAttribute",
+        "DBInstanceId"
+      ],
+      "properties": {
+        "DBInstanceIPArrayAttribute": {
+          "type": "string",
+          "description": "Security ips to add or remove."
+        },
+        "DBInstanceIPArrayName": {
+          "type": "string",
+          "description": "Group name of the security ips, only support lower characters and '_'. Advice use a new group name avoid effect your database system. If the properties is not specified, it will set to default group, please be careful."
+        },
+        "DBInstanceId": {
+          "type": "string",
+          "description": "Database instance id to update security ips."
+        }
+      }
+    }

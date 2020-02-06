@@ -1,0 +1,55 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-dbinstance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_DBInstance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DBClusterId",
+        "DBName",
+        "CharacterSetName"
+      ],
+      "properties": {
+        "AccountName": {
+          "type": "string",
+          "description": "The name of the database account to be used."
+        },
+        "AccountPrivilege": {
+          "type": "string",
+          "description": "The permissions of the database account on the database. Valid values:\nReadWrite: has read and write permissions on the database.\nReadOnly: has the read-only permission on the database.\nDMLOnly: runs only data manipulation language (DML) statements.\nDDLOnly: runs only data definition language (DDL) statements.\nDefault value: ReadWrite.",
+          "default": "ReadWrite",
+          "Enum": [
+            "ReadWrite",
+            "ReadOnly",
+            "DMLOnly",
+            "DDLOnly"
+          ]
+        },
+        "CharacterSetName": {
+          "type": "string",
+          "description": "The character set of the database. For more information, see Character sets."
+        },
+        "DBClusterId": {
+          "type": "string",
+          "description": "The ID of the ApsaraDB for POLARDB cluster for which a database is to be created."
+        },
+        "DBDescription": {
+          "type": "string",
+          "description": "The description of the database. Valid values:\nIt cannot start with http:// or https://.\nIt must be 2 to 256 characters in length.",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "DBName": {
+          "type": "string",
+          "description": "The name of the database to be created. The name must comply with the following rules:\nIt must start with a lowercase letter and consist of lowercase letters, digits, hyphens\n(-), and underscores (_).\nIt must end with a letter or a digit. It can be up to 64 characters in length.",
+          "pattern": "^[a-z0-9][-_a-z0-9]{0,63}(?\u003c![-_]$)$"
+        }
+      }
+    }

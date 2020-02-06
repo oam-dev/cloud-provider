@@ -1,0 +1,49 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-scalingrule
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_ScalingRule
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AdjustmentType",
+        "ScalingGroupId"
+      ],
+      "properties": {
+        "AdjustmentType": {
+          "type": "string",
+          "description": "Adjustment mode of a scaling rule. Optional values:\n- QuantityChangeInCapacity: It is used to increase or decrease a specified number of ECS instances.\n- PercentChangeInCapacity: It is used to increase or decrease a specified proportion of ECS instances.\n- TotalCapacity: It is used to adjust the quantity of ECS instances in the current scaling group to a specified value.",
+          "Enum": [
+            "QuantityChangeInCapacity",
+            "PercentChangeInCapacity",
+            "TotalCapacity"
+          ]
+        },
+        "AdjustmentValue": {
+          "type": "integer",
+          "description": "Adjusted value of a scaling rule. Value range:\n- QuantityChangeInCapacity: [-500, 500]\n- PercentChangeInCapacity: [-100, 10000]\n- TotalCapacity: [0, 1000]",
+          "minimum": -500,
+          "maximum": 10000
+        },
+        "Cooldown": {
+          "type": "integer",
+          "description": "Cool-down time of a scaling rule. Value range: [0, 86,400], in seconds. The default value is empty.",
+          "maximum": 86400
+        },
+        "ScalingGroupId": {
+          "type": "string",
+          "description": "ID of the scaling group of a scaling rule."
+        },
+        "ScalingRuleName": {
+          "type": "string",
+          "description": "Name shown for the scaling group, which is a string containing 2 to 40 English or Chinese characters. It must begin with a number, a letter (case-insensitive) or a Chinese character and can contain numbers, \"_\", \"-\" or \".\". The account name in the same scaling group is unique in the same region. If this parameter value is not specified, the default value is ScalingRuleId.",
+          "pattern": "^[a-zA-Z0-9\\u4e00-\\u9fa5][-_.a-zA-Z0-9\\u4e00-\\u9fa5]{1,63}$"
+        }
+      }
+    }

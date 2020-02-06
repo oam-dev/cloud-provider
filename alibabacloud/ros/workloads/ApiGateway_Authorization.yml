@@ -1,0 +1,53 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-authorization
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_Authorization
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "StageName",
+        "AppIds",
+        "ApiIds",
+        "GroupId"
+      ],
+      "properties": {
+        "ApiIds": {
+          "type": "array",
+          "description": "APIs to authorize.",
+          "items": {},
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "AppIds": {
+          "type": "array",
+          "description": "APPs are authorized to APIs.",
+          "items": {},
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the authorization, less than 180 characters."
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The id of the group."
+        },
+        "StageName": {
+          "type": "string",
+          "description": "Authorize in this stage.",
+          "Enum": [
+            "TEST",
+            "RELEASE",
+            "PRE"
+          ]
+        }
+      }
+    }

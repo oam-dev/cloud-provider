@@ -1,0 +1,45 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: waf-aclrule
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: WAF_AclRule
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Rules",
+        "Domain",
+        "InstanceId"
+      ],
+      "properties": {
+        "Domain": {
+          "type": "string",
+          "description": "Domain name."
+        },
+        "InstanceId": {
+          "type": "string",
+          "description": "WAF instance ID.\nDescription Interface You can view your current WAF instance ID by calling DescribePayInfo."
+        },
+        "Region": {
+          "type": "string",
+          "description": "Examples of areas where the WAF. Value:\ncn: said China mainland (default)\ncn-hongkong: overseas representation",
+          "Enum": [
+            "cn",
+            "cn-hongkong"
+          ]
+        },
+        "RuleId": {
+          "type": "integer",
+          "description": "Precise access control rule ID"
+        },
+        "Rules": {
+          "type": "string",
+          "description": "Detailed information of precise access control rules, expressed in JSON format strings."
+        }
+      }
+    }

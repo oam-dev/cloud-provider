@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-signature
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_Signature
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SignatureName",
+        "SignatureKey",
+        "SignatureSecret"
+      ],
+      "properties": {
+        "SignatureKey": {
+          "type": "string",
+          "description": "The key of the signature."
+        },
+        "SignatureName": {
+          "type": "string",
+          "description": "The name of the Signature.Need [4, 15] Chinese\\English\\Number characters or \"_\",and should start with Chinese/English character."
+        },
+        "SignatureSecret": {
+          "type": "string",
+          "description": "The secret of the signature."
+        }
+      }
+    }

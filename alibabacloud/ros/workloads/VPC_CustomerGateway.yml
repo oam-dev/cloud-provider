@@ -1,0 +1,35 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-customergateway
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_CustomerGateway
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "IpAddress"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Description of the user gateway.\nThe length is 2-256 characters and must start with a letter or Chinese, but cannot start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "IpAddress": {
+          "type": "string",
+          "description": "The IP address of the user gateway."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the user gateway.\nThe length is 2-128 characters and must start with a letter or Chinese. It can contain numbers, periods (.), underscores (_), and dashes (-). But it can't start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 128
+        }
+      }
+    }

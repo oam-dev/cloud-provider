@@ -1,0 +1,243 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: rds-dbinstance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RDS_DBInstance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "EngineVersion",
+        "SecurityIPList",
+        "DBInstanceClass",
+        "Engine",
+        "DBInstanceStorage"
+      ],
+      "properties": {
+        "AllocatePublicConnection": {
+          "type": "boolean",
+          "description": "If true, allocate public connection automate."
+        },
+        "BackupRetentionPeriod": {
+          "type": "number",
+          "description": "The number of days for which automatic DB backups are retained.",
+          "default": 7,
+          "minimum": 7,
+          "maximum": 30
+        },
+        "ConnectionMode": {
+          "type": "string",
+          "description": "Connection Mode for database instance,support 'Performance' and 'Safty' mode. Default is RDS system assigns. ",
+          "Enum": [
+            "Performance",
+            "Safty"
+          ]
+        },
+        "DBInstanceClass": {
+          "type": "string",
+          "description": "Database instance type. Refer the RDS database instance type reference, such as 'rds.mys2.large', 'rds.mss1.large', 'rds.pg.s1.small' etc"
+        },
+        "DBInstanceDescription": {
+          "type": "string",
+          "description": "Description of created database instance."
+        },
+        "DBInstanceNetType": {
+          "type": "string",
+          "description": "Database instance net type, default is Intranet.Internet for public access, Intranet for private access.",
+          "default": "Intranet",
+          "Enum": [
+            "Internet",
+            "Intranet"
+          ]
+        },
+        "DBInstanceStorage": {
+          "type": "integer",
+          "description": "Database instance storage size. mysql is [5,1000]. sql server 2008r2 is [10,1000], sql server 2012/2012_web/2016-web is [20,1000]. PostgreSQL and PPAS is [5,2000]. Increased every 5 GB, Unit in GB"
+        },
+        "DBMappings": {
+          "type": "array",
+          "description": "Database mappings to attach to db instance.",
+          "items": {
+            "type": "object",
+            "required": [
+              "DBName",
+              "CharacterSetName"
+            ],
+            "properties": {
+              "CharacterSetName": {
+                "type": "string",
+                "description": "For supported engines, specifies the character set to associate with the database instance.",
+                "Enum": [
+                  "utf8",
+                  "gbk",
+                  "latin1",
+                  "utf8mb4",
+                  "Chinese_PRC_CI_AS",
+                  "Chinese_PRC_CS_AS",
+                  "SQL_Latin1_General_CP1_CI_AS",
+                  "SQL_Latin1_General_CP1_CS_AS",
+                  "Chinese_PRC_BIN"
+                ]
+              },
+              "DBDescription": {
+                "type": "string",
+                "description": "Specifies the database description, containing up to 256 characters.",
+                "maxLength": 256
+              },
+              "DBName": {
+                "type": "string",
+                "description": "Consists of [2, 64] lower case letters, numbers, underscores, lines, letters. Must start with a letter, end with letters or numbers"
+              }
+            }
+          }
+        },
+        "Engine": {
+          "type": "string",
+          "description": "Database instance engine type. Support MySQL/SQLServer/PostgreSQL/PPAS/MariaDB now.",
+          "Enum": [
+            "MySQL",
+            "SQLServer",
+            "PostgreSQL",
+            "PPAS",
+            "MariaDB"
+          ]
+        },
+        "EngineVersion": {
+          "type": "string",
+          "description": "Database instance version of the relative engine type.Support MySQL: 5.5/5.6/5.7/8.0; SQLServer: 2008r2, 2012, 2012_web, 2012_std_ha, 2012_ent_ha, 2016_web, 2016_std_ha, 2016_ent_ha, 2017_ent; PostgreSQL:9.4, 10.0; PPAS: 9.3, 10.0. MariaDB: 10.3.",
+          "Enum": [
+            "5.5",
+            "5.6",
+            "5.7",
+            "8.0",
+            "2008r2",
+            "2012",
+            "2012_web",
+            "2012_std_ha",
+            "2012_ent_ha",
+            "2016_web",
+            "2016_std_ha",
+            "2016_ent_ha",
+            "2017_ent",
+            "9.4",
+            "9.3",
+            "10.0",
+            "10.3"
+          ]
+        },
+        "MasterUserPassword": {
+          "type": "string",
+          "description": "The master password for the database instance. ",
+          "minLength": 8,
+          "maxLength": 32
+        },
+        "MasterUserType": {
+          "type": "string",
+          "description": "Privilege type of account.\n Normal: Common privilege. \n Super: High privilege. And the default value is Normal.This parameter is valid for MySQL 5.5/5.6 only. MySQL 5.7, SQL Server 2012/2016, PostgreSQL, and PPAS each can have only one initial account. \nOther accounts are created by the initial account that has logged on to the database.",
+          "default": "Normal",
+          "Enum": [
+            "Normal",
+            "Super"
+          ]
+        },
+        "MasterUsername": {
+          "type": "string",
+          "description": "The master user name for the database instance. "
+        },
+        "MultiAZ": {
+          "type": "boolean",
+          "description": "Specifies if the database instance is a multiple Availability Zone deployment. ",
+          "default": false
+        },
+        "PayType": {
+          "type": "string",
+          "description": "The charge type of created instance.",
+          "default": "Postpaid",
+          "Enum": [
+            "Prepaid",
+            "Postpaid"
+          ]
+        },
+        "Period": {
+          "type": "integer",
+          "description": "Prepaid time period. While choose by pay by month, it could be from 1 to 9. While choose pay by year, it could be from 1 to 3.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 9
+        },
+        "PeriodType": {
+          "type": "string",
+          "description": "Charge period for created instances.",
+          "default": "Month",
+          "Enum": [
+            "Month",
+            "Year"
+          ]
+        },
+        "PreferredBackupPeriod": {
+          "type": "array",
+          "description": "Automate backups cycle if automated backups are enabled.",
+          "items": {}
+        },
+        "PreferredBackupTime": {
+          "type": "string",
+          "description": "The daily time range during which automated backups are created if automated backups are enabled.",
+          "Enum": [
+            "00:00Z-01:00Z",
+            "01:00Z-02:00Z",
+            "02:00Z-03:00Z",
+            "03:00Z-04:00Z",
+            "04:00Z-05:00Z",
+            "05:00Z-06:00Z",
+            "06:00Z-07:00Z",
+            "07:00Z-08:00Z",
+            "08:00Z-09:00Z",
+            "09:00Z-10:00Z",
+            "10:00Z-11:00Z",
+            "11:00Z-12:00Z",
+            "12:00Z-13:00Z",
+            "13:00Z-14:00Z",
+            "14:00Z-15:00Z",
+            "15:00Z-16:00Z",
+            "16:00Z-17:00Z",
+            "17:00Z-18:00Z",
+            "18:00Z-19:00Z",
+            "19:00Z-20:00Z",
+            "20:00Z-21:00Z",
+            "21:00Z-22:00Z",
+            "22:00Z-23:00Z",
+            "23:00Z-24:00Z"
+          ]
+        },
+        "PrivateIpAddress": {
+          "type": "string",
+          "description": "The private ip for created instance."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "SecurityIPList": {
+          "type": "string",
+          "description": "Security ip to access the database instance, combine with comma, 0.0.0.0/0 means no limitation."
+        },
+        "Tags": {},
+        "VSwitchId": {
+          "type": "string",
+          "description": "The vSwitch id of created instance. For VPC network, the property is required."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The VPC id of created database instance. For VPC network, the property is required."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "selected zone to create database instance. You cannot set the ZoneId parameter if the MultiAZ parameter is set to true."
+        }
+      }
+    }

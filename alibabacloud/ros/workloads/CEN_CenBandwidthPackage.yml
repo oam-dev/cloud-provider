@@ -1,0 +1,83 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cen-cenbandwidthpackage
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CEN_CenBandwidthPackage
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "GeographicRegionBId",
+        "GeographicRegionAId",
+        "Bandwidth"
+      ],
+      "properties": {
+        "AutoPay": {
+          "type": "boolean",
+          "description": "Whether to automatically pay the bill. Valid value:\ntrue\nfalse (Default)",
+          "default": false
+        },
+        "Bandwidth": {
+          "type": "integer",
+          "description": "The bandwidth in Mbps of the bandwidth package. The bandwidth cannot be less than 2 Mbps.",
+          "minimum": 2
+        },
+        "BandwidthPackageChargeType": {
+          "type": "string",
+          "description": "The billing method. Valid value: PREPAY, POSTPAY (Default)",
+          "Enum": [
+            "PREPAY",
+            "POSTPAY"
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "The description of the bandwidth package.\nThe description can contain [2,256] characters, numbers, underscores, and hyphens, and the name must start with English letters, but cannot start with http:// or https://."
+        },
+        "GeographicRegionAId": {
+          "type": "string",
+          "description": "The other area A to connect.\nValid value: China | North-America | Asia-Pacific | Europe | Australia",
+          "Enum": [
+            "China",
+            "North-America",
+            "Asia-Pacific",
+            "Europe",
+            "Australia"
+          ]
+        },
+        "GeographicRegionBId": {
+          "type": "string",
+          "description": "The other area B to connect.\nValid value: China | North-America | Asia-Pacific | Europe | Australia",
+          "Enum": [
+            "China",
+            "North-America",
+            "Asia-Pacific",
+            "Europe",
+            "Australia"
+          ]
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the bandwidth package.\nThe name can contain 2-128 characters including a-z, A-Z, 0-9, periods, underlines, and hyphens. It must start with English letters, but cannot start with http:// or https://."
+        },
+        "Period": {
+          "type": "integer",
+          "description": "The purchase period. The default value is 1.",
+          "default": 1
+        },
+        "PricingCycle": {
+          "type": "string",
+          "description": "The pricing cycle.",
+          "default": "Month",
+          "Enum": [
+            "Month",
+            "Year"
+          ]
+        }
+      }
+    }

@@ -1,0 +1,38 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: pvtz-zone
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: PVTZ_Zone
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ZoneName"
+      ],
+      "properties": {
+        "ProxyPattern": {
+          "type": "string",
+          "description": "ZONE: completely hijack the entire zone.\nRECORD: Incomplete hijacking, recursive resolution agent.\nDefault to ZONE.",
+          "default": "ZONE",
+          "Enum": [
+            "RECORD",
+            "ZONE"
+          ]
+        },
+        "Remark": {
+          "type": "string",
+          "description": "50 characters at most. It can only contain numbers, Chinese, English and special characters: \"_-,.，。\".",
+          "maxLength": 50,
+          "pattern": "^[-_,.\\uff0c\\u3002a-zA-Z0-9\\u4e00-\\u9fa5]{0,50}$"
+        },
+        "ZoneName": {
+          "type": "string",
+          "description": "Zone name"
+        }
+      }
+    }

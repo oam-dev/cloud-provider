@@ -1,0 +1,97 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cs-cluster
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CS_Cluster
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Size",
+        "Password",
+        "Name"
+      ],
+      "properties": {
+        "CreateSlbByDefault": {
+          "type": "boolean",
+          "description": "Create new SLB for docker cluster or use the existed SLB. Support true or false, Default is true.",
+          "default": true
+        },
+        "DataDiskCategory": {
+          "type": "string",
+          "description": "Category of data disk.support cloud|cloud_efficiency|cloud_ssd|ephemeral_ssd",
+          "Enum": [
+            "cloud",
+            "cloud_efficiency",
+            "cloud_ssd",
+            "ephemeral_ssd"
+          ]
+        },
+        "DataDiskSize": {
+          "type": "integer",
+          "description": "The size of the volume, unit in GB."
+        },
+        "ImageId": {
+          "type": "string",
+          "description": "Image ID to create ecs instance."
+        },
+        "InstanceIds": {
+          "type": "array",
+          "description": "The comma delimited instance id list. Docker cluster will be created with the existed ECS instance. If \"InstanceType\" is specified, this value will be ignored. If \"InstanceType\" is not specified, \"Size\" will be set as length of InstanceId list and any other parameters will be ignored. The original system disk of all the ECS instances will be replaced. Please ensure you have backed up all the data in the original system disk.",
+          "items": {}
+        },
+        "InstanceType": {
+          "type": "string",
+          "description": "Ecs instance supported instance type, make sure it should be correct. If \"InstanceType\" is specified, \"InstanceIds\" will be ignored."
+        },
+        "IoOptimized": {
+          "type": "boolean",
+          "description": "The 'optimized' instance can provide better IO performance. Support true or false, Default is true. ",
+          "default": false
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string",
+          "description": "Password of created ecs instance. Must contain at least 3 types of special character, lower character, upper character, number."
+        },
+        "Size": {
+          "type": "integer",
+          "description": "The cluster szie."
+        },
+        "SubnetCidr": {
+          "type": "string",
+          "description": "Subnet for containers. The range allowed is 172.17.0.0/24 - 172.31.0.0/24. Make sure it's different from vpc and vswitch.",
+          "default": "172.18.0.0/24"
+        },
+        "SystemDiskCategory": {
+          "type": "string",
+          "description": "Category of system disk. Default is cloud.support cloud|cloud_efficiency|cloud_ssd|ephemeral_ssd",
+          "default": "cloud_efficiency",
+          "Enum": [
+            "cloud",
+            "cloud_efficiency",
+            "cloud_ssd",
+            "ephemeral_ssd"
+          ]
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The vSwitch Id to create ecs instance."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The VPC id to create ecs instance."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "current zone to create the cluster."
+        }
+      }
+    }

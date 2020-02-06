@@ -1,0 +1,30 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-dbnodes
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_DBNodes
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Amount",
+        "DBClusterId"
+      ],
+      "properties": {
+        "Amount": {
+          "type": "integer",
+          "description": "Number of nodes to be added to cluster.",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "DBClusterId": {
+          "type": "string",
+          "description": "The ID of the ApsaraDB for POLARDB cluster to be added nodes to."
+        }
+      }
+    }

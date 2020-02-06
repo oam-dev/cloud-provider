@@ -1,0 +1,81 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-trafficcontrol
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_TrafficControl
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "TrafficControlUnit",
+        "ApiDefault",
+        "TrafficControlName"
+      ],
+      "properties": {
+        "ApiDefault": {
+          "type": "integer",
+          "description": "Default API traffic value."
+        },
+        "AppDefault": {
+          "type": "string",
+          "description": "Default APP traffic value."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the traffic control, less than 180 characters."
+        },
+        "Special": {
+          "type": "array",
+          "description": "Special traffic controls.",
+          "items": {
+            "type": "object",
+            "required": [
+              "TrafficValue",
+              "SpecialKey",
+              "SpecialType"
+            ],
+            "properties": {
+              "SpecialKey": {
+                "type": "string",
+                "description": "The key of special traffic control."
+              },
+              "SpecialType": {
+                "type": "string",
+                "description": "The type of special traffic control.",
+                "Enum": [
+                  "APP",
+                  "USER"
+                ]
+              },
+              "TrafficValue": {
+                "type": "integer",
+                "description": "The value of special traffic control",
+                "default": 0
+              }
+            }
+          }
+        },
+        "TrafficControlName": {
+          "type": "string",
+          "description": "The name of the traffic control.Need [4, 50] Chinese\\English\\Number characters or \"_\",and should start with Chinese/English character."
+        },
+        "TrafficControlUnit": {
+          "type": "string",
+          "description": "Traffic control unit, DAY/HOUR/MINUTE.",
+          "Enum": [
+            "DAY",
+            "HOUR",
+            "MINUTE"
+          ]
+        },
+        "UserDefault": {
+          "type": "string",
+          "description": "Default user traffic value."
+        }
+      }
+    }

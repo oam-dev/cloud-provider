@@ -1,0 +1,147 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: elasticsearch-instance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ElasticSearch_Instance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Password",
+        "VSwitchId",
+        "DataNode",
+        "Version"
+      ],
+      "properties": {
+        "DataNode": {
+          "type": "object",
+          "required": [
+            "Amount",
+            "Spec",
+            "DiskSize",
+            "DiskType"
+          ],
+          "properties": {
+            "Amount": {
+              "type": "integer",
+              "description": "The Elasticsearch cluster's data node quantity, between 2 and 50.",
+              "minimum": 2,
+              "maximum": 50
+            },
+            "DiskSize": {
+              "type": "integer",
+              "description": "The single data node storage space.\ncloud_ssd: An SSD disk, supports a maximum of 2048 GiB (2 TB).\ncloud_efficiency: An ultra disk, supports a maximum of 5120 GiB (5 TB). If the data to be stored is larger than 2048 GiB, an ultra disk can only support the following data sizes (GiB): [2560, 3072, 3584, 4096, 4608, 5120]."
+            },
+            "DiskType": {
+              "type": "string",
+              "description": "The data node disk type. Supported values: cloud_ssd, cloud_efficiency.",
+              "Enum": [
+                "cloud_ssd",
+                "cloud_efficiency"
+              ]
+            },
+            "Spec": {
+              "type": "string",
+              "description": "The data node specifications of the Elasticsearch instance."
+            }
+          }
+        },
+        "Description": {
+          "type": "string",
+          "description": "The description of instance. It a string of 0 to 30 characters. It can contain numbers, letters, underscores, (_) and hyphens (-). It must start with a letter, a number or Chinese character.",
+          "maxLength": 30
+        },
+        "InstanceChargeType": {
+          "type": "string",
+          "description": "Valid values are PrePaid, PostPaid, Default to PostPaid.",
+          "default": "PostPaid",
+          "Enum": [
+            "PrePaid",
+            "PostPaid"
+          ]
+        },
+        "KibanaWhitelist": {
+          "type": "array",
+          "description": "Set the Kibana's IP whitelist in internet network.",
+          "items": {}
+        },
+        "MasterNode": {
+          "type": "object",
+          "required": [
+            "Spec"
+          ],
+          "properties": {
+            "Amount": {
+              "type": "integer",
+              "description": "The dedicated master node quantity. Default to 3.",
+              "default": 3
+            },
+            "DiskSize": {
+              "type": "integer",
+              "description": "The dedicated master node storage space. Default to 20.",
+              "default": 20
+            },
+            "DiskType": {
+              "type": "string",
+              "description": "The dedicated master node disk type.",
+              "default": "cloud_ssd"
+            },
+            "Spec": {
+              "type": "string",
+              "description": "The dedicated master node spec."
+            }
+          }
+        },
+        "Password": {
+          "type": "string",
+          "description": "The password of the instance. The password can be 8 to 32 characters in length and must contain three of the following conditions: uppercase letters, lowercase letters, numbers, and special characters (!@#$%\u0026*()_+-=)."
+        },
+        "Period": {
+          "type": "integer",
+          "description": "The duration that you will buy Elasticsearch instance (in month). It is valid when instance_charge_type is PrePaid. Valid values: [1~9], 12, 24, 36. Default to 1.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12,
+            24,
+            36
+          ]
+        },
+        "PrivateWhitelist": {
+          "type": "array",
+          "description": "Set the instance's IP whitelist in VPC network.",
+          "items": {}
+        },
+        "PublicWhitelist": {
+          "type": "array",
+          "description": "Set the instance's IP whitelist in Internet.",
+          "items": {}
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The ID of VSwitch."
+        },
+        "Version": {
+          "type": "string",
+          "description": "Elasticsearch version. Supported values: 5.5.3_with_X-Pack, 6.3_with_X-Pack and 6.7_with_X-Pack.",
+          "Enum": [
+            "5.5.3_with_X-Pack",
+            "6.3_with_X-Pack",
+            "6.7_with_X-Pack"
+          ]
+        }
+      }
+    }

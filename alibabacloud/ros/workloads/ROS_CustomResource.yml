@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ros-customresource
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ROS_CustomResource
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ServiceToken",
+        "Timeout"
+      ],
+      "properties": {
+        "Parameters": {},
+        "ServiceToken": {
+          "type": "string",
+          "description": "The service token that was given to the template developer by the service provider to access the service.\nAllowed values:\n- Function Compute: acs:fc:\u003cregion_id\u003e:\u003caccount_id\u003e:services/\u003cservice_name\u003e/functions/\u003cfunction_name\u003e\n- MNS Queue: acs:mns:\u003cregion_id\u003e:\u003caccount_id\u003e:queues/\u003cqueue_name\u003e\n- MNS Topic: acs:mns:\u003cregion_id\u003e:\u003caccount_id\u003e:topics/\u003ctopic_name\u003e\n- HTTP\u0026HTTPS: web[options]:\u003curl\u003e\n  Two options are supported:\n  - sync: sync HTTP\u0026HTTPS request.\n  - idempotent: indicates that the Create request is idempotent. Update and Delete requests should be always idempotent.\nExamples:\n  - acs:fc:cn-hangzhou:123456789:services/test-service/functions/test-function\n  - acs:mns:cn-hangzhou:123456789:queues/test-queue\n  - acs:mns:cn-hangzhou:123456789:topics/test-topic\n  - web:https://abc.com\n  - web[sync]:http://abc.com\n  - web[sync,idempotent]:https://abc.com",
+          "maxLength": 512
+        },
+        "Timeout": {
+          "type": "number",
+          "description": "Timeout seconds before service provider responses.\nIt takes effects only if the type of ServiceToken is Function Compute, MNS Queue, MNS Topic or async HTTP\u0026HTTPS request.\nTimeout seconds are always 10 for sync HTTP\u0026HTTPS request.",
+          "default": 60,
+          "minimum": 1,
+          "maximum": 43200
+        }
+      }
+    }

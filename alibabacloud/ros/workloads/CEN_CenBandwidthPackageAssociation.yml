@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cen-cenbandwidthpackageassociation
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CEN_CenBandwidthPackageAssociation
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "CenBandwidthPackageId",
+        "CenId"
+      ],
+      "properties": {
+        "CenBandwidthPackageId": {
+          "type": "string",
+          "description": "The ID of the bandwidth package."
+        },
+        "CenId": {
+          "type": "string",
+          "description": "The ID of the CEN instance."
+        }
+      }
+    }

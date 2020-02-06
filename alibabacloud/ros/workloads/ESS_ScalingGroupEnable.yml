@@ -1,0 +1,49 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-scalinggroupenable
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_ScalingGroupEnable
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ScalingGroupId"
+      ],
+      "properties": {
+        "InstanceIds": {
+          "type": "array",
+          "description": "The id list of ECS instance which will be attached. Max support 1000 instances.",
+          "items": {},
+          "maxItems": 1000
+        },
+        "RemoveInstanceIds": {
+          "type": "array",
+          "description": "The id list of ECS instance which will be removed. Max support 1000 instances.",
+          "items": {},
+          "maxItems": 1000
+        },
+        "ScalingConfigurationId": {
+          "type": "string",
+          "description": "The id of scaling configuration which will be activate."
+        },
+        "ScalingGroupId": {
+          "type": "string",
+          "description": "The id of operated scaling group."
+        },
+        "ScalingRuleAris": {
+          "type": "array",
+          "description": "A list of scaling rule aris which will be executed. Max support 10 scaling rule aris.\nWhen creating the resource, all the scaling rule aris in the list will be executed.\nWhen updating the resource, none of scaling rule aris in the list will be executed, unless ScalingRuleArisExecuteVersion is changed.",
+          "items": {},
+          "maxItems": 10
+        },
+        "ScalingRuleArisExecuteVersion": {
+          "type": "integer",
+          "description": "The change of the property leads to the execution of all the scaling rule aris in ScalingRuleAris."
+        }
+      }
+    }

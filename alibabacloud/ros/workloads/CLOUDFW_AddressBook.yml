@@ -1,0 +1,83 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cloudfw-addressbook
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CLOUDFW_AddressBook
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Description",
+        "GroupType",
+        "GroupName"
+      ],
+      "properties": {
+        "AddressList": {
+          "type": "string",
+          "description": "Address list of the address book, between multiple addresses separated by commas.\nNote: When GroupType ip, it must be set to port or domain.\nWhen GroupType as ip, address list, fill in the IP address. For example: 1.2.3.4/32, 1.2.3.0/24\nWhen GroupType for the port, the address list to fill in ports or port ranges. For example: 80, 100/200\nWhen GroupType for the domain, the domain name to fill in the address list. For example: demo1.aliyun.com, demo2.aliyun.com"
+        },
+        "AutoAddTagEcs": {
+          "type": "boolean",
+          "description": "Whether to automatically add new ECS public network IP matching tags to the address book. Default to false.",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "description": "Address book description.",
+          "minLength": 1
+        },
+        "GroupName": {
+          "type": "string",
+          "description": "Name Address book."
+        },
+        "GroupType": {
+          "type": "string",
+          "description": "Type the address book, the optional values ​​are:\nip: IP Address Book\ndomain: domain name address book\nport: Port Address Book\ntag: ECS label address book",
+          "Enum": [
+            "domain",
+            "ip",
+            "port",
+            "tag"
+          ]
+        },
+        "RegionId": {
+          "type": "string",
+          "description": "Region ID. Default to cn-hangzhou.",
+          "default": "cn-hangzhou",
+          "Enum": [
+            "cn-hangzhou",
+            "ap-southeast-1"
+          ]
+        },
+        "TagList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TagKey": {
+                "type": "string",
+                "description": "ECS labels to be matched Key."
+              },
+              "TagValue": {
+                "type": "string",
+                "description": "ECS tag value to be matched."
+              }
+            }
+          },
+          "maxItems": 100
+        },
+        "TagRelation": {
+          "type": "string",
+          "description": "The relationship between the labels to be matched more ECS.\nand: the relationship between multiple labels \"and\" that matches both ECS IP public network more tags will be added to the address book.\nor: a plurality of inter-labeled \"or\" relationship, i.e., as long as a matching tag ECS ​​public IP address book will be added.",
+          "Enum": [
+            "and",
+            "or"
+          ]
+        }
+      }
+    }

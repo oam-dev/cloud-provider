@@ -1,0 +1,52 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cen-routeentry
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CEN_RouteEntry
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ChildInstanceId",
+        "ChildInstanceRegionId",
+        "DestinationCidrBlock",
+        "CenId",
+        "ChildInstanceType",
+        "ChildInstanceRouteTableId"
+      ],
+      "properties": {
+        "CenId": {
+          "type": "string",
+          "description": "The ID of the CEN instance where the route entry is published."
+        },
+        "ChildInstanceId": {
+          "type": "string",
+          "description": "The ID of the attached network (VPC or VBR)."
+        },
+        "ChildInstanceRegionId": {
+          "type": "string",
+          "description": "The ID of the region where the attached VBR or VPC is located."
+        },
+        "ChildInstanceRouteTableId": {
+          "type": "string",
+          "description": "The route table of the attached VBR or VPC."
+        },
+        "ChildInstanceType": {
+          "type": "string",
+          "description": "The type of the network, value: VPC VBR",
+          "Enum": [
+            "VPC",
+            "VBR"
+          ]
+        },
+        "DestinationCidrBlock": {
+          "type": "string",
+          "description": "The destination CIDR block of the route entry to publish."
+        }
+      }
+    }

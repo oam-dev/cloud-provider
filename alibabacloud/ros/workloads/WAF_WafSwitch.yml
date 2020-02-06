@@ -1,0 +1,45 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: waf-wafswitch
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: WAF_WafSwitch
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Domain",
+        "InstanceId",
+        "ServiceOn"
+      ],
+      "properties": {
+        "Domain": {
+          "type": "string",
+          "description": "Domain name."
+        },
+        "InstanceId": {
+          "type": "string",
+          "description": "WAF instance ID.\nDescription Interface You can view your current WAF instance ID by calling DescribePayInfo."
+        },
+        "Region": {
+          "type": "string",
+          "description": "Examples of areas where the WAF. Value:\ncn: said China mainland (default)\ncn-hongkong: overseas representation",
+          "Enum": [
+            "cn",
+            "cn-hongkong"
+          ]
+        },
+        "ServiceOn": {
+          "type": "integer",
+          "description": "Web attack protection switch, the value of:\n0: closed.\n1: indicate on.",
+          "Enum": [
+            0,
+            1
+          ]
+        }
+      }
+    }

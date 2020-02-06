@@ -1,0 +1,77 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ram-managedpolicy
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RAM_ManagedPolicy
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "PolicyName"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Specifies the authorization policy description, containing up to 1024 characters.",
+          "maxLength": 1024
+        },
+        "Groups": {
+          "type": "array",
+          "description": "The names of groups to attach to this policy.",
+          "items": {}
+        },
+        "PolicyDocument": {
+          "type": "object",
+          "properties": {
+            "Statement": {
+              "type": "array",
+              "description": "A policy consists of one or more statements.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Action": {
+                    "type": "array",
+                    "description": "What actions you will allow.",
+                    "items": {}
+                  },
+                  "Condition": {},
+                  "Effect": {
+                    "type": "string",
+                    "description": "What the effect will be when the user requests access-either allow or deny."
+                  },
+                  "Resource": {
+                    "type": "array",
+                    "description": "Which resources you allow the action on.",
+                    "items": {}
+                  }
+                }
+              }
+            },
+            "Version": {
+              "type": "string",
+              "description": "You can use versions to track changes to a managed policy."
+            }
+          }
+        },
+        "PolicyDocumentUnchecked": {},
+        "PolicyName": {
+          "type": "string",
+          "description": "Specifies the authorization policy name, containing up to 128 characters."
+        },
+        "Roles": {
+          "type": "array",
+          "description": "The names of roles to attach to this policy.",
+          "items": {}
+        },
+        "Users": {
+          "type": "array",
+          "description": "The names of users to attach to this policy.",
+          "items": {}
+        }
+      }
+    }

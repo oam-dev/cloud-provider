@@ -1,0 +1,46 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-vswitch
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_VSwitch
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ZoneId",
+        "VpcId",
+        "CidrBlock"
+      ],
+      "properties": {
+        "CidrBlock": {
+          "type": "string",
+          "description": "CIDR Block of created VSwitch, It must belong to itself VPC CIDR block."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the VSwitch, [2, 256] characters. Do not fill or empty, the default is empty."
+        },
+        "Ipv6CidrBlock": {
+          "type": "integer",
+          "description": "The IPv6 network segment of the switch supports the last 8 bits of the VPC IPv6 network segment. Value: 0-255 (decimal).\nThe IPv6 segment mask of the switch defaults to 64 bits.",
+          "maximum": 255
+        },
+        "VSwitchName": {
+          "type": "string",
+          "description": "Display name of the vSwitch instance, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'"
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "VPC id to create vswtich."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The availability zone in which the VSwitch will be created."
+        }
+      }
+    }

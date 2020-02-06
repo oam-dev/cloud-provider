@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-eipassociation
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_EIPAssociation
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "InstanceId",
+        "AllocationId"
+      ],
+      "properties": {
+        "AllocationId": {
+          "type": "string",
+          "description": "EIP instance id to bind."
+        },
+        "InstanceId": {
+          "type": "string",
+          "description": "ECS/SLB/NAT/HaVip/ENI instance id to bid the EIP."
+        },
+        "Mode": {
+          "type": "string",
+          "description": "The mode of associating. Valid values: NAT | MULTI_BINDED.",
+          "Enum": [
+            "NAT",
+            "MULTI_BINDED"
+          ]
+        },
+        "PrivateIpAddress": {
+          "type": "string",
+          "description": "An IP address in the CIDR block of the VSwitch.\nIf you leave the option empty, the system allocates a private IP address according to the VPC ID and VSwitch ID."
+        }
+      }
+    }

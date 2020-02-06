@@ -1,0 +1,46 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-signaturebinding
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_SignatureBinding
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "GroupId",
+        "StageName",
+        "SignatureId",
+        "ApiIds"
+      ],
+      "properties": {
+        "ApiIds": {
+          "type": "array",
+          "description": "APIs to bind with the signature.",
+          "items": {},
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The id of group."
+        },
+        "SignatureId": {
+          "type": "string",
+          "description": "The id of the Signature."
+        },
+        "StageName": {
+          "type": "string",
+          "description": "Bind signature in this stage.",
+          "Enum": [
+            "TEST",
+            "RELEASE",
+            "PRE"
+          ]
+        }
+      }
+    }

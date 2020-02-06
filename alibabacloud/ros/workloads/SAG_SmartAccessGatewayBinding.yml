@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sag-smartaccessgatewaybinding
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SAG_SmartAccessGatewayBinding
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "CcnId",
+        "SmartAGId"
+      ],
+      "properties": {
+        "CcnId": {
+          "type": "string",
+          "description": "The ID of the CCN instance to bind."
+        },
+        "SmartAGId": {
+          "type": "string",
+          "description": "The ID of the Smart Access Gateway instance."
+        }
+      }
+    }

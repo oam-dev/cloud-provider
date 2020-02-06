@@ -1,0 +1,96 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: rds-readonlydbinstance
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RDS_ReadOnlyDBInstance
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ZoneId",
+        "DBInstanceStorage",
+        "EngineVersion",
+        "DBInstanceClass",
+        "DBInstanceId"
+      ],
+      "properties": {
+        "Category": {
+          "type": "string",
+          "description": "The edition of the instance. Valid values:\n- Basic\n- HighAvailability\n- AlwaysOn",
+          "Enum": [
+            "Basic",
+            "HighAvailability",
+            "AlwaysOn"
+          ]
+        },
+        "DBInstanceClass": {
+          "type": "string",
+          "description": "The type of the instance. For more information, see Instance type list. The type of the read-only instance must be no less than that of the master instance. Otherwise, the read-only instance incurs high latency and high load."
+        },
+        "DBInstanceDescription": {
+          "type": "string",
+          "description": "Description of created database instance."
+        },
+        "DBInstanceId": {
+          "type": "string",
+          "description": "The ID of the master instance."
+        },
+        "DBInstanceStorage": {
+          "type": "integer",
+          "description": "The storage space of the instance. Value range: 5 to 3000. The value must be a multiple of 5. Unit: GB."
+        },
+        "DBInstanceStorageType": {
+          "type": "string",
+          "description": "The storage type of the instance. Valid values:\n- local_ssd/ephemeral_ssd: local SSDs.\n- cloud_ssd: SSDs.\n- cloud_essd: ESSDs.",
+          "Enum": [
+            "local_ssd/ephemeral_ssd",
+            "cloud_ssd",
+            "cloud_essd"
+          ]
+        },
+        "EngineVersion": {
+          "type": "string",
+          "description": "The version of the database. The database and the master instance must have the same database version. Valid values:\n- 5.6\n- 5.7\n- 8.0\n- 2017_ent",
+          "Enum": [
+            "5.6",
+            "5.7",
+            "8.0",
+            "2017_ent"
+          ]
+        },
+        "PayType": {
+          "type": "string",
+          "description": "The billing method. The system only supports Pay-As-You-Go. Valid value: Postpaid.",
+          "default": "Postpaid",
+          "Enum": [
+            "Postpaid"
+          ]
+        },
+        "PrivateIpAddress": {
+          "type": "string",
+          "description": "The private IP address of the read-only instance. It must be within the IP address range provided by the switch. The system automatically assigns an IP address based on the VPCId and VSwitchId by default."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "Tags": {},
+        "VPCId": {
+          "type": "string",
+          "description": "The ID of the VPC."
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The ID of the VSwitch."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The ID of the zone. You can call the DescribeRegions API operation to view the latest zones."
+        }
+      }
+    }

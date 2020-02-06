@@ -1,0 +1,58 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: eci-imagecache
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECI_ImageCache
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SecurityGroupId",
+        "ImageCacheName",
+        "Image",
+        "VSwitchId"
+      ],
+      "properties": {
+        "EipInstanceId": {
+          "type": "string",
+          "description": "If you want to pull the public network image, you need to configure the public network ip or configure the switch NAT gateway."
+        },
+        "Image": {
+          "type": "array",
+          "description": "The image list to be cached.",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20
+        },
+        "ImageCacheName": {
+          "type": "string",
+          "description": "Image cache name."
+        },
+        "ImageRegistryCredential": {
+          "type": "array",
+          "description": "Private image password. Alibaba Cloud ACR image can be left blank.",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group."
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "Security group ID."
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "VSwitch ID."
+        }
+      }
+    }

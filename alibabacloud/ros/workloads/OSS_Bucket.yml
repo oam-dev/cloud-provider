@@ -1,0 +1,200 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: oss-bucket
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: OSS_Bucket
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "BucketName"
+      ],
+      "properties": {
+        "AccessControl": {
+          "type": "string",
+          "description": "The access control list.",
+          "default": "private",
+          "Enum": [
+            "private",
+            "public-read",
+            "public-read-write"
+          ]
+        },
+        "BucketName": {
+          "type": "string",
+          "description": "bucket name."
+        },
+        "CORSConfiguration": {
+          "type": "object",
+          "properties": {
+            "CORSRule": {
+              "type": "array",
+              "description": "A set of origins and methods that you allow.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "AllowedHeader": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "AllowedMethod": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "AllowedOrigin": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ExposeHeader": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "MaxAgeSeconds": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "DeletionForce": {
+          "type": "boolean",
+          "description": "Whether force delete the relative objects in the bucket. Default value is false.",
+          "default": false
+        },
+        "LifecycleConfiguration": {
+          "type": "object",
+          "properties": {
+            "Rule": {
+              "type": "array",
+              "description": "Describes lifecycle rules for the oss bucket Lifecycle Configuration property.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "AbortMultipartUpload": {
+                    "type": "object",
+                    "properties": {
+                      "CreatedBeforeDate": {
+                        "type": "string"
+                      },
+                      "Days": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "Expiration": {
+                    "type": "object",
+                    "properties": {
+                      "CreatedBeforeDate": {
+                        "type": "string"
+                      },
+                      "Date": {
+                        "type": "string"
+                      },
+                      "Days": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "ID": {
+                    "type": "string"
+                  },
+                  "Prefix": {
+                    "type": "string"
+                  },
+                  "Status": {
+                    "type": "string",
+                    "Enum": [
+                      "Enabled",
+                      "Disabled"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "LoggingConfiguration": {
+          "type": "object",
+          "properties": {
+            "TargetBucket": {
+              "type": "string",
+              "description": "Specifies the bucket where you want Aliyun OSS to store server access logs."
+            },
+            "TargetPrefix": {
+              "type": "string",
+              "description": "This element lets you specify a prefix for the objects that the log files will be stored."
+            }
+          }
+        },
+        "Policy": {},
+        "RefererConfiguration": {
+          "type": "object",
+          "properties": {
+            "AllowEmptyReferer": {
+              "type": "boolean"
+            },
+            "RefererList": {
+              "type": "array",
+              "items": {}
+            }
+          }
+        },
+        "ServerSideEncryptionConfiguration": {
+          "type": "object",
+          "required": [
+            "SSEAlgorithm"
+          ],
+          "properties": {
+            "KMSMasterKeyID": {
+              "type": "string",
+              "description": "Specifies the CMK ID when the value of SSEAlgorithm is KMS and a specified CMK is used for encryption. If the value of SSEAlgorithm is not KMS, this element must be null."
+            },
+            "SSEAlgorithm": {
+              "type": "string",
+              "description": "Specifies the default server-side encryption method.",
+              "Enum": [
+                "KMS",
+                "AES256"
+              ]
+            }
+          }
+        },
+        "StorageClass": {
+          "type": "string",
+          "description": "Specifies the storage class of the bucket. Default is \"Standard\".",
+          "Enum": [
+            "Standard",
+            "IA",
+            "Archive"
+          ]
+        },
+        "Tags": {},
+        "WebsiteConfiguration": {
+          "type": "object",
+          "properties": {
+            "ErrorDocument": {
+              "type": "string",
+              "description": "default error page."
+            },
+            "IndexDocument": {
+              "type": "string",
+              "description": "default home page."
+            }
+          }
+        }
+      }
+    }

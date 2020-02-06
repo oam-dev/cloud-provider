@@ -1,0 +1,218 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-scalingconfiguration
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_ScalingConfiguration
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ScalingGroupId"
+      ],
+      "properties": {
+        "DeploymentSetId": {
+          "type": "string",
+          "description": "Deployment set ID."
+        },
+        "DiskMappings": {
+          "type": "array",
+          "description": "Disk mappings to attach to instance.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "AutoSnapshotPolicyId": {
+                "type": "string",
+                "description": "Auto snapshot policy ID."
+              },
+              "Category": {
+                "type": "string",
+                "description": "The volume type to create.Now support: cloud|cloud_efficiency|cloud_ssd|cloud_essd|ephemeral_ssdDefault is cloud.",
+                "Enum": [
+                  "cloud",
+                  "cloud_efficiency",
+                  "cloud_ssd",
+                  "cloud_essd",
+                  "ephemeral_ssd"
+                ]
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the disk, [2, 256] characters. Do not fill or empty, the default is empty."
+              },
+              "Device": {
+                "type": "string",
+                "description": "A device name where the volume will be attached in the system at /dev/xvd[id]. Range from '/dev/xvdb' to '/dev/xvdz'."
+              },
+              "DiskName": {
+                "type": "string",
+                "description": "Display name of the disk, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'."
+              },
+              "Encrypted": {
+                "type": "string",
+                "description": "Whether the data disk is encrypted or not. Options:\ntrue: Encrypted.\nfalse: Not encrypted.\nDefault value: false.",
+                "Enum": [
+                  "true",
+                  "false"
+                ]
+              },
+              "KMSKeyId": {
+                "type": "string",
+                "description": "The KMS key ID for the data disk."
+              },
+              "Size": {
+                "type": "string",
+                "description": "The size of the volume, in GB. Must be equal or greater than the size of the snapshot. It is safe to leave this blank and have the Compute service infer the size."
+              },
+              "SnapshotId": {
+                "type": "string",
+                "description": "ID of the snapshot to create the volume."
+              }
+            }
+          }
+        },
+        "HpcClusterId": {
+          "type": "string",
+          "description": "The HPC cluster ID to which the instance belongs."
+        },
+        "ImageId": {
+          "type": "string",
+          "description": "Image ID to create ecs instance ."
+        },
+        "InstanceId": {
+          "type": "string",
+          "description": "Source ECS instance to copy configuration, if the properties is setting, Which will copy the InstanceType, ImageId, InternetChargeType, IoOptimized,UserData, KeyPairName, RamRoleName, InternetMaxBandwidthIn,InternetMaxBandwidthOut, and first security group id from source instance, you can also specify the relative properties to overwrite the properties copy from source instance id."
+        },
+        "InstanceName": {
+          "type": "string",
+          "description": "The name of the instance launched from the current scaling configuration."
+        },
+        "InstanceType": {
+          "type": "string",
+          "description": "ecs supported instance type."
+        },
+        "InstanceTypes": {
+          "type": "array",
+          "description": "ecs supported instance types. Length [1,10]. If InstanceTypes is specified,the InstanceType will be ignored.",
+          "items": {},
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "InternetChargeType": {
+          "type": "string",
+          "description": "Instance internet access charge type.Support 'PayByBandwidth' and 'PayByTraffic' only.",
+          "Enum": [
+            "PayByBandwidth",
+            "PayByTraffic"
+          ]
+        },
+        "InternetMaxBandwidthIn": {
+          "type": "integer",
+          "description": "Maximum incoming bandwidth from the public network, measured in Mbps (Mega bit per second). The value range is [1,200]. If this parameter value is not specified, AliyunAPI automatically sets the value to 200 Mbps.",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "InternetMaxBandwidthOut": {
+          "type": "integer",
+          "description": "Maximum outgoing bandwidth from the public network, measured in Mbps (Mega bit per second).\nThe value range for PayByBandwidth is [0,100]. If this parameter value is not specified, AliyunAPI automatically sets the value to 0 Mbps.\nThe value range for PayByTraffic is [0,100]. If this parameter value is not specified, an error is reported",
+          "maximum": 100
+        },
+        "IoOptimized": {
+          "type": "string",
+          "description": "The 'optimized' instance can provide better IO performance. Support 'none' and 'optimized' only, default is 'none'.",
+          "Enum": [
+            "none",
+            "optimized"
+          ]
+        },
+        "KeyPairName": {
+          "type": "string",
+          "description": "SSH key pair name."
+        },
+        "PasswordInherit": {
+          "type": "boolean",
+          "description": "Whether to use the password pre-configured in the image you select or not. When PasswordInherit is specified, the Password must be null. For a secure access, make sure that the selected image has password configured."
+        },
+        "RamRoleName": {
+          "type": "string",
+          "description": "Instance RAM role name. The name is provided and maintained by Resource Access Management (RAM) and can be queried using ListRoles. For more information, see RAM API CreateRole and ListRoles."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "ScalingConfigurationName": {
+          "type": "string",
+          "description": "Name of created scaling configuration."
+        },
+        "ScalingGroupId": {
+          "type": "string",
+          "description": "Scaling group id to create the scaling configuration."
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "Security Group to create ecs instance."
+        },
+        "SpotPriceLimit": {
+          "type": "number",
+          "description": "Set the hourly maximum price for the instance. Supports a maximum of 3 decimal places, and the parameter takes effect only when the value of SpotStrategy is SpotWithPriceLimit.It is a default value for all instance types, and can be overwrite by SpotPriceLimitForInstanceType"
+        },
+        "SpotPriceLimitForInstanceType": {},
+        "SpotStrategy": {
+          "type": "string",
+          "description": "Preemption strategy for post-paid instances. It takes effect when the parameter InstanceChargeType takes the value of PostPaid. Ranges:\nNoSpot: Normal pay-per-use instance\nSpotWithPriceLimit: Set a preemptive instance of the cap price\nSpotAsPriceGo: System automatic bidding, following the current market actual price\nDefault: NoSpot.",
+          "Enum": [
+            "NoSpot",
+            "SpotWithPriceLimit",
+            "SpotAsPriceGo"
+          ]
+        },
+        "SystemDiskAutoSnapshotPolicyId": {
+          "type": "string",
+          "description": "Auto snapshot policy ID."
+        },
+        "SystemDiskCategory": {
+          "type": "string",
+          "description": "Category of system disk. Default is cloud.support cloud|cloud_efficiency|cloud_ssd|cloud_essd|ephemeral_ssd",
+          "Enum": [
+            "cloud",
+            "cloud_efficiency",
+            "cloud_ssd",
+            "cloud_essd",
+            "ephemeral_ssd"
+          ]
+        },
+        "SystemDiskSize": {
+          "type": "integer",
+          "description": "Size of system disk. Unit is GB.",
+          "minimum": 20
+        },
+        "TagList": {
+          "type": "array",
+          "description": "The tags of an instance in list format.\nDo not use with Tags at the same time.\nYou should input the information of the tag with the format of Key-Value list, such as [{\"Key\":\"key1\",\"Value\":\"value1\"}, ...].\nAt most 20 tags can be specified.\nKey\nIt can be up to 64 characters in length.\nCannot begin with aliyun.\nCannot begin with http:// or https://.\nCannot be a null string.\nValue\nIt can be up to 128 characters in length.\nCannot begin with aliyun.\nCannot begin with http:// or https://.\nCan be a null string.If less then 20 tags are specified, ros will add a tag(Key: \"ros-aliyun-created\", Value:\"\u003cresource_name\u003e_stack_\u003cstack_id\u003e\") if possible.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "UserData": {
+          "type": "string",
+          "description": "User data to pass to instance. [1, 16KB] characters.User data should not be base64 encoded. If you want to pass base64 encoded string to the property, use function Fn::Base64Decode to decode the base64 string first."
+        }
+      }
+    }
