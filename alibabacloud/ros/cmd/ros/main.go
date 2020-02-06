@@ -2,18 +2,21 @@ package main
 
 import (
 	"flag"
+	"os"
+
+	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
+	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
+	"github.com/oam-dev/oam-go-sdk/pkg/oam"
+	rosapi "github.com/oam-dev/cloud-provider/alibabacloud/ros/apis/ros.alibabacloud.com/v1alpha1"
+	rosclient "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/handlers"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/k8s"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
-	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
-	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
-	"github.com/oam-dev/oam-go-sdk/pkg/oam"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
-	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
 	// +kubebuilder:scaffold:imports
 )
@@ -26,6 +29,7 @@ func init() {
 	_ = v1beta1.AddToScheme(scheme)
 	_ = corev1.AddToScheme(scheme)
 	_ = v1alpha1.AddToScheme(scheme)
+	_ = rosapi.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -51,6 +55,8 @@ func main() {
 	flag.StringVar(&namespace, "namespace", "default", "App namespace.")
 	var updateApp bool
 	flag.BoolVar(&updateApp, "update-app", false, "Whether update application status")
+	var workAsROSStack bool
+	flag.BoolVar(&workAsROSStack, "ros-stack", false, "whether this controller work as rosStack or OAM runtime")
 	flag.Parse()
 
 	// init controller conf
@@ -81,16 +87,30 @@ func main() {
 	logging.SetUp.Info("Controller manager success initialized")
 
 	// register hooks and handlers
-	client, err := versioned.NewForConfig(ctrl.GetConfigOrDie())
-	if err != nil {
-		logging.SetUp.Error(err, "Create client err")
-		os.Exit(1)
+	var option oam.Option
+	if workAsROSStack {
+		oam.RegisterObject("rosstack", new(rosapi.RosStack))
+
+		client, err := rosclient.NewForConfig(ctrl.GetConfigOrDie())
+		if err != nil {
+			logging.SetUp.Error(err, "Create client err")
+			os.Exit(1)
+		}
+		oam.RegisterHandlers("rosstack", &handlers.AppConfHandler{Name: "app", RosClient: client})
+		option = oam.WithSpec("rosstack")
+	} else {
+		client, err := versioned.NewForConfig(ctrl.GetConfigOrDie())
+		if err != nil {
+			logging.SetUp.Error(err, "Create client err")
+			os.Exit(1)
+		}
+		oam.RegisterHandlers(oam.STypeApplicationConfiguration, &handlers.AppConfHandler{Name: "app", Client: client})
+		option = oam.WithApplicationConfiguration()
 	}
 
-	oam.RegisterHandlers(oam.STypeApplicationConfiguration, &handlers.AppConfHandler{Name: "app", Client: client})
 	logging.SetUp.Info("Add hooks and handlers success")
 
-	if err := oam.Run(oam.WithApplicationConfiguration()); err != nil {
+	if err := oam.Run(option); err != nil {
 		logging.SetUp.Error(err, "Problem occurs during stating ros controller")
 		os.Exit(1)
 	}

@@ -2,22 +2,26 @@ package handlers
 
 import (
 	"errors"
-	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/application"
-	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
-	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
-	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/ros"
+	"time"
+
 	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
 	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
 	"github.com/oam-dev/oam-go-sdk/pkg/finalizer"
 	"github.com/oam-dev/oam-go-sdk/pkg/oam"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/application"
+	rosclient "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/ros"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"time"
 )
 
+//TDOO use rosclient in ROSStack case
 type AppConfHandler struct {
-	Client *versioned.Clientset
-	Name   string
+	Client    *versioned.Clientset
+	RosClient *rosclient.Clientset
+	Name      string
 }
 
 func (a *AppConfHandler) Handle(ctx *oam.ActionContext, ac runtime.Object, eType oam.EType) error {
