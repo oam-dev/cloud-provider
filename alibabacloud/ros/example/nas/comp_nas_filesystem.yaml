@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: nas-file-system
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the nas filesystem.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.NAS_FileSystem
+  osType: "linux"
+  arch: "x86"
+  containers: []
+  parameters: []
+  workloadSettings:
+    ProtocolType: NFS
+    StorageType: Performance

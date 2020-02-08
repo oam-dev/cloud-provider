@@ -1,0 +1,54 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: nas-mounttarget
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: NAS_MountTarget
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AccessGroupName",
+        "NetworkType",
+        "FileSystemId"
+      ],
+      "properties": {
+        "AccessGroupName": {
+          "type": "string",
+          "description": "Permission group name. Default to DEFAULT_VPC_GROUP_NAME.",
+          "default": "DEFAULT_VPC_GROUP_NAME"
+        },
+        "FileSystemId": {
+          "type": "string",
+          "description": "File system ID"
+        },
+        "NetworkType": {
+          "type": "string",
+          "description": "Network type, including Vpc and Classic networks.",
+          "Enum": [
+            "Vpc",
+            "Classic"
+          ]
+        },
+        "Status": {
+          "type": "string",
+          "description": "Status, including Active and Inactive",
+          "Enum": [
+            "Active",
+            "Inactive"
+          ]
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "VSwitch ID."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "VPC network ID"
+        }
+      }
+    }

@@ -1,0 +1,144 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-dbcluster
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_DBCluster
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DBNodeClass",
+        "DBVersion",
+        "DBType",
+        "PayType"
+      ],
+      "properties": {
+        "AutoRenewPeriod": {
+          "type": "integer",
+          "description": "Set the cluster auto renewal time. Valid values: 1, 2, 3, 6, 12, 24, 36. Default to 1.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            6,
+            12,
+            24,
+            36
+          ]
+        },
+        "CloneDataPoint": {
+          "type": "string",
+          "description": "The time point of data to be cloned. Valid values:\nLATEST: clones data of the latest time point.\n\u003cBackupID\u003e: clones historical backup data. Specify the ID of the specific backup set.\n\u003cTimestamp\u003e: clones data of a historical time point. Specify the specific time in\nthe yyyy-MM-ddTHH:mm:ssZ format. The time must be in UTC.\nDefault value: LATEST.\nNote\nThis parameter takes effect only when the DBType parameter is set to MySQL, the DBVersion parameter is set to 5.6, and the CreationOption parameter is set to CloneFromRDS or CloneFromPolarDB.\nIf the CreationOption parameter is set to CloneFromRDS, the value of this parameter must be LATEST.",
+          "default": "LATEST"
+        },
+        "ClusterNetworkType": {
+          "type": "string",
+          "description": "The network type of the cluster. Currently, only VPC is supported. Default value: VPC.",
+          "default": "VPC",
+          "Enum": [
+            "VPC"
+          ]
+        },
+        "CreationOption": {
+          "type": "string",
+          "description": "The method for creating an ApsaraDB for POLARDB cluster. Valid values:\nNormal: creates an ApsaraDB for POLARDB cluster.\nCloneFromPolarDB: clones data from an existing ApsaraDB for POLARDB cluster to a new\nApsaraDB for POLARDB cluster.\nCloneFromRDS: clones data from an existing ApsaraDB for RDS instance to a new ApsaraDB\nfor POLARDB cluster.\nMigrationFromRDS: migrates data from an existing ApsaraDB for RDS instance to a new\nApsaraDB for POLARDB cluster. The created ApsaraDB for POLARDB cluster is in read-only\nmode and has binary logs enabled by default.\nDefault value: Normal.\nNote This parameter takes effect only when the DBType parameter is set to MySQL and the DBVersion parameter is set to 5.6.",
+          "default": "Normal",
+          "Enum": [
+            "CloneFromPolarDB",
+            "CloneFromRDS",
+            "MigrationFromRDS",
+            "Normal"
+          ]
+        },
+        "DBClusterDescription": {
+          "type": "string",
+          "description": "The description of the cluster. The description must comply with the following rules:\nIt must start with a Chinese character or an English letter.\nIt can contain Chinese and English characters, digits, underscores (_), and hyphens (-).\nIt cannot start with http:// or https://.\nIt must be 2 to 256 characters in length.",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "DBNodeClass": {
+          "type": "string",
+          "description": "The node specifications of the cluster. For more information, see Specifications and pricing."
+        },
+        "DBType": {
+          "type": "string",
+          "description": "Database type, value:\nMySQL\nPostgreSQL\nOracle",
+          "Enum": [
+            "MySQL",
+            "Oracle",
+            "PostgreSQL"
+          ]
+        },
+        "DBVersion": {
+          "type": "string",
+          "description": "The version of the database. Valid values:\nMySQL: 5.6 or 8.0\nPostgreSQL: 11\nOracle: 11",
+          "Enum": [
+            "5.6",
+            "8.0",
+            "11"
+          ]
+        },
+        "MaintainTime": {
+          "type": "string",
+          "description": "The maintainable time of the cluster:\nFormat: HH: mmZ- HH: mmZ.\nExample: 16:00Z-17:00Z, which means 0 to 1 (UTC+08:00) for routine maintenance."
+        },
+        "PayType": {
+          "type": "string",
+          "description": "The billing method of the cluster. Valid values:\nPostpaid: pay-as-you-go\nPrepaid: subscription",
+          "Enum": [
+            "Postpaid",
+            "Prepaid"
+          ]
+        },
+        "Period": {
+          "type": "integer",
+          "description": "The subscription period of the cluster in month. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 24, 36.",
+          "Enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12,
+            24,
+            36
+          ]
+        },
+        "RenewalStatus": {
+          "type": "string",
+          "description": "The auto renewal status of the cluster Valid values:\nAutoRenewal: automatically renews the cluster.\nNormal: manually renews the cluster.\nNotRenewal: does not renew the cluster.\nDefault value: Normal.\nNote If this parameter is set to NotRenewal, the system does not send a reminder for expiration,\nbut only sends an SMS message three days before the cluster expires to remind you\nthat the cluster is not renewed.",
+          "default": "Normal",
+          "Enum": [
+            "AutoRenewal",
+            "Normal",
+            "NotRenewal"
+          ]
+        },
+        "SourceResourceId": {
+          "type": "string",
+          "description": "The ID of the source RDS instance or source POLARDB cluster.\nNote\nThis parameter takes effect only when the DBType parameter is set to MySQL and the DBVersion parameter is set to 5.6.\nThis parameter is required if the CreationOption parameter is not set to Normal."
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The ID of the VSwitch to connect to."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The ID of the VPC to connect to."
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The zone ID of the cluster. You can call the DescribeRegions operation to query available zones."
+        }
+      }
+    }

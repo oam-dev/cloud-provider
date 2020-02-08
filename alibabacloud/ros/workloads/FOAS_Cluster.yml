@@ -1,0 +1,97 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: foas-cluster
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FOAS_Cluster
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Description",
+        "ClusterName",
+        "OssBucket",
+        "VSwitchId"
+      ],
+      "properties": {
+        "ClusterName": {
+          "type": "string",
+          "description": "Cluster name. It begins with a letter, and contains only lowercase English letters, numbers, underscores (_), and is limited to 3-64 characters.",
+          "pattern": "[a-z][a-z0-9_]{2,63}"
+        },
+        "Description": {
+          "type": "string",
+          "description": "Cluster description.",
+          "minLength": 1
+        },
+        "Order": {
+          "type": "object",
+          "required": [
+            "SlaveSpec",
+            "MasterSpec"
+          ],
+          "properties": {
+            "MasterNumber": {
+              "type": "integer",
+              "description": "Number of masters. Valid values: 1, 3. Default to 3.",
+              "default": 3,
+              "Enum": [
+                1,
+                3
+              ]
+            },
+            "MasterSpec": {
+              "type": "string",
+              "description": "Master spec, such as Ecs_4c16g.",
+              "pattern": "^Ecs_\\d+c\\d+g$"
+            },
+            "PayModel": {
+              "type": "string",
+              "description": "Pay model. Valid values: pre, post. Default to post.",
+              "default": "post",
+              "Enum": [
+                "pre",
+                "post"
+              ]
+            },
+            "Period": {
+              "type": "integer",
+              "description": "Pre paid time period. Unit is month. Default to 1.",
+              "default": 1,
+              "minimum": 1
+            },
+            "SlaveNumber": {
+              "type": "integer",
+              "description": "Number of masters. Valid values: 2-1000. Default to 2.",
+              "default": 2,
+              "minimum": 2,
+              "maximum": 1000
+            },
+            "SlaveSpec": {
+              "type": "string",
+              "description": "Master spec, such as Ecs_4c16g.",
+              "pattern": "^Ecs_\\d+c\\d+g$"
+            }
+          }
+        },
+        "OrderId": {
+          "type": "string",
+          "description": "Order Id. Only one of property Order or OrderId can be specified.\nOrderId is suggested.",
+          "minLength": 1
+        },
+        "OssBucket": {
+          "type": "string",
+          "description": "Bucket name in your OSS.",
+          "minLength": 1
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "VSwitch ID.",
+          "minLength": 1
+        }
+      }
+    }

@@ -1,0 +1,62 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-lifecyclehook
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_LifecycleHook
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "LifecycleTransition",
+        "ScalingGroupId"
+      ],
+      "properties": {
+        "DefaultResult": {
+          "type": "string",
+          "description": "The action that the scaling group takes when the lifecycle hook times out. Value range:\n CONTINUE: the scaling group continues with the scale-in or scale-out process.\n ABANDON: the scaling group stops any remaining action of the scale-in or scale-out event.\nDefault value: CONTINUE\nIf the scaling group has multiple lifecycle hooks and one of them is terminated by the DefaultResult=ABANDON parameter during a scale-in event (SCALE_IN), the remaining lifecycle hooks under the same scaling group will also be terminated. Otherwise, the action following the wait state is the next action, as specified in the parameter DefaultResult, after the last lifecycle event under the same scaling group.",
+          "Enum": [
+            "CONTINUE",
+            "ABANDON"
+          ]
+        },
+        "HeartbeatTimeout": {
+          "type": "integer",
+          "description": "The time, in seconds, that can elapse before the lifecycle hook times out. If the lifecycle hook times out, the scaling group performs the default action (DefaultResult). The range is from 30 to 21,600 seconds. The default value is 600 seconds.\nYou can prevent the lifecycle hook from timing out by calling the RecordLifecycleActionHeartbeat operation. You can also terminate the lifecycle action by calling the CompleteLifecycleAction operation.",
+          "minimum": 30,
+          "maximum": 21600
+        },
+        "LifecycleHookName": {
+          "type": "string",
+          "description": "The name of the lifecycle hook. Each name must be unique within a scaling group. The name must be 2 to 40 characters in length and can contain letters, numbers, Chinese characters, and special characters including underscores (_), hyphens (-) and periods (.).\nDefault value: Lifecycle Hook ID",
+          "pattern": "^[a-zA-Z0-9\\u4e00-\\u9fa5][-_.a-zA-Z0-9\\u4e00-\\u9fa5]{1,63}$"
+        },
+        "LifecycleTransition": {
+          "type": "string",
+          "description": "The scaling activities to which lifecycle hooks apply Value range:\n SCALE_OUT: scale-out event\n SCALE_IN: scale-in event",
+          "Enum": [
+            "SCALE_OUT",
+            "SCALE_IN"
+          ]
+        },
+        "NotificationArn": {
+          "type": "string",
+          "description": "The Alibaba Cloud Resource Name (ARN) of the notification target that Auto Scaling will use to notify you when an instance is in the transition state for the lifecycle hook. This target can be either an MNS queue or an MNS topic. The format of the parameter value is acs:ess:{region}:{account-id}:{resource-relative-id}.\nregion: the region to which the scaling group locates\naccount-id: Alibaba Cloud ID\nFor example:\nMNS queue: acs:ess:{region}:{account-id}:queue/{queuename}\nMNS topic: acs:ess:{region}:{account-id}:topic/{topicname}\nOOS template: acs:ess:{region}:{account-id}:oos/{templatename}",
+          "maxLength": 300,
+          "pattern": "^acs:ess:([a-zA-Z0-9-]+):(\\d+):(queue|topic|oos)/([a-zA-Z0-9][-_a-zA-Z0-9]{0,255})$"
+        },
+        "NotificationMetadata": {
+          "type": "string",
+          "description": "The fixed string that you want to include when Auto Scaling sends a message about the wait state of the scaling activity to the notification target. The length of the parameter can be up to 256 characters. Auto Scaling will send the specified NotificationMetadata parameter along with the notification message so that you can easily categorize your notifications. The NotificationMetadata parameter will only take effect after you specify the NotificationArn parameter.",
+          "maxLength": 256
+        },
+        "ScalingGroupId": {
+          "type": "string",
+          "description": "The ID of the scaling group."
+        }
+      }
+    }

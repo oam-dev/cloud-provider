@@ -1,0 +1,54 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: nas-accessrule
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: NAS_AccessRule
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SourceCidrIp",
+        "AccessGroupName"
+      ],
+      "properties": {
+        "AccessGroupName": {
+          "type": "string",
+          "description": "Permission group name"
+        },
+        "Priority": {
+          "type": "integer",
+          "description": "Priority level. Range: 1-100. Default value: 1",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "RWAccessType": {
+          "type": "string",
+          "description": "Read-write permission type: RDWR (default), RDONLY",
+          "default": "RDWR",
+          "Enum": [
+            "RDWR",
+            "RDONLY"
+          ]
+        },
+        "SourceCidrIp": {
+          "type": "string",
+          "description": "Address or address segment"
+        },
+        "UserAccessType": {
+          "type": "string",
+          "description": "User permission type: no_squash (default), root_squash, all_squash",
+          "default": "no_squash",
+          "Enum": [
+            "no_squash",
+            "root_squash",
+            "all_squash"
+          ]
+        }
+      }
+    }

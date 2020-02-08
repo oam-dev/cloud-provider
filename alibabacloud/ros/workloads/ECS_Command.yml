@@ -1,0 +1,43 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-command
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_Command
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Type"
+      ],
+      "properties": {
+        "CommandContent": {
+          "type": "string",
+          "description": "The content of command. Content requires base64 encoding. Maximum size support 16KB."
+        },
+        "Description": {
+          "type": "string",
+          "description": "The description of command."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of command."
+        },
+        "Timeout": {
+          "type": "integer",
+          "description": "Total timeout when the command is executed in the instance. Input the time unit as second. Default is 3600s."
+        },
+        "Type": {
+          "type": "string",
+          "description": "The type of command."
+        },
+        "WorkingDir": {
+          "type": "string",
+          "description": "The path where command will be executed in the instance."
+        }
+      }
+    }

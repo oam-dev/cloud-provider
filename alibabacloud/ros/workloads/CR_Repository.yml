@@ -1,0 +1,53 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cr-repository
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CR_Repository
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RepoName",
+        "RepoNamespace",
+        "RepoType",
+        "Summary"
+      ],
+      "properties": {
+        "Detail": {
+          "type": "string",
+          "description": "detailed configuration in markdown format",
+          "maxLength": 2000
+        },
+        "RepoName": {
+          "type": "string",
+          "description": "the name of the repo",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "RepoNamespace": {
+          "type": "string",
+          "description": "the namespace the repo belongs to",
+          "minLength": 2,
+          "maxLength": 30
+        },
+        "RepoType": {
+          "type": "string",
+          "description": "repository visibility, public or private",
+          "Enum": [
+            "PUBLIC",
+            "PRIVATE"
+          ]
+        },
+        "Summary": {
+          "type": "string",
+          "description": "description or something alike",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      }
+    }

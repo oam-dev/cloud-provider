@@ -1,0 +1,57 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: marketplace-order
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: MarketPlace_Order
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ProductCode",
+        "SkuCode"
+      ],
+      "properties": {
+        "ChargeType": {
+          "type": "string",
+          "description": "The resource charge type. Default value is Prepaid",
+          "default": "Prepaid",
+          "Enum": [
+            "Prepaid",
+            "Postpaid"
+          ]
+        },
+        "Duration": {
+          "type": "number",
+          "description": "Duration of the resource. If ChargeType is specified as Postpaid, this value will be ignore.",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "Preference": {},
+        "PricingCycle": {
+          "type": "string",
+          "description": "Price cycle of the resource. This property has no default value. If ChargeType is specified as Postpaid, this value will be ignore.",
+          "Enum": [
+            "Month",
+            "Year"
+          ]
+        },
+        "ProductCode": {
+          "type": "string",
+          "description": "Product code for the resource."
+        },
+        "Quantity": {
+          "type": "number",
+          "description": "Resource number. Default value is 1",
+          "default": 1
+        },
+        "SkuCode": {
+          "type": "string",
+          "description": "Sku code for the resource."
+        }
+      }
+    }

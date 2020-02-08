@@ -1,0 +1,75 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-route
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_Route
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RouteId",
+        "RouteTableId",
+        "DestinationCidrBlock"
+      ],
+      "properties": {
+        "DestinationCidrBlock": {
+          "type": "string",
+          "description": "The RouteEntry's target network segment."
+        },
+        "NextHopId": {
+          "type": "string",
+          "description": "The route entry's next hop. When the NextHopList is specified, the value will be ignored."
+        },
+        "NextHopList": {
+          "type": "array",
+          "description": "The route entry's next hop list. If router is virtual border router, the value will be ignore. The list should contain 2-4 next hop. NextHopId of each next hop must be RouterInterface that VRouter forwards to VBR.",
+          "items": {
+            "type": "object",
+            "required": [
+              "NextHopId"
+            ],
+            "properties": {
+              "NextHopId": {
+                "type": "string",
+                "description": "Route entry next hop Instance id or Tunnel id."
+              },
+              "NextHopType": {
+                "type": "string",
+                "description": "Route entry next hop type. Now support 'Instance|Tunnel|HaVip|RouterInterface'.",
+                "default": "RouterInterface",
+                "Enum": [
+                  "Instance",
+                  "Tunnel",
+                  "HaVip",
+                  "RouterInterface"
+                ]
+              }
+            }
+          }
+        },
+        "NextHopType": {
+          "type": "string",
+          "description": "The next hop type. Available value options: Instance | Tunnel | HaVip | RouterInterface. The default value is Instance.When the NextHopList is specified, the value will be ignored.",
+          "default": "Instance",
+          "Enum": [
+            "Instance",
+            "Tunnel",
+            "HaVip",
+            "RouterInterface"
+          ]
+        },
+        "RouteId": {
+          "type": "string",
+          "description": "RouteId of created route entry."
+        },
+        "RouteTableId": {
+          "type": "string",
+          "description": "RouteTableId of created route entry."
+        }
+      }
+    }

@@ -1,0 +1,62 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sls-logtailconfig
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLS_LogtailConfig
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ProjectName",
+        "LogtailConfigName",
+        "LogstoreName"
+      ],
+      "properties": {
+        "CloneFrom": {
+          "type": "object",
+          "required": [
+            "ProjectName",
+            "LogtailConfigName"
+          ],
+          "properties": {
+            "LogtailConfigName": {
+              "type": "string",
+              "description": "Logtail config name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+              "minLength": 3,
+              "maxLength": 63
+            },
+            "ProjectName": {
+              "type": "string",
+              "description": "Project name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+              "minLength": 3,
+              "maxLength": 63
+            }
+          }
+        },
+        "LogstoreName": {
+          "type": "string",
+          "description": "Logstore name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+          "minLength": 3,
+          "maxLength": 63
+        },
+        "LogtailConfigName": {
+          "type": "string",
+          "description": "Logtail config name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+          "minLength": 3,
+          "maxLength": 63
+        },
+        "ProjectName": {
+          "type": "string",
+          "description": "Project name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+          "minLength": 3,
+          "maxLength": 63,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "RawConfigData": {}
+      }
+    }

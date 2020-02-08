@@ -1,0 +1,37 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-stageconfig
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_StageConfig
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "StageName",
+        "Variables",
+        "GroupId"
+      ],
+      "properties": {
+        "GroupId": {
+          "type": "string",
+          "description": "The id of the Group."
+        },
+        "StageName": {
+          "type": "string",
+          "description": "The name of the Stage.",
+          "Enum": [
+            "TEST",
+            "RELEASE",
+            "PRE"
+          ]
+        },
+        "Variables": {
+          "maxProperties": 50
+        }
+      }
+    }

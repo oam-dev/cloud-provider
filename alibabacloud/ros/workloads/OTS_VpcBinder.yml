@@ -1,0 +1,63 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ots-vpcbinder
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: OTS_VpcBinder
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Vpcs",
+        "InstanceName"
+      ],
+      "properties": {
+        "InstanceName": {
+          "type": "string",
+          "description": "Instance name"
+        },
+        "Vpcs": {
+          "type": "array",
+          "description": "Vpc binding configuration.",
+          "items": {
+            "type": "object",
+            "required": [
+              "VirtualSwitchId",
+              "InstanceVpcName",
+              "VpcId",
+              "Network"
+            ],
+            "properties": {
+              "InstanceVpcName": {
+                "type": "string",
+                "description": "Custom name, need to be unique under the OTS instance.",
+                "pattern": "[a-zA-Z][a-zA-Z0-9]{2,15}"
+              },
+              "Network": {
+                "type": "string",
+                "description": "Instance network type. The values are as follows:\n1, the NORMAL instance does not limit the source of the request. (Defaults)\n2. A VPC instance only allows requests from all VPCs it is bound to.\n3, VPC_CONSOLE instance only allows requests from the console and all VPCs it is bound to",
+                "default": "NORMAL",
+                "Enum": [
+                  "NORMAL",
+                  "VPC",
+                  "VPC_CONSOLE"
+                ]
+              },
+              "VirtualSwitchId": {
+                "type": "string",
+                "description": "vSwitch Id."
+              },
+              "VpcId": {
+                "type": "string",
+                "description": "Vpc Id."
+              }
+            }
+          },
+          "maxItems": 20
+        }
+      }
+    }

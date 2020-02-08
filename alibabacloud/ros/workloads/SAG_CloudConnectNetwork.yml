@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sag-cloudconnectnetwork
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SAG_CloudConnectNetwork
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "The description of the CCN instance.\nThe description can contain 2 to 256 characters. The description cannot start with http:// or https://."
+        },
+        "IsDefault": {
+          "type": "boolean",
+          "description": "Whether is created by system",
+          "default": false
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the CCN instance.\nThe name can contain 2 to 128 characters including a-z, A-Z, 0-9, chinese, underlines, and hyphens. The name must start with an English letter, but cannot start with http:// or https://."
+        }
+      }
+    }

@@ -1,0 +1,286 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: dts-migrationjob
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: DTS_MigrationJob
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "MigrationJobClass"
+      ],
+      "properties": {
+        "DestinationEndpoint": {
+          "type": "object",
+          "required": [
+            "Password",
+            "InstanceType",
+            "Region",
+            "UserName"
+          ],
+          "properties": {
+            "DatabaseName": {
+              "type": "string",
+              "description": "The connection database library name of the target instance, which is required if the target instance's database type is: PostgreSQL, PPAS, or MongoDB"
+            },
+            "EngineName": {
+              "type": "string",
+              "description": "The data type of the target instance. It is required when the target instance is a self-built database. The values include:\nMySQL, SQLServer, PostgreSQL, PPAS, MongoDB, Redis",
+              "Enum": [
+                "MySQL",
+                "SQLServer",
+                "PostgreSQL",
+                "PPAS",
+                "MongoDB",
+                "Redis"
+              ]
+            },
+            "IP": {
+              "type": "string",
+              "description": "The connection address of the target instance. Required when the source instance is a self-built database."
+            },
+            "InstanceID": {
+              "type": "string",
+              "description": "Target instance ID\nWhen the DestinationEndpoint.InstanceType value is RDS, this parameter needs to be passed to the RDS instance ID.\nWhen the DestinationEndpoint.InstanceType value is ECS, this parameter needs to be passed to the ECS instance ID.\nWhen the DestinationEndpoint.InstanceType value is MongoDB, this parameter needs to be passed to the MongoDB instance ID.\nWhen the DestinationEndpoint.InstanceType value is Redis, this parameter needs to be passed in the Redis instance ID.\nWhen the DestinationEndpoint.InstanceType value is DRDS, this parameter needs to be passed to the DRDS instance ID.\nWhen the DestinationEndpoint.InstanceType value is PetaData, this parameter needs to pass in the PetaData instance ID.\nWhen the DestinationEndpoint.InstanceType value is OceanBase, this parameter needs to be passed to the OceanBase instance ID.\nWhen the DestinationEndpoint.InstanceType value is POLARDB, this parameter needs to be passed to the POLARDB for MySQL cluster ID."
+            },
+            "InstanceType": {
+              "type": "string",
+              "description": "The instance type of the target instance, including:\nRDS: Alibaba Cloud RDS instance\nECS: Self-built database on ECS\nLocalInstance: Self-built database of local IDC\nMongoDB: Alibaba Cloud MongoDB instance\nRedis: Alibaba Cloud Redis instance\nDRDS: Alibaba Cloud DRDS instance\nPetaData: Alibaba Cloud PetaData instance\nOceanBase: Alibaba Cloud OceanBase instance\nPOLARDB: Alibaba Cloud POLARDB for MySQL Cluster",
+              "Enum": [
+                "RDS",
+                "ECS",
+                "LocalInstance",
+                "MongoDB",
+                "Redis",
+                "DRDS",
+                "PetaData",
+                "OceanBase",
+                "POLARDB"
+              ]
+            },
+            "Password": {
+              "type": "string",
+              "description": "Target instance password"
+            },
+            "Port": {
+              "type": "string",
+              "description": "The listening port of the target instance, which is required when the source instance is a self-built database."
+            },
+            "Region": {
+              "type": "string",
+              "description": "The area where the target instance is located. If it is a self-built database, you can select the area closest to the physical distance of the self-built IDC."
+            },
+            "Role": {
+              "type": "string",
+              "description": "When the source instance is an RDS instance and the source instance is different from the Alibaba Cloud account to which the target instance belongs, this parameter is the authorization role of the Alibaba Cloud account to which the source instance belongs to the target instance Alibaba Cloud account. For details on the permissions and authorization methods required for this role, see Cross-Account Migration Synchronization."
+            },
+            "UserName": {
+              "type": "string",
+              "description": "Target instance access account"
+            }
+          }
+        },
+        "MigrationJobClass": {
+          "type": "string",
+          "description": "Migrating instance specifications, which can be:\nsmall, medium, large\nVarious specifications of the reference data migration test performance specifications",
+          "Enum": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "MigrationJobName": {
+          "type": "string",
+          "description": "Migrating job name"
+        },
+        "MigrationMode": {
+          "type": "object",
+          "properties": {
+            "DataIntialization": {
+              "type": "boolean",
+              "description": "Whether the migration task performs full data migration, and the values include:\ntrue: indicates that full data migration is required.\nfalse: indicates no structural migration",
+              "default": true
+            },
+            "DataSynchronization": {
+              "type": "boolean",
+              "description": "Whether the migration task synchronizes incremental data, including:\ntrue: Indicates that incremental data synchronization is required.\nfalse: Indicates that incremental data synchronization is not performed.",
+              "default": false
+            },
+            "StructureIntialization": {
+              "type": "boolean",
+              "description": "Whether the migration task performs structural migration, and the values include:\ntrue: indicates that a structure migration is required.\nfalse: indicates no structural migration",
+              "default": true
+            }
+          }
+        },
+        "MigrationObject": {
+          "type": "array",
+          "description": "Objects that need to be migrated",
+          "items": {
+            "type": "object",
+            "properties": {
+              "DBName": {
+                "type": "string",
+                "description": "db name to be migrated"
+              },
+              "NewDBName": {
+                "type": "string",
+                "description": "The name of the db to be migrated in the target instance."
+              },
+              "NewSchemaName": {
+                "type": "string",
+                "description": "Schema name to be migrated by Schema in the target instance"
+              },
+              "SchemaName": {
+                "type": "string",
+                "description": "Schema name to be migrated"
+              },
+              "TableExcludes": {
+                "type": "array",
+                "description": "Table excludes configuration",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "TableName": {
+                      "type": "string",
+                      "description": "The name of the table to be migrated does not require the table name of the migration table."
+                    }
+                  }
+                }
+              },
+              "TableIncludes": {
+                "type": "array",
+                "description": "Table configuration",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ColumnExcludes": {
+                      "type": "array",
+                      "description": "Column excludes configuration",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ColumnName": {
+                            "type": "string",
+                            "description": "Column names are not migrated in the table to be migrated"
+                          }
+                        }
+                      }
+                    },
+                    "ColumnIncludes": {
+                      "type": "array",
+                      "description": "Column includes configuration",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ColumnName": {
+                            "type": "string",
+                            "description": "The column name to be migrated in the table to be migrated"
+                          },
+                          "NewColumnName": {
+                            "type": "string",
+                            "description": "The name of the column to be migrated to be mapped in the target instance"
+                          }
+                        }
+                      }
+                    },
+                    "FilterCondition": {
+                      "type": "string",
+                      "description": "Where condition"
+                    },
+                    "NewTableName": {
+                      "type": "string",
+                      "description": "The name of the table to be migrated in the target instance mapping"
+                    },
+                    "TableName": {
+                      "type": "string",
+                      "description": "Table name to be migrated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SourceEndpoint": {
+          "type": "object",
+          "required": [
+            "UserName",
+            "InstanceType",
+            "Region",
+            "Password"
+          ],
+          "properties": {
+            "DatabaseName": {
+              "type": "string",
+              "description": "When the source instance database type is PostgreSQL or MongoDB, this parameter is the database library name used when creating the connection."
+            },
+            "EngineName": {
+              "type": "string",
+              "description": "The database type of the source instance, which is required when SourceEndpoint.InstanceType is not RDS. Values include:\nMySQL, SQLServer, PostgreSQL, Oracle, MongoDB, Redis",
+              "Enum": [
+                "MySQL",
+                "SQLServer",
+                "PostgreSQL",
+                "Oracle",
+                "MongoDB",
+                "Redis"
+              ]
+            },
+            "IP": {
+              "type": "string",
+              "description": "The connection address of the source instance. Required when the source instance is a self-built database."
+            },
+            "InstanceID": {
+              "type": "string",
+              "description": "Source instance ID.\nWhen the value of SourceEndpoint.InstanceType is RDS, this parameter needs to be passed in the RDS instance ID.\nWhen the SourceEndpoint.InstanceType value is ECS, this parameter needs to be passed to the ECS instance ID.\nWhen the SourceEndpoint.InstanceType value is Express, this parameter needs to be passed in the VPC ID (ie, the proprietary network ID).\nWhen the SourceEndpoint.InstanceType value is MongoDB, this parameter needs to be passed to the MongoDB instance ID.\nWhen the SourceEndpoint.InstanceType value is POLARDB, this parameter needs to be passed to POLARDB for MySQL cluster ID."
+            },
+            "InstanceType": {
+              "type": "string",
+              "description": "The instance type of the migration source instance, including:\nRDS: Alibaba Cloud RDS instance\nECS: Self-built database on ECS\nLocalInstance: Self-built database with public IP address\nExpress: self-built database accessed via dedicated line\nMongoDB: Ali cloud MongoDB instance\nPOLARDB: Alibaba Cloud POLARDB for MySQL Cluster\n",
+              "Enum": [
+                "RDS",
+                "ECS",
+                "LocalInstance",
+                "Express",
+                "MongoDB",
+                "POLARDB"
+              ]
+            },
+            "OracleSID": {
+              "type": "string",
+              "description": "When the source instance database type is Oracle, this parameter is Oracle SID"
+            },
+            "OwnerID": {
+              "type": "string",
+              "description": "When the source instance is an RDS instance and the source instance is different from the Alibaba Cloud account to which the target instance belongs, this parameter is the UID of the Alibaba Cloud account to which the source RDS instance belongs."
+            },
+            "Password": {
+              "type": "string",
+              "description": "Source instance password"
+            },
+            "Port": {
+              "type": "string",
+              "description": "The listening port of the source instance, which is required when the source instance is a self-built database."
+            },
+            "Region": {
+              "type": "string",
+              "description": "The area where the source instance is located. If it is a self-built database, you can select the area closest to the physical distance of the self-built IDC."
+            },
+            "Role": {
+              "type": "string",
+              "description": "When the source instance is an RDS instance and the source instance is different from the Alibaba Cloud account to which the target instance belongs, this parameter is the authorization role of the Alibaba Cloud account to which the source instance belongs to the target instance Alibaba Cloud account. For details on the permissions and authorization methods required for this role, see Cross-Account Migration Synchronization."
+            },
+            "UserName": {
+              "type": "string",
+              "description": "Source instance access account"
+            }
+          }
+        }
+      }
+    }

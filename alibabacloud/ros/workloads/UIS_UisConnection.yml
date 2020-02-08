@@ -1,0 +1,115 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: uis-uisconnection
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: UIS_UisConnection
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "UisNodeId",
+        "UisProtocol"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "A description of the tunnel connection."
+        },
+        "GreConfig": {
+          "type": "array",
+          "description": "The config for GRE. Item can be overwritten, but removed.",
+          "items": {
+            "type": "object",
+            "required": [
+              "LocalIP",
+              "LocalTunnelIP",
+              "CustomerTunnelIP",
+              "CustomerSubnet",
+              "CustomerIP"
+            ],
+            "properties": {
+              "CustomerIP": {
+                "type": "string",
+                "description": "The customer's public IP."
+              },
+              "CustomerSubnet": {
+                "type": "string",
+                "description": "The CIDR of customer's GRE private network."
+              },
+              "CustomerTunnelIP": {
+                "type": "string",
+                "description": "The GRE Tunnel IP for Customer."
+              },
+              "LocalIP": {
+                "type": "string",
+                "description": "UisNode IP."
+              },
+              "LocalTunnelIP": {
+                "type": "string",
+                "description": "The GRE Tunnel IP for UisNode."
+              }
+            }
+          }
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the tunnel connection."
+        },
+        "SslConfig": {
+          "type": "object",
+          "required": [
+            "Protocol",
+            "Port",
+            "Cipher"
+          ],
+          "properties": {
+            "Cipher": {
+              "type": "string",
+              "description": "The encryption algorithm used by SSL-VPN. Value: AES-128-CBC (default) | AES-192-CBC | AES-256-CBC | none.",
+              "default": "AES-128-CBC",
+              "Enum": [
+                "AES-128-CBC",
+                "AES-192-CBC",
+                "AES-256-CBC",
+                "none"
+              ]
+            },
+            "Port": {
+              "type": "integer",
+              "description": "The port used by the SSL-VPN server. The default value is 1194. The port range us 1025-10000, and avoid the following well-known ports [22, 2222, 22222, 9000, 9001, 9002, 7505, 80, 443, 53, 68, 123, 4510, 4560, 500, 4500]",
+              "default": 1194,
+              "minimum": 1025,
+              "maximum": 10000
+            },
+            "Protocol": {
+              "type": "string",
+              "description": "The protocol used by the SSL-VPN server. Value: UDP (default) | TCP",
+              "default": "UDP",
+              "Enum": [
+                "UDP",
+                "TCP"
+              ]
+            }
+          }
+        },
+        "UisNodeId": {
+          "type": "string",
+          "description": "Node instance ID."
+        },
+        "UisProtocol": {
+          "type": "string",
+          "description": "The protocol name used by the software and server. The default value is SSLVPN.",
+          "default": "SSLVPN",
+          "Enum": [
+            "GRE",
+            "SDK",
+            "SSLVPN"
+          ]
+        }
+      }
+    }

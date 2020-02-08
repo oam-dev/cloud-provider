@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-assignprivateipaddresses
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_AssignPrivateIpAddresses
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "NetworkInterfaceId"
+      ],
+      "properties": {
+        "NetworkInterfaceId": {
+          "type": "string",
+          "description": "The ID of the ENI."
+        },
+        "PrivateIpAddresses": {
+          "type": "array",
+          "description": "One or multiple secondary private IP addresses selected from the CIDR block of the VSwitch that hosts the ENI. \nValid values of number of private ip addresses:\nWhen the ENI is in the Available state: 1 to 10.\nWhen the ENI is in the InUse state: limited by the instance type. \nFor more information, see Instance type families.\nYou must specify either the PrivateIpAddresses parameter or the SecondaryPrivateIpAddressCount parameter to assign secondary private IP addresses.",
+          "items": {},
+          "maxItems": 10
+        },
+        "SecondaryPrivateIpAddressCount": {
+          "type": "integer",
+          "description": "The specified number of private IP addresses to be assigned by the ECS instance."
+        }
+      }
+    }

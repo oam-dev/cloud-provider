@@ -1,0 +1,56 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-copyimage
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_CopyImage
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ImageId",
+        "DestinationRegionId"
+      ],
+      "properties": {
+        "DestinationDescription": {
+          "type": "string",
+          "description": "The description of the destination custom image.It cannot begin with http:// or https://.  Default value: null."
+        },
+        "DestinationImageName": {
+          "type": "string",
+          "description": "Name of the destination custom image.The name is a string of 2 to 128 characters. It must begin with an English or a Chinese character. It can contain A-Z, a-z, Chinese characters, numbers, periods (.), colons (:), underscores (_), and hyphens (-).  Default value: null."
+        },
+        "DestinationRegionId": {
+          "type": "string",
+          "description": "ID of the region to where the destination custom image belongs."
+        },
+        "Encrypted": {
+          "type": "boolean",
+          "description": "Whether to encrypt the image."
+        },
+        "ImageId": {
+          "type": "string",
+          "description": "ID of the source custom image."
+        },
+        "Tag": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Key": {
+                "type": "string",
+                "description": "Custom image tag key."
+              },
+              "Value": {
+                "type": "string",
+                "description": "Customize the label value of the image."
+              }
+            }
+          }
+        }
+      }
+    }

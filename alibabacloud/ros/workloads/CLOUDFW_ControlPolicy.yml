@@ -1,0 +1,139 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cloudfw-controlpolicy
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CLOUDFW_ControlPolicy
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ApplicationName",
+        "DestinationType",
+        "Direction",
+        "AclAction",
+        "Description",
+        "NewOrder",
+        "Proto",
+        "Source",
+        "Destination",
+        "SourceType"
+      ],
+      "properties": {
+        "AclAction": {
+          "type": "string",
+          "description": "Traffic access control policy set by the cloud of a firewall.\naccept: Release\ndrop: rejected\nlog: Observation",
+          "Enum": [
+            "accept",
+            "drop",
+            "log"
+          ]
+        },
+        "ApplicationName": {
+          "type": "string",
+          "description": "Application types supported by the security policy.\nThe following types of applications are supported: ANY, HTTP, HTTPS, MySQL, SMTP, SMTPS, RDP, VNC, SSH, Redis, MQTT, MongoDB, Memcache, SSL\nNOTE ANY indicates that the policy is applied to all types of applications.",
+          "Enum": [
+            "ANY",
+            "HTTP",
+            "HTTPS",
+            "MQTT",
+            "Memcache",
+            "MongoDB",
+            "MySQL",
+            "RDP",
+            "Redis",
+            "SMTP",
+            "SMTPS",
+            "SSH",
+            "SSL",
+            "VNC"
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "Security access control policy description information.",
+          "minLength": 1
+        },
+        "DestPort": {
+          "type": "string",
+          "description": "Security access control policy access traffic destination port.\nNote When DestPortType to port, set the item."
+        },
+        "DestPortGroup": {
+          "type": "string",
+          "description": "Security access control policy access traffic destination port address book name.\nDescription DestPortType is group, set the item."
+        },
+        "DestPortType": {
+          "type": "string",
+          "description": "Security access control policy access destination port traffic type.\nport: Port\ngroup: port address book",
+          "Enum": [
+            "group",
+            "port"
+          ]
+        },
+        "Destination": {
+          "type": "string",
+          "description": "Security Access Control destination address policy.\nWhen DestinationType is net, Destination purpose CIDR. For example: 1.2.3.4/24\nWhen DestinationType as a group, Destination for the purpose of the address book name. For example: db_group\nWhen DestinationType for the domain, Destination for the purpose of a domain name. For example:. * Aliyuncs.com\nWhen DestinationType as location, Destination area for the purpose (see below position encoding specific regions). For example: [ \"BJ11\", \"ZB\"]",
+          "minLength": 1
+        },
+        "DestinationType": {
+          "type": "string",
+          "description": "Security Access Control destination address type of policy.\nnet: Destination network segment (CIDR)\ngroup: destination address book\ndomain: The purpose domain\nlocation: The purpose area",
+          "Enum": [
+            "domain",
+            "group",
+            "location",
+            "net"
+          ]
+        },
+        "Direction": {
+          "type": "string",
+          "description": "Security access control traffic direction policies.\nin: internal and external traffic access control\nout: within the flow of external access control",
+          "Enum": [
+            "in",
+            "out"
+          ]
+        },
+        "NewOrder": {
+          "type": "integer",
+          "description": "Security access control priority policy in force. Priority number increments sequentially from 1, lower the priority number, the higher the priority.\nDescription -1 indicates the lowest priority.",
+          "minimum": -1
+        },
+        "Proto": {
+          "type": "string",
+          "description": "The type of security protocol for traffic access in the security access control policy. Can be set to ANY when you are not sure of the specific protocol type.\nAllowed values: ANY, TCP, UDP, ICMP",
+          "Enum": [
+            "ANY",
+            "ICMP",
+            "TCP",
+            "UDP"
+          ]
+        },
+        "RegionId": {
+          "type": "string",
+          "description": "Region ID. Default to cn-hangzhou.",
+          "default": "cn-hangzhou",
+          "Enum": [
+            "cn-hangzhou",
+            "ap-southeast-1"
+          ]
+        },
+        "Source": {
+          "type": "string",
+          "description": "Security access control source address policy.\nWhen SourceType for the net, Source is the source CIDR. For example: 1.2.3.0/24\nWhen SourceType as a group, Source name for the source address book. For example: db_group\nWhen SourceType as location, Source source region (specific region position encoder see below). For example, [ \"BJ11\", \"ZB\"]",
+          "minLength": 1
+        },
+        "SourceType": {
+          "type": "string",
+          "description": "Security access control source address type of policy.\nnet: Source segment (CIDR)\ngroup: source address book\nlocation: the source area",
+          "Enum": [
+            "group",
+            "location",
+            "net"
+          ]
+        }
+      }
+    }

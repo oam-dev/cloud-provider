@@ -1,0 +1,73 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sls-logstore
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLS_Logstore
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ProjectName",
+        "LogstoreName"
+      ],
+      "properties": {
+        "AppendMeta": {
+          "type": "boolean",
+          "description": "Whether to add client external network IP and log arrival time after receiving the log.\nDefault to false.",
+          "default": false
+        },
+        "AutoSplit": {
+          "type": "boolean",
+          "description": "Whether to automatically split the shard.\nDefault to false.",
+          "default": false
+        },
+        "EnableTracking": {
+          "type": "boolean",
+          "description": "Whether to enable WebTracking, which supports fast capture of various browsers and iOS/Android/APP access information.\nDefault to false.",
+          "default": false
+        },
+        "LogstoreName": {
+          "type": "string",
+          "description": "Logstore name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+          "minLength": 3,
+          "maxLength": 63
+        },
+        "MaxSplitShard": {
+          "type": "integer",
+          "description": "The maximum number of shards when splitting automatically. Must be specified if AutoSplit is set to true.\nAllowed Values: 1-64.",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "PreserveStorage": {
+          "type": "boolean",
+          "description": "Whether to keep the log permanently.\nIf set to true, TTL will be ignored.\nDefault to false.",
+          "default": false
+        },
+        "ProjectName": {
+          "type": "string",
+          "description": "Project name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+          "minLength": 3,
+          "maxLength": 63,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "ShardCount": {
+          "type": "integer",
+          "description": "The number of Shards.\nAllowed Values: 1-100, default to 2.",
+          "default": 2,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "TTL": {
+          "type": "integer",
+          "description": "The lifecycle of log in the logstore in days.\nAllowed Values: 1-3600, default to 30.",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 3600
+        }
+      }
+    }

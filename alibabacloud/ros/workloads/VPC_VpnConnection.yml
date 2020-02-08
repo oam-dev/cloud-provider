@@ -1,0 +1,190 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-vpnconnection
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_VpnConnection
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "VpnGatewayId",
+        "RemoteSubnet",
+        "CustomerGatewayId",
+        "LocalSubnet"
+      ],
+      "properties": {
+        "CustomerGatewayId": {
+          "type": "string",
+          "description": "The ID of the user gateway."
+        },
+        "EffectImmediately": {
+          "type": "boolean",
+          "description": "Whether to delete the currently negotiated IPsec tunnel and re-initiate the negotiation. Value:\nTrue: Negotiate immediately after the configuration is complete.\nFalse (default): Negotiate when traffic enters.",
+          "default": false
+        },
+        "HealthCheckConfig": {
+          "type": "object",
+          "properties": {
+            "Dip": {
+              "type": "boolean"
+            },
+            "Enable": {
+              "type": "boolean"
+            },
+            "Interval": {
+              "type": "integer"
+            },
+            "Retry": {
+              "type": "integer"
+            },
+            "Sip": {
+              "type": "string"
+            }
+          }
+        },
+        "IkeConfig": {
+          "type": "object",
+          "properties": {
+            "IkeAuthAlg": {
+              "type": "string",
+              "description": "The authentication algorithm negotiated in the first phase, the value is md5|sha1, and the default value is md5.",
+              "default": "md5",
+              "Enum": [
+                "md5",
+                "sha1"
+              ]
+            },
+            "IkeEncAlg": {
+              "type": "string",
+              "description": "The encryption algorithm negotiated in the first phase, value: aes|aes192|aes256|des|3des, default value: aes.",
+              "default": "aes",
+              "Enum": [
+                "aes",
+                "aes192",
+                "aes256",
+                "des",
+                "3des"
+              ]
+            },
+            "IkeLifetime": {
+              "type": "integer",
+              "description": "The life cycle of the SA negotiated in the first phase. The value ranges from 0 to 86400, in seconds. The default value is 86400.",
+              "default": 86400,
+              "maximum": 86400
+            },
+            "IkeMode": {
+              "type": "string",
+              "description": "Negotiation mode for IKE V1. Value: main|aggressive, default: main.",
+              "default": "main",
+              "Enum": [
+                "main",
+                "aggressive"
+              ]
+            },
+            "IkePfs": {
+              "type": "string",
+              "description": "Diffie-Hellman key exchange algorithm used in the first phase negotiation. Value: group1|group2|group5|group14|group24, default value: group2.",
+              "default": "group2",
+              "Enum": [
+                "group1",
+                "group2",
+                "group5",
+                "group14",
+                "group24"
+              ]
+            },
+            "IkeVersion": {
+              "type": "string",
+              "description": "The version of the IKE protocol. Value: ikev1|ikev2, default: ikev1.",
+              "default": "ikev1",
+              "Enum": [
+                "ikev1",
+                "ikev2"
+              ]
+            },
+            "LocalIdIPsec": {
+              "type": "string",
+              "description": "ID of the VPN gateway. The length is limited to 100 characters. The default value is the public IP address of the VPN gateway.",
+              "maxLength": 100
+            },
+            "Psk": {
+              "type": "string",
+              "description": "Used for identity authentication between the IPsec VPN gateway and the user gateway. It is generated randomly by default, or you can specify the key manually. The length is limited to 100 characters.",
+              "maxLength": 100
+            },
+            "RemoteId": {
+              "type": "string",
+              "description": "ID of the user gateway. The length is limited to 100 characters. The default value is the public IP address of the user gateway.",
+              "maxLength": 100
+            }
+          }
+        },
+        "IpsecConfig": {
+          "type": "object",
+          "properties": {
+            "IpsecAuthAlg": {
+              "type": "string",
+              "description": "Authentication algorithm negotiated in the second phase. Value: md5|sha1, default value: md5.",
+              "default": "md5",
+              "Enum": [
+                "md5",
+                "sha1"
+              ]
+            },
+            "IpsecEncAlg": {
+              "type": "string",
+              "description": "Encryption algorithm negotiated in the second phase. Value: aes|aes192|aes256|des|3des, default value: aes.",
+              "default": "aes",
+              "Enum": [
+                "aes",
+                "aes192",
+                "aes256",
+                "des",
+                "3des"
+              ]
+            },
+            "IpsecLifetime": {
+              "type": "integer",
+              "description": "IpsecLifetime: The life cycle of the SA negotiated in the second phase. The value ranges from 0 to 86400, in seconds. The default value is 86400.",
+              "default": 86400,
+              "maximum": 86400
+            },
+            "IpsecPfs": {
+              "type": "string",
+              "description": "Forwards all protocol packets. The Diffie-Hellman key exchange algorithm used in the first phase negotiation, the value: group1|group2|group5|group14|group24, default value: group2.",
+              "default": "group2",
+              "Enum": [
+                "group1",
+                "group2",
+                "group5",
+                "group14",
+                "group24"
+              ]
+            }
+          }
+        },
+        "LocalSubnet": {
+          "type": "string",
+          "description": "A network segment on the VPC side that needs to be interconnected with the local IDC for the second phase negotiation.\nMultiple network segments are separated by commas, for example: 192.168.1.0/24, 192.168.2.0/24."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the IPsec connection.\nThe length is 2-128 characters and must start with a letter or Chinese. It can contain numbers, periods (.), underscores (_) and dashes (-), but cannot start with http:// or https:// .",
+          "minLength": 2,
+          "maxLength": 128
+        },
+        "RemoteSubnet": {
+          "type": "string",
+          "description": "The network segment of the local IDC is used for the second phase negotiation.\nMultiple network segments are separated by commas, for example: 192.168.3.0/24, 192.168.4.0/24."
+        },
+        "VpnGatewayId": {
+          "type": "string",
+          "description": "ID of the VPN gateway."
+        }
+      }
+    }

@@ -1,0 +1,30 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ros-waitconditionhandle
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ROS_WaitConditionHandle
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "Count": {
+          "type": "integer",
+          "description": "There are 3 preconditions that make Count taking effect:\n1.Mode is set to Full.\n2.Count \u003e= 0.\n3.The id of signal is not specified. If so, it will be a self-increasing integer started from 1. For example, the id of the first signal is 1, the id of the second signal is 2, and so on.\n\nIf Count takes effect, signals with id \u003e Count will be deleted before update.\nThe default value is -1, which means no effect.\nIt is recommended to quote the same value with WaitCondition.Count.",
+          "default": -1
+        },
+        "Mode": {
+          "type": "string",
+          "description": "If set to Increment, all old signals will be deleted before update. In this mode, WaitCondition.Count should reference an incremental value instead of a full value, such as ScalingGroupEnable.ScalingRuleArisExecuteResultNumberOfAddedInstances.\n\nIf set to Full, no old signal will be deleted unless Count is set. In this mode, WaitCondition.Count should reference a full value, such as the same value with InstanceGroup.MaxAmount. It is recommended to use this mode with Count.\n\nDefault to Full.",
+          "default": "Full",
+          "Enum": [
+            "Increment",
+            "Full"
+          ]
+        }
+      }
+    }

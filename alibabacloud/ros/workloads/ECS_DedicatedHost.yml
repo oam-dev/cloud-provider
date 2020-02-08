@@ -1,0 +1,157 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-dedicatedhost
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_DedicatedHost
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DedicatedHostType"
+      ],
+      "properties": {
+        "ActionOnMaintenance": {
+          "type": "string",
+          "description": "The policy used to migrate the instances from the dedicated hostwhen the dedicated host fails or needs to be repaired online.Valid values: Migrate: Instances are migrated to another physical server and restarted.If the dedicated host is attached with disks that are not local disks, the default value is Migrate.Stop: Instances on the dedicated host are stopped. If the dedicated host cannot be repaired,the instances are migrated to another physical server and restarted.If the dedicated host is attached with local disks, the default value is Stop.",
+          "Enum": [
+            "Migrate",
+            "Stop"
+          ]
+        },
+        "AutoPlacement": {
+          "type": "string",
+          "description": "Specifies whether the dedicated host is added to the resource pool for automatic deployment. If you do not specify the DedicatedHostId parameter when you create an instance on a dedicated host, Alibaba Cloud automatically selects a dedicated host from the resource pool to host the instance. For more information, see Automatic deployment. Valid values:on: The dedicated host is added to the resource pool for automatic deployment.off: The dedicated host is not added to the resource pool for automatic deployment.Default value: on.Note When you create a dedicated host: If you do not specify this parameter, the dedicated host is added to the automatic deployment resource pool.If you do not want to add the dedicated host to the automatic deployment resource pool, set the value to off.",
+          "Enum": [
+            "on",
+            "off"
+          ]
+        },
+        "AutoReleaseTime": {
+          "type": "string",
+          "description": "Auto release time for created host, Follow ISO8601 standard using UTC time. format is 'yyyy-MM-ddTHH:mm:ssZ'. Not bigger than 3 years from this day onwards"
+        },
+        "AutoRenew": {
+          "type": "string",
+          "description": "Whether renew the fee automatically? When the parameter InstanceChargeType is PrePaid, it will take effect. Range of value:True: automatic renewal.False: no automatic renewal. Default value is False.",
+          "default": "False",
+          "Enum": [
+            "True",
+            "False"
+          ]
+        },
+        "AutoRenewPeriod": {
+          "type": "number",
+          "description": "The time period of auto renew. When the parameter InstanceChargeType is PrePaid, it will take effect.It could be 1, 2, 3, 6, 12. Default value is 1.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            6,
+            12
+          ]
+        },
+        "ChargeType": {
+          "type": "string",
+          "description": "Instance Charge type, allowed value: Prepaid and Postpaid. If specified Prepaid, please ensure you have sufficient balance in your account. Or instance creation will be failure. Default value is Postpaid.",
+          "default": "PostPaid",
+          "Enum": [
+            "PrePaid",
+            "PostPaid"
+          ]
+        },
+        "DedicatedHostName": {
+          "type": "string",
+          "description": "The name of the dedicated host, [2, 128] English or Chinese characters. It must begin with an uppercase/lowercase letter or a Chinese character, and may contain numbers, '_' or '-'. It cannot begin with http:// or https://."
+        },
+        "DedicatedHostType": {
+          "type": "string",
+          "description": "The instance type of host."
+        },
+        "Description": {
+          "type": "string",
+          "description": "The description of host."
+        },
+        "NetworkAttributesSlbUdpTimeout": {
+          "type": "integer",
+          "description": "The duration of UDP timeout for sessions between Server Load Balancer (SLB) and the dedicated host. Unit: seconds. Valid values: 15 to 310.",
+          "minimum": 15,
+          "maximum": 310
+        },
+        "NetworkAttributesUdpTimeout": {
+          "type": "integer",
+          "description": "The duration of UDP timeout for sessions between users and instances on the dedicated host. Unit: seconds. Valid values: 15 to 310.",
+          "minimum": 15,
+          "maximum": 310
+        },
+        "Period": {
+          "type": "number",
+          "description": "Prepaid time period. Unit is month, it could be from 1 to 9 or 12, 24, 36, 48, 60. Default value is 1.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12,
+            24,
+            36,
+            48,
+            60
+          ]
+        },
+        "PeriodUnit": {
+          "type": "string",
+          "description": "Unit of prepaid time period, it could be Week/Month. Default value is Month.",
+          "default": "Month",
+          "Enum": [
+            "Week",
+            "Month"
+          ]
+        },
+        "Quantity": {
+          "type": "integer",
+          "description": "The number of dedicated hosts that you want to create. Valid values: 1 to 100.Default value: 1.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "The ID of the resource group. If this is left blank, the system automatically fills in the ID of the default resource group."
+        },
+        "Tags": {
+          "type": "array",
+          "description": "Tags to attach to DedicatedHost. Max support 20 tags to add during create DedicatedHost. Each tag with two properties Key and Value, and Key is required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The zone to create the host."
+        }
+      }
+    }

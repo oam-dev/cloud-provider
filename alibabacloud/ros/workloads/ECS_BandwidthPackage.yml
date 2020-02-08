@@ -1,0 +1,59 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-bandwidthpackage
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_BandwidthPackage
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "IpCount",
+        "Bandwidth",
+        "NatGatewayId"
+      ],
+      "properties": {
+        "Bandwidth": {
+          "type": "integer",
+          "description": "Bandwidth, [5-5000]M for PayByBandwidth, [5-50]M for PayByTraffic.",
+          "default": 5,
+          "minimum": 5,
+          "maximum": 5000
+        },
+        "BandwidthPackageName": {
+          "type": "string",
+          "description": "Display name of the bandwidth package, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'"
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the bandwidth package, [2, 256] characters. Do not fill or empty, the default is empty."
+        },
+        "InternetChargeType": {
+          "type": "string",
+          "description": "Nat Gateway internet access charge type.Support 'PayByBandwidth' and 'PayByTraffic' only. Default is PayByTraffic",
+          "default": "PayByTraffic",
+          "Enum": [
+            "PayByBandwidth",
+            "PayByTraffic"
+          ]
+        },
+        "IpCount": {
+          "type": "integer",
+          "description": "Total internet IPs of this Bandwidth package, [1-5]",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "NatGatewayId": {
+          "type": "string",
+          "description": "Create bandwidth package for specified NAT gateway"
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The availability zone where the bandwidth package will be created."
+        }
+      }
+    }

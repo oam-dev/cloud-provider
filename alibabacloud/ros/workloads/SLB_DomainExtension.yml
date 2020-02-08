@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-domainextension
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_DomainExtension
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ServerCertificateId",
+        "Domain",
+        "LoadBalancerId",
+        "ListenerPort"
+      ],
+      "properties": {
+        "Domain": {
+          "type": "string",
+          "description": "The domain name."
+        },
+        "ListenerPort": {
+          "type": "integer",
+          "description": "The front-end HTTPS listener port of the Server Load Balancer instance. Valid value:\n1-65535",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "LoadBalancerId": {
+          "type": "string",
+          "description": "The ID of Server Load Balancer instance."
+        },
+        "ServerCertificateId": {
+          "type": "string",
+          "description": "The ID of the certificate corresponding to the domain name."
+        }
+      }
+    }

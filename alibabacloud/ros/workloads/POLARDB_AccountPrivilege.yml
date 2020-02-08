@@ -1,0 +1,42 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-accountprivilege
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_AccountPrivilege
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AccountName",
+        "DBClusterId",
+        "DBName",
+        "AccountPrivilege"
+      ],
+      "properties": {
+        "AccountName": {
+          "type": "string",
+          "description": "The name of the database account to be granted access permissions.",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "AccountPrivilege": {
+          "type": "string",
+          "description": "The permissions of the database account on the database. Valid values:\n- ReadWrite: has read and write permissions on the database.\n- ReadOnly: has the read-only permission on the database.\n- DMLOnly: runs only data manipulation language (DML) statements.\n- DDLOnly: runs only data definition language (DDL) statements.\nThe number of account permissions specified by the AccountPrivilege parameter must be the same as that of database names specified by the DBName parameter. Each account permission must correspond to a database name in sequence.\nSeparate multiple permissions with a comma (,).",
+          "minLength": 1
+        },
+        "DBClusterId": {
+          "type": "string",
+          "description": "The ID of the ApsaraDB for POLARDB cluster to which a database account belongs."
+        },
+        "DBName": {
+          "type": "string",
+          "description": "The name of the database whose access permissions are to be granted to the database account.\nYou can grant access permissions on one or more databases to the database account.\nSeparate multiple databases with a comma (,).",
+          "minLength": 1
+        }
+      }
+    }

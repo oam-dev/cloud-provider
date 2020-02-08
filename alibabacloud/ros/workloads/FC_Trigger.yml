@@ -1,0 +1,54 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: fc-trigger
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FC_Trigger
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ServiceName",
+        "TriggerName",
+        "FunctionName",
+        "TriggerType",
+        "TriggerConfig"
+      ],
+      "properties": {
+        "FunctionName": {
+          "type": "string",
+          "description": "Function name."
+        },
+        "InvocationRole": {
+          "type": "string",
+          "description": "The role grants event source the permission to run function on behalf of user. This is optional for some triggers.\nExample : \"acs:ram::1234567890:role/fc-test\""
+        },
+        "Qualifier": {
+          "type": "string",
+          "description": "service version or alias.\nExample : \"LATEST\""
+        },
+        "ServiceName": {
+          "type": "string",
+          "description": "Service name.",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "SourceArn": {
+          "type": "string",
+          "description": "The Aliyun Resource Name (ARN) of event source. This is optional for some triggers.\nExample : \"acs:oss:cn-shanghai:12345:mybucket\""
+        },
+        "TriggerConfig": {},
+        "TriggerName": {
+          "type": "string",
+          "description": "Trigger name.\nExample : \"image_resize\""
+        },
+        "TriggerType": {
+          "type": "string",
+          "description": "Trigger type, e.g. oss, timer, logs. This determines how the trigger config is interpreted.\nExample : \"oss\""
+        }
+      }
+    }

@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-assignipv6addresses
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_AssignIpv6Addresses
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "NetworkInterfaceId"
+      ],
+      "properties": {
+        "Ipv6AddressCount": {
+          "type": "integer",
+          "description": "IPv6 addresses specified number of randomly generated interfaces elasticity.\nNote You cannot specify the parameters Ipv6Addresses and Ipv6AddressCount at the same time."
+        },
+        "Ipv6Addresses": {
+          "type": "array",
+          "description": "Specify one or more IPv6 addresses for the elastic NIC. Currently, the maximum list size is 1. Example value: 2001:db8:1234:1a00::*** .\nNote You cannot specify the parameters Ipv6Addresses and Ipv6AddressCount at the same time.",
+          "items": {},
+          "maxItems": 1
+        },
+        "NetworkInterfaceId": {
+          "type": "string",
+          "description": "Elastic network interface ID."
+        }
+      }
+    }

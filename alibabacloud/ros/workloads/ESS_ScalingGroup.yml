@@ -1,0 +1,127 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-scalinggroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_ScalingGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "MinSize",
+        "MaxSize"
+      ],
+      "properties": {
+        "DBInstanceIds": {
+          "type": "array",
+          "description": "ID list of an RDS instance. A Json Array with format: [ \"rm-id0\", \"rm-id1\", ... \"rm-idz\" ], support up to 100 RDS instance.",
+          "items": {},
+          "maxItems": 100
+        },
+        "DefaultCooldown": {
+          "type": "integer",
+          "description": "Default cool-down time (in seconds) of the scaling group. Value range: [0, 86400].\nThe default value is 300s.",
+          "maximum": 86400
+        },
+        "GroupDeletionProtection": {
+          "type": "boolean",
+          "description": "Whether to enable deletion protection for scaling group.\nDefault to False.",
+          "default": false
+        },
+        "HealthCheckType": {
+          "type": "string",
+          "description": "The health check type. Allow values is \"ECS\" and \"NONE\", default to \"ECS\".",
+          "Enum": [
+            "ECS",
+            "NONE"
+          ]
+        },
+        "LoadBalancerIds": {
+          "type": "array",
+          "description": "ID list of a Server Load Balancer instance. A Json Array with format: [ \"lb-id0\", \"lb-id1\", ... \"lb-idz\" ], support up to 100 Load Balancer instance.",
+          "items": {},
+          "maxItems": 100
+        },
+        "MaxSize": {
+          "type": "integer",
+          "description": "Maximum number of ECS instances in the scaling group. Value range: [0, 1000].",
+          "maximum": 1000
+        },
+        "MinSize": {
+          "type": "integer",
+          "description": "Minimum number of ECS instances in the scaling group. Value range: [0, 1000].",
+          "maximum": 1000
+        },
+        "MultiAZPolicy": {
+          "type": "string",
+          "description": "ECS scaling strategy for multi availability zone. Allow value:\n1. PRIORITY: scaling the capacity according to the virtual switch (VSwitchIds.N) you define. ECS instances are automatically created using the next priority virtual switch when the higher priority virtual switch cannot be created in the available zone.\n2. BALANCE: evenly allocate ECS instances between the multiple available zone specified by the scaling group.",
+          "Enum": [
+            "PRIORITY",
+            "BALANCE"
+          ]
+        },
+        "NotificationConfigurations": {
+          "type": "array",
+          "description": "When a scaling event occurs in a scaling group, ESS will send a notification to Cloud Monitor or MNS.",
+          "items": {
+            "type": "object",
+            "required": [
+              "NotificationArn",
+              "NotificationTypes"
+            ],
+            "properties": {
+              "NotificationArn": {
+                "type": "string",
+                "description": "The format of the parameter value is acs:ess:{region}:{account-id}:{resource-relative-id}.\nregion: the region to which the scaling group locates\naccount-id: Alibaba Cloud ID\nFor example:\nMNS queue: acs:ess:{region}:{account-id}:queue/{queuename}\nMNS topic: acs:ess:{region}:{account-id}:topic/{topicname}\nCloud Monitor: acs:ess:{region}:{account-id}:/cloudmonitor",
+                "maxLength": 300,
+                "pattern": "^acs:ess:([a-zA-Z0-9-]+):(\\d+):(((queue|topic)/([a-zA-Z0-9][a-zA-Z0-9-]{0,255}))|cloudmonitor)$"
+              },
+              "NotificationTypes": {
+                "type": "array",
+                "description": "Ess events and resource change notification types. Possible values:\nAUTOSCALING:SCALE_OUT_SUCCESS\nAUTOSCALING:SCALE_IN_SUCCESS\nAUTOSCALING:SCALE_OUT_ERROR\nAUTOSCALING:SCALE_IN_ERROR\nAUTOSCALING:SCALE_REJECT\nAUTOSCALING:SCALE_OUT_START\nAUTOSCALING:SCALE_IN_START\nAUTOSCALING:SCHEDULE_TASK_EXPIRING",
+                "items": {},
+                "minItems": 1,
+                "maxItems": 8
+              }
+            }
+          }
+        },
+        "ProtectedInstances": {
+          "type": "array",
+          "description": "ECS instances of protected mode in the scaling group.",
+          "items": {},
+          "maxItems": 1000
+        },
+        "RemovalPolicys": {
+          "type": "array",
+          "description": "Policy for removing ECS instances from the scaling group.\nOptional values:\nOldestInstance: removes the first ECS instance attached to the scaling group.\nNewestInstance: removes the first ECS instance attached to the scaling group.\nOldestScalingConfiguration: removes the ECS instance with the oldest scaling configuration.\nDefault values: OldestScalingConfiguration and OldestInstance. You can enter up to two removal policies.",
+          "items": {},
+          "maxItems": 2
+        },
+        "ScalingGroupName": {
+          "type": "string",
+          "description": "Name shown for the scaling group, which must contain 2-40 characters (English or Chinese). The name must begin with a number, an upper/lower-case letter or a Chinese character and may contain numbers, \"_\", \"-\" or \".\". The account name is unique in the same region.\nIf this parameter is not specified, the default value is ScalingGroupId.",
+          "pattern": "^[a-zA-Z0-9\\u4e00-\\u9fa5][-_.a-zA-Z0-9\\u4e00-\\u9fa5]{1,63}$"
+        },
+        "StandbyInstances": {
+          "type": "array",
+          "description": "ECS instances of standby mode in the scaling group.",
+          "items": {},
+          "maxItems": 1000
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "If you create a VPC scaling group, you must specify the ID of a VSwitch."
+        },
+        "VSwitchIds": {
+          "type": "array",
+          "description": "Parameter VSwitchIds.N is used to create instance in multiple zones. Parameter VSwitchIds.N has a priority over parameter VSwitchId.\nThe valid range of N is [1, 5], and you can specify at most 5 VSwitches in a VPC.\nThe priority of VSwitches descends from 1 to 5, and 1 indicates the highest priority.\nWhen you fail to create an instance in the zone to which a specified VSwitch belongs, another VSwitch with less priority replaces the specified one automatically.",
+          "items": {},
+          "maxItems": 5
+        }
+      }
+    }

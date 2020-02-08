@@ -1,0 +1,38 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-snapshot
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_Snapshot
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DiskId"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "The description of a snapshot can be 2 to 256 characters in length and cannot begin with http:// or https://. The description will appear on the console. By default, the value is zero."
+        },
+        "DiskId": {
+          "type": "string",
+          "description": "Indicates the ID of the specified disk."
+        },
+        "SnapshotName": {
+          "type": "string",
+          "description": "The name of the snapshot, [2, 128] English or Chinese characters. It must begin with an uppercase/lowercase letter or a Chinese character, and may contain numbers, '_' or '-'. It cannot begin with http:// or https://."
+        },
+        "Timeout": {
+          "type": "integer",
+          "description": "The number of minutes to wait for create snapshot.",
+          "default": 200,
+          "minimum": 200,
+          "maximum": 1440
+        }
+      }
+    }

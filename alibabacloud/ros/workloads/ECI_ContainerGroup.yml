@@ -1,0 +1,682 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: eci-containergroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECI_ContainerGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Container",
+        "SecurityGroupId",
+        "ContainerGroupName",
+        "VSwitchId"
+      ],
+      "properties": {
+        "Container": {
+          "type": "array",
+          "description": "The containers that constitute the container group.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Image",
+              "Name"
+            ],
+            "properties": {
+              "Arg": {
+                "type": "array",
+                "description": "The arguments passed to the commands. A maximum of 10 arguments are supported.",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10
+              },
+              "Command": {
+                "type": "array",
+                "description": "The list of commands that you want to send to a container to run. You can specify a maximum of 1 commands. Maximum length per string: 256 characters.",
+                "items": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "maxItems": 1
+              },
+              "Cpu": {
+                "type": "number",
+                "description": "The number of vCPUs assigned to the container. Unit: vCPUs (cores)."
+              },
+              "EnvironmentVar": {
+                "type": "array",
+                "description": "Environment variables in the operating system of the container. Each environment variable is a key/value pair, and both the key and value are strings. A maximum of 100 environment variables are supported. The key indicates the name of a variable. The value indicates the value of the variable.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "FieldRef.FieldPath": {
+                      "type": "string",
+                      "description": "A reference to another variable. Currently, only status.podIP is supported.",
+                      "Enum": [
+                        "status.podIP"
+                      ]
+                    },
+                    "Key": {
+                      "type": "string",
+                      "description": "The name of the variable. The name must be [1,128] characters in length and can contain [, 0-9a-zA-Z, ], and underscores (_). It cannot start with a digit.",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "Value": {
+                      "type": "string",
+                      "description": "The value of the variable. The value must be [0,256] characters in length.",
+                      "maxLength": 256
+                    }
+                  }
+                },
+                "maxItems": 100
+              },
+              "Image": {
+                "type": "string",
+                "description": "The container image."
+              },
+              "ImagePullPolicy": {
+                "type": "string",
+                "description": "The image pull policy. You can use it to pull the image from the image repository."
+              },
+              "LivenessProbe": {
+                "type": "object",
+                "properties": {
+                  "Exec.Command": {
+                    "type": "array",
+                    "description": "The commands for running the readiness probe.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "FailureThreshold": {
+                    "type": "integer",
+                    "description": "The minimum consecutive failures for the probe to be considered to have failed after having succeeded. Default value: 3."
+                  },
+                  "HttpGet.Path": {
+                    "type": "string",
+                    "description": "The path to which the system sends an HTTP GET request to perform the check."
+                  },
+                  "HttpGet.Port": {
+                    "type": "integer",
+                    "description": "The port to which the system sends an HTTP GET request to perform the check."
+                  },
+                  "HttpGet.Scheme": {
+                    "type": "string",
+                    "description": "The protocol that is used to connect the host. Valid values: HTTP and HTTPS.",
+                    "Enum": [
+                      "HTTP",
+                      "HTTPS"
+                    ]
+                  },
+                  "InitialDelaySeconds": {
+                    "type": "integer",
+                    "description": "The number of seconds after the container has started before probes are initiated."
+                  },
+                  "PeriodSeconds": {
+                    "type": "integer",
+                    "description": "Specifies the period at which the probe is performed. Unit: seconds. Default value: 10. Minimum value: 1.",
+                    "minimum": 1
+                  },
+                  "SuccessThreshold": {
+                    "type": "integer",
+                    "description": "The minimum consecutive successes for the probe to be considered successful after having failed. Default value: 1."
+                  },
+                  "TcpSocket.Port": {
+                    "type": "integer",
+                    "description": "The port to which the system sends a TCP SOCKET request to perform the check."
+                  },
+                  "TimeoutSeconds": {
+                    "type": "integer",
+                    "description": "The number of seconds after which the probe times out. Default value: 1. Minimum value: 1.",
+                    "minimum": 1
+                  }
+                }
+              },
+              "Memory": {
+                "type": "number",
+                "description": "The memory assigned to the container. Unit: GiB."
+              },
+              "Name": {
+                "type": "string",
+                "description": "The name of the container."
+              },
+              "Port": {
+                "type": "array",
+                "description": "The open ports and protocols. You can set a maximum of 100 ports.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Port": {
+                      "type": "integer",
+                      "description": "The port number. Valid values: 1-65535.",
+                      "minimum": 1,
+                      "maximum": 65535
+                    },
+                    "Protocol": {
+                      "type": "string",
+                      "description": "The protocol that the port uses. Valid values: TCP and UDP",
+                      "Enum": [
+                        "TCP",
+                        "UDP"
+                      ]
+                    }
+                  }
+                },
+                "maxItems": 100
+              },
+              "ReadinessProbe": {
+                "type": "object",
+                "properties": {
+                  "Exec.Command": {
+                    "type": "array",
+                    "description": "The commands for running the readiness probe.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "FailureThreshold": {
+                    "type": "integer",
+                    "description": "The minimum consecutive failures for the probe to be considered to have failed after having succeeded. Default value: 3."
+                  },
+                  "HttpGet.Path": {
+                    "type": "string",
+                    "description": "The path to which the system sends an HTTP GET request to perform the check."
+                  },
+                  "HttpGet.Port": {
+                    "type": "integer",
+                    "description": "The port to which the system sends an HTTP GET request to perform the check."
+                  },
+                  "HttpGet.Scheme": {
+                    "type": "string",
+                    "description": "The protocol that is used to connect the host. Valid values: HTTP and HTTPS.",
+                    "Enum": [
+                      "HTTP",
+                      "HTTPS"
+                    ]
+                  },
+                  "InitialDelaySeconds": {
+                    "type": "integer",
+                    "description": "The number of seconds after the container has started before probes are initiated."
+                  },
+                  "PeriodSeconds": {
+                    "type": "integer",
+                    "description": "Specifies the period at which the probe is performed. Unit: seconds. Default value: 10. Minimum value: 1.",
+                    "minimum": 1
+                  },
+                  "SuccessThreshold": {
+                    "type": "integer",
+                    "description": "The minimum consecutive successes for the probe to be considered successful after having failed. Default value: 1."
+                  },
+                  "TcpSocket.Port": {
+                    "type": "integer",
+                    "description": "The port to which the system sends a TCP SOCKET request to perform the check."
+                  },
+                  "TimeoutSeconds": {
+                    "type": "integer",
+                    "description": "The number of seconds after which the probe times out. Default value: 1. Minimum value: 1.",
+                    "minimum": 1
+                  }
+                }
+              },
+              "SecurityContext": {
+                "type": "object",
+                "properties": {
+                  "Capability.Add": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Valid values: NET_ADMIN.",
+                      "Enum": [
+                        "NET_ADMIN"
+                      ]
+                    }
+                  },
+                  "ReadOnlyRootFilesystem": {
+                    "type": "boolean",
+                    "description": "Valid value: True.",
+                    "Enum": [
+                      true
+                    ]
+                  },
+                  "RunAsUser": {
+                    "type": "integer",
+                    "description": "User ID."
+                  }
+                }
+              },
+              "Stdin": {
+                "type": "boolean"
+              },
+              "StdinOnce": {
+                "type": "boolean"
+              },
+              "Tty": {
+                "type": "boolean"
+              },
+              "VolumeMount": {
+                "type": "array",
+                "description": "The number of volumes that are mounted to the container. A maximum of 16 volumes are supported.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "MountPath": {
+                      "type": "string",
+                      "description": "A mount path. The data in the target directory is overwritten by the data in the mounted volume. Therefore, use caution when you mount a volume to a directory."
+                    },
+                    "Name": {
+                      "type": "string",
+                      "description": "The name of the volume. The name is the same as that specified for the Name parameter in the Volume section."
+                    },
+                    "ReadOnly": {
+                      "type": "boolean",
+                      "description": "Default value: False.",
+                      "default": false
+                    }
+                  }
+                },
+                "maxItems": 16
+              },
+              "WorkingDir": {
+                "type": "string",
+                "description": "The working directory for the container."
+              }
+            }
+          }
+        },
+        "ContainerGroupName": {
+          "type": "string",
+          "description": "The name of the container group. \nThe length is [2,128] English lowercase letters, numbers or hyphens (-), cannot begin or end with a hyphens.",
+          "minLength": 2,
+          "maxLength": 128
+        },
+        "Cpu": {
+          "type": "number",
+          "description": "CPU size"
+        },
+        "DnsConfig": {
+          "type": "object",
+          "properties": {
+            "NameServer": {
+              "type": "array",
+              "description": "The list of IP addresses for DNS servers.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "Option": {
+              "type": "array",
+              "description": "The list of options. Each option includes a name and a value. The value is optional.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "description": "The name of the option."
+                  },
+                  "Value": {
+                    "type": "string",
+                    "description": "The value of the option."
+                  }
+                }
+              }
+            },
+            "Search": {
+              "type": "array",
+              "description": "The list of DNS search domains.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "EipInstanceId": {
+          "type": "string",
+          "description": "Elastic IP ID"
+        },
+        "HostAliase": {
+          "type": "array",
+          "description": "Customize the hostname mapping of a container inside the pod",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Hostname": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "Ip": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ImageRegistryCredential": {
+          "type": "array",
+          "description": "The information that you need to log on to the container image repository, including the server address, username, and password.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Password",
+              "UserName",
+              "Server"
+            ],
+            "properties": {
+              "Password": {
+                "type": "string",
+                "description": "The password that is used to log on to the image repository."
+              },
+              "Server": {
+                "type": "string",
+                "description": "The IP address of the image repository. This address does not include a protocol prefix, such as http:// or https://."
+              },
+              "UserName": {
+                "type": "string",
+                "description": "The username that is used to log on to the image repository."
+              }
+            }
+          },
+          "maxItems": 10
+        },
+        "ImageSnapshotId": {
+          "type": "string",
+          "description": "Image cache ID or snapshot ID."
+        },
+        "InitContainer": {
+          "type": "array",
+          "description": "The containers that constitute the container group for initializing.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Arg": {
+                "type": "array",
+                "description": "The arguments passed to the commands. A maximum of 10 arguments are supported.",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10
+              },
+              "Command": {
+                "type": "array",
+                "description": "The list of commands that you want to send to a container to run. You can specify a maximum of 1 commands. Maximum length per string: 256 characters.",
+                "items": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "maxItems": 1
+              },
+              "Cpu": {
+                "type": "number",
+                "description": "The number of vCPUs assigned to the container. Unit: vCPUs (cores)."
+              },
+              "EnvironmentVar": {
+                "type": "array",
+                "description": "Environment variables in the operating system of the container. Each environment variable is a key/value pair, and both the key and value are strings. A maximum of 100 environment variables are supported. The key indicates the name of a variable. The value indicates the value of the variable.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "FieldRef.FieldPath": {
+                      "type": "string",
+                      "description": "A reference to another variable. Currently, only status.podIP is supported.",
+                      "Enum": [
+                        "status.podIP"
+                      ]
+                    },
+                    "Key": {
+                      "type": "string",
+                      "description": "The name of the variable. The name must be [1,128] characters in length and can contain [, 0-9a-zA-Z, ], and underscores (_). It cannot start with a digit.",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "Value": {
+                      "type": "string",
+                      "description": "The value of the variable. The value must be [0,256] characters in length.",
+                      "maxLength": 256
+                    }
+                  }
+                },
+                "maxItems": 100
+              },
+              "Image": {
+                "type": "string",
+                "description": "The container image."
+              },
+              "ImagePullPolicy": {
+                "type": "string",
+                "description": "The image pull policy. You can use it to pull the image from the image repository."
+              },
+              "Memory": {
+                "type": "number",
+                "description": "The memory assigned to the container. Unit: GiB."
+              },
+              "Name": {
+                "type": "string",
+                "description": "The name of the container."
+              },
+              "Port": {
+                "type": "array",
+                "description": "The open ports and protocols. You can set a maximum of 100 ports.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Port": {
+                      "type": "integer",
+                      "description": "The port number. Valid values: 1-65535.",
+                      "minimum": 1,
+                      "maximum": 65535
+                    },
+                    "Protocol": {
+                      "type": "string",
+                      "description": "The protocol that the port uses. Valid values: TCP and UDP",
+                      "Enum": [
+                        "TCP",
+                        "UDP"
+                      ]
+                    }
+                  }
+                },
+                "maxItems": 100
+              },
+              "SecurityContext": {
+                "type": "object",
+                "properties": {
+                  "Capability.Add": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "Valid values: NET_ADMIN.",
+                      "Enum": [
+                        "NET_ADMIN"
+                      ]
+                    }
+                  },
+                  "ReadOnlyRootFilesystem": {
+                    "type": "boolean",
+                    "description": "Valid value: True.",
+                    "Enum": [
+                      true
+                    ]
+                  },
+                  "RunAsUser": {
+                    "type": "integer",
+                    "description": "Valid value: 1337.",
+                    "Enum": [
+                      1337
+                    ]
+                  }
+                }
+              },
+              "VolumeMount": {
+                "type": "array",
+                "description": "The number of volumes that are mounted to the container. A maximum of 16 volumes are supported.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "MountPath": {
+                      "type": "string",
+                      "description": "A mount path. The data in the target directory is overwritten by the data in the mounted volume. Therefore, use caution when you mount a volume to a directory."
+                    },
+                    "Name": {
+                      "type": "integer",
+                      "description": "The name of the volume. The name is the same as that specified for the Name parameter in the Volume section."
+                    },
+                    "ReadOnly": {
+                      "type": "boolean",
+                      "description": "Default value: False.",
+                      "default": false
+                    }
+                  }
+                },
+                "maxItems": 16
+              },
+              "WorkingDir": {
+                "type": "string",
+                "description": "The working directory for the container."
+              }
+            }
+          }
+        },
+        "Memory": {
+          "type": "number",
+          "description": "memory size"
+        },
+        "RestartPolicy": {
+          "type": "string",
+          "description": "The policy for restarting the instance. Default value: Always.",
+          "Enum": [
+            "Always",
+            "OnFailure",
+            "Never"
+          ]
+        },
+        "SecurityContextSysctl": {
+          "type": "array",
+          "description": "ECI Sysctl is valid for every container in ECI.\nCurrently only two Sysctl keyNames are supported:\nKernel.shm_rmid_forced\nKernel.msgmax",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Name": {
+                "type": "string",
+                "Enum": [
+                  "kernel.shm_rmid_forced",
+                  "kernel.msgmax"
+                ]
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "The ID of the security group to which the instance belongs. Instances in the same security group can access one another."
+        },
+        "SlsEnable": {
+          "type": "boolean",
+          "description": "Enable user log collection. The default is False."
+        },
+        "Tag": {
+          "type": "array",
+          "description": "The list of container group tags in the form of key/value pairs. You can define a maximum of 20 tags for each container group.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string",
+                "description": "The keyword of the tag."
+              },
+              "Value": {
+                "type": "string",
+                "description": "The value of the tag."
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "VSwitchId": {
+          "type": "string",
+          "description": "The ID of the specified VSwitch. Currently, ECI instances can only be deployed in VPCs."
+        },
+        "Volume": {
+          "type": "array",
+          "description": "The data volume. You can specify a maximum of 20 data volumes.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Type",
+              "Name"
+            ],
+            "properties": {
+              "ConfigFileVolume.ConfigFileToPath": {
+                "type": "array",
+                "description": "The path to the configuration file.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "Path"
+                  ],
+                  "properties": {
+                    "Content": {
+                      "type": "string",
+                      "description": "The content of the configuration file. Maximum size: 32 KB."
+                    },
+                    "Path": {
+                      "type": "string",
+                      "description": "The relative path in the configuration file. You can specify a location of a directory relative to another directory."
+                    }
+                  }
+                }
+              },
+              "EmptyDirVolume.Medium": {
+                "type": "string",
+                "description": "The storage medium for EmptyDirVolume. By default, the file system on the node is used. Default value: not specified. Valid value: Memory. If this parameter is set to Memory, the EmptyDirVolume volume is stored in memory.",
+                "Enum": [
+                  "Memory"
+                ]
+              },
+              "NFSVolume.Path": {
+                "type": "string",
+                "description": "The path to the NFS volume."
+              },
+              "NFSVolume.ReadOnly": {
+                "type": "boolean",
+                "description": "Default value: False."
+              },
+              "NFSVolume.Server": {
+                "type": "string",
+                "description": "The IP address of the NFS server."
+              },
+              "Name": {
+                "type": "string",
+                "description": "The name of the volume."
+              },
+              "Type": {
+                "type": "string",
+                "description": "The type of volume. Valid values: EmptyDirVolume, NFSVolume, and ConfigFileVolume.",
+                "Enum": [
+                  "EmptyDirVolume",
+                  "NFSVolume",
+                  "ConfigFileVolume"
+                ]
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "The ID of the zone in which the instance resides. If you leave the parameter blank, the system assigns a zone for you. The default value is blank."
+        }
+      }
+    }

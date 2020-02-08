@@ -1,0 +1,31 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sls-project
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLS_Project
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Name"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "Project description: \u003c\u003e'\"\\ is not supported, up to 64 characters.",
+          "maxLength": 64
+        },
+        "Name": {
+          "type": "string",
+          "description": "Project name:\n1. Only supports lowercase letters, numbers, hyphens (-) and underscores (_).\n2. Must start and end with lowercase letters and numbers.\n3. The name length is 3-63 characters.",
+          "minLength": 3,
+          "maxLength": 63,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        }
+      }
+    }

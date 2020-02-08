@@ -1,0 +1,88 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-customimage
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_CustomImage
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "Architecture": {
+          "type": "string",
+          "description": "After specifying the data disk snapshot as the mirrored system disk, you need to determine the system architecture of the system disk through Architecture. Ranges:\nI386\nX86_64 (default)"
+        },
+        "Description": {
+          "type": "string",
+          "description": "The description of the image.\nIt can be [0, 256] letters in length.\nIt cannot begin with http:// or https://.\nDefault value: null."
+        },
+        "DiskDeviceMapping": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Device": {
+                "type": "string",
+                "description": "Specify the device name in DiskMirrorMapping.N. in the custom image. Value range: /dev/xvda~/dev/xvdz"
+              },
+              "DiskType": {
+                "type": "string",
+                "description": "Specifies the disk type of DiskDeviceMapping.N. in the new image. You can use the data disk snapshot as the mirrored system disk. If not specified, the default is the disk type corresponding to the snapshot. Ranges:\nSystem: system disk\nData: data disk",
+                "Enum": [
+                  "system",
+                  "data"
+                ]
+              },
+              "Size": {
+                "type": "integer",
+                "description": "The size of a disk. The unit of measurement is GiB. Value range: [5, 2000] GiB.\nThe default value is the value of snapshot size (DiskDeviceMapping.N.SnapshotId) if you do not specify this parameter.\nIf you do not specify the snapshot ID (DiskDeviceMapping.N.SnapshotId), the default size is 5 GiB.\nThe size value cannot be less than the size of the snapshot (DiskDeviceMapping.N.SnapshotId).\nThe value range of n in DiskDeviceMapping.n is: [1, 17].\nn =1: Indicates the specified disk is a system disk.\nn =2, 3, ...17: Indicates the specified disk is a data disk."
+              },
+              "SnapshotId": {
+                "type": "string",
+                "description": "The snapshot ID of the disk DiskDeviceMapping.N.."
+              }
+            }
+          }
+        },
+        "ImageName": {
+          "type": "string",
+          "description": "Image name.\nCan contain [2, 128] characters in length. Must begin with an English letter or Chinese character. Can contain digits, colons (:), underscores (_), or hyphens (-).\nCannot begin with http:// or https://."
+        },
+        "InstanceId": {
+          "type": "string",
+          "description": "Instance ID."
+        },
+        "Platform": {
+          "type": "string",
+          "description": "After specifying the data disk snapshot as the mirrored system disk, you need to determine the operating system release of the system disk through Platform."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "The enterprise resource group ID where the custom image is located."
+        },
+        "SnapshotId": {
+          "type": "string",
+          "description": "The snapshot ID. A custom image is created from the specified snapshot."
+        },
+        "Tag": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Key": {
+                "type": "string",
+                "description": "The key of a tag of which n is from 1 to 20. Once you use this parameter, it cannot be a null string. It can be up to 64 characters in length. It cannot begin with \"aliyun\", \"acs:\", \"http://\", or \"https://\"."
+              },
+              "Value": {
+                "type": "string",
+                "description": "The value of a tag of which n is a number from 1 to 20. Once you use this parameter, it can be a null string. It can be up to 128 characters in length. It cannot begin with \"aliyun\", \"acs:\", \"http://\", or \"https://\"."
+              }
+            }
+          }
+        }
+      }
+    }

@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ram-accesskey
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RAM_AccessKey
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "UserName"
+      ],
+      "properties": {
+        "UserName": {
+          "type": "string",
+          "description": "Specifies the user name, containing up to 64 characters."
+        }
+      }
+    }

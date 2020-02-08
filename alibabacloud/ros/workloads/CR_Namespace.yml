@@ -1,0 +1,39 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cr-namespace
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CR_Namespace
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Namespace"
+      ],
+      "properties": {
+        "AutoCreate": {
+          "type": "boolean",
+          "description": "whether auto create repository",
+          "default": true
+        },
+        "DefaultVisibility": {
+          "type": "string",
+          "description": "repository default visibility, public or private",
+          "default": "PRIVATE",
+          "Enum": [
+            "PUBLIC",
+            "PRIVATE"
+          ]
+        },
+        "Namespace": {
+          "type": "string",
+          "description": "domain name",
+          "minLength": 2,
+          "maxLength": 30
+        }
+      }
+    }

@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: nas-access-group
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the nas access group.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.NAS_AccessGroup
+  osType: "linux"
+  arch: "x86"
+  containers: []
+  parameters: []
+  workloadSettings:
+    AccessGroupType: Vpc
+    AccessGroupName: NasDemo

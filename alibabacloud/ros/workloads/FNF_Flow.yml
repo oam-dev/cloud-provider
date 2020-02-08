@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: fnf-flow
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FNF_Flow
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Definition",
+        "Name"
+      ],
+      "properties": {
+        "Definition": {
+          "type": "string",
+          "description": "The definition of the created flow following the FDL syntax standard."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Create a description of the flow."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the flow created. This name is unique under the account."
+        },
+        "RequestId": {
+          "type": "string",
+          "description": "The specified Request ID for this request. If not specified, our system will help you generate a random one."
+        },
+        "RoleArn": {
+          "type": "string",
+          "description": "Optional parameter, the resource descriptor information required for the execution of the flow, used to perform the assume role during FnF execution."
+        }
+      }
+    }

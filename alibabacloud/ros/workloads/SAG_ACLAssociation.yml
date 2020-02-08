@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sag-aclassociation
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SAG_ACLAssociation
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SmartAGId",
+        "AclId"
+      ],
+      "properties": {
+        "AclId": {
+          "type": "string",
+          "description": "Access control ID."
+        },
+        "SmartAGId": {
+          "type": "string",
+          "description": "An intelligent gateway instance that needs to bind access control."
+        }
+      }
+    }

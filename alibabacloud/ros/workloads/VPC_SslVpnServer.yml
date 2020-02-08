@@ -1,0 +1,69 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-sslvpnserver
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_SslVpnServer
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "VpnGatewayId",
+        "ClientIpPool",
+        "LocalSubnet"
+      ],
+      "properties": {
+        "Cipher": {
+          "type": "string",
+          "description": "The encryption algorithm used by SSL-VPN. Value:\nAES-128-CBC (default) | AES-192-CBC | AES-256-CBC | none",
+          "default": "AES-128-CBC",
+          "Enum": [
+            "AES-128-CBC",
+            "AES-192-CBC",
+            "AES-256-CBC",
+            "none"
+          ]
+        },
+        "ClientIpPool": {
+          "type": "string",
+          "description": "It is the address segment that assigns the access address to the client virtual NIC. It does not refer to the existing intranet segment of the client.\nWhen the client accesses the local end through an SSL-VPN connection, the VPN gateway allocates an IP address to the client from the specified client network segment.\nThe network segment cannot conflict with the LocalSubnet address segment."
+        },
+        "Compress": {
+          "type": "boolean",
+          "description": "Whether it is compressed.",
+          "default": false
+        },
+        "LocalSubnet": {
+          "type": "string",
+          "description": "Is the address segment that the client wants to access through an SSL-VPN connection.\nThe local network segment can be the network segment of the VPC, the network segment of the switch, the network segment of the IDC interconnected by the leased line and the VPC, and the network segment of the cloud service such as RDS/OSS."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of the SSL-VPN server. The length is 2-128 characters and must start with a letter or Chinese. It can contain numbers, periods (.), underscores (_), and dashes (-).\nBut it can't start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 128
+        },
+        "Port": {
+          "type": "integer",
+          "description": "The port used by the SSL-VPN server. The default value is 1194. Cannot use the following ports:\n22, 2222, 22222, 9000, 9001, 9002, 7505, 80, 443, 53, 68, 123, 4510, 4560, 500, 4500",
+          "default": 1194
+        },
+        "Proto": {
+          "type": "string",
+          "description": "The protocol used by the SSL-VPN server. Allowed values: UDP (default) | TCP.",
+          "default": "UDP",
+          "Enum": [
+            "UDP",
+            "TCP"
+          ]
+        },
+        "VpnGatewayId": {
+          "type": "string",
+          "description": "ID of the VPN gateway."
+        }
+      }
+    }

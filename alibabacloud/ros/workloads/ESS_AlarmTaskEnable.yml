@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-alarmtaskenable
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_AlarmTaskEnable
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AlarmTaskId",
+        "Enable"
+      ],
+      "properties": {
+        "AlarmTaskId": {
+          "type": "string",
+          "description": "The id of alarm task."
+        },
+        "Enable": {
+          "type": "boolean",
+          "description": "Enable alarm task or not"
+        }
+      }
+    }

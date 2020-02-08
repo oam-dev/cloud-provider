@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-vpcaccessconfig
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_VpcAccessConfig
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "VpcId",
+        "Name",
+        "Port",
+        "InstanceId"
+      ],
+      "properties": {
+        "InstanceId": {
+          "type": "string",
+          "description": "The id of the instance (ECS/SLB)."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name of one VPC access configuration.Need [4, 50] Chinese\\English\\Number characters \"-\" or \"_\",and should start with Chinese/English character."
+        },
+        "Port": {
+          "type": "integer",
+          "description": "The port of the VPC.",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The id of the VPC."
+        }
+      }
+    }

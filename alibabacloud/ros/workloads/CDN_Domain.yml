@@ -1,0 +1,54 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cdn-domain
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CDN_Domain
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DomainName",
+        "CdnType"
+      ],
+      "properties": {
+        "CdnType": {
+          "type": "string",
+          "description": "The business type. Valid values: web, download, video, livestream, and httpsdelivery. web: acceleration of images and small files download. download: acceleration of large file downloads. video: live streaming acceleration. httpsdelivery: SSL acceleration for HTTPS.",
+          "Enum": [
+            "video",
+            "download",
+            "web",
+            "liveStream"
+          ]
+        },
+        "CheckUrl": {
+          "type": "string",
+          "description": "The validation of the origin."
+        },
+        "DomainName": {
+          "type": "string",
+          "description": "The CDN domain name. Wildcard domain names that start with periods (.) are supported. For example, .a.com."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "The ID of the resource group. If this is left blank, the system automatically fills in the ID of the default resource group."
+        },
+        "Scope": {
+          "type": "string",
+          "description": "Valid values: domestic, overseas, and global. Default value: domestic. The setting is supported for users outside mainland China, users in mainland China of level 3 or above."
+        },
+        "Sources": {
+          "type": "string",
+          "description": "The list of origin URLs."
+        },
+        "TopLevelDomain": {
+          "type": "string",
+          "description": "The top-level domain, which can only be configured by users on the whitelist."
+        }
+      }
+    }

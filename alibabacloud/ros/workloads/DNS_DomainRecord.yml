@@ -1,0 +1,53 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: dns-domainrecord
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: DNS_DomainRecord
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Type",
+        "DomainName",
+        "RR",
+        "Value"
+      ],
+      "properties": {
+        "DomainName": {
+          "type": "string",
+          "description": "Domain name"
+        },
+        "Line": {
+          "type": "string",
+          "description": "Parse the line, the default is default. See parsing line enumeration"
+        },
+        "Priority": {
+          "type": "integer",
+          "description": "The priority of the MX record, the value range [1,10], when the record type is MX record, this parameter must be",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "RR": {
+          "type": "string",
+          "description": "Host record, if you want to resolve @.exmaple.com, the host record should fill in \"@\" instead of empty"
+        },
+        "TTL": {
+          "type": "integer",
+          "description": "The resolution time is valid. The default is 600 seconds (10 minutes). See the TTL definition.",
+          "default": 600
+        },
+        "Type": {
+          "type": "string",
+          "description": "Parse record type, see parsing record type format"
+        },
+        "Value": {
+          "type": "string",
+          "description": "Record value"
+        }
+      }
+    }

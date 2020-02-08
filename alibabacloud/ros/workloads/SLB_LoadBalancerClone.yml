@@ -1,0 +1,64 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-loadbalancerclone
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_LoadBalancerClone
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SourceLoadBalancerId"
+      ],
+      "properties": {
+        "BackendServers": {
+          "type": "array",
+          "description": "The list of ECS instance, which will attached to load balancer.",
+          "items": {
+            "type": "object",
+            "required": [
+              "ServerId",
+              "Weight"
+            ],
+            "properties": {
+              "ServerId": {
+                "type": "string",
+                "description": "Need one valid ECS instance id. The instance status should running."
+              },
+              "Weight": {
+                "type": "integer",
+                "description": "The weight of backend server of load balancer. From 0 to 100, 0 means offline. Default is 100.",
+                "maximum": 100
+              }
+            }
+          }
+        },
+        "BackendServersPolicy": {
+          "type": "string",
+          "description": "Solution for handle the backend server and weights. If select 'clone', it will clone from source load balancer. If select 'empty' it will not attach any backend servers. If select 'append' it will append the new backend server list to source backed servers. If select 'replace' it will only attach new backend server list. Default is 'clone'. ",
+          "default": "clone",
+          "Enum": [
+            "clone",
+            "empty",
+            "append",
+            "replace"
+          ]
+        },
+        "LoadBalancerName": {
+          "type": "string",
+          "description": "Name of created load balancer. Length is limited to 1-80 characters, allowed to contain letters, numbers, '-, /, _,.' When not specified, a default name will be assigned."
+        },
+        "ResourceGroupId": {
+          "type": "string",
+          "description": "Resource group id."
+        },
+        "SourceLoadBalancerId": {
+          "type": "string",
+          "description": "Source load balancer id to clone"
+        }
+      }
+    }

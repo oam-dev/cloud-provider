@@ -1,0 +1,47 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cen-ceninstanceattachment
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CEN_CenInstanceAttachment
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ChildInstanceRegionId",
+        "CenId",
+        "ChildInstanceType",
+        "ChildInstanceId"
+      ],
+      "properties": {
+        "CenId": {
+          "type": "string",
+          "description": "The ID of the CEN instance."
+        },
+        "ChildInstanceId": {
+          "type": "string",
+          "description": "The ID of the network to attach."
+        },
+        "ChildInstanceOwnerId": {
+          "type": "integer",
+          "description": "The account ID to which the network belongs."
+        },
+        "ChildInstanceRegionId": {
+          "type": "string",
+          "description": "The ID of the region where the network is located. The ID of the region where the network is located."
+        },
+        "ChildInstanceType": {
+          "type": "string",
+          "description": "The type of the network to attach. Support VPC, VBR or CCN.",
+          "Enum": [
+            "VPC",
+            "VBR",
+            "CCN"
+          ]
+        }
+      }
+    }

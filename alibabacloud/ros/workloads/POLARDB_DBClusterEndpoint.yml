@@ -1,0 +1,65 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-dbclusterendpoint
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_DBClusterEndpoint
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DBClusterId"
+      ],
+      "properties": {
+        "AutoAddNewNodes": {
+          "type": "string",
+          "description": "Specifies whether a newly added node is automatically added to this connection point.\nValid values: Enable, Disable.\nDefault value: Disable.",
+          "default": "Disable",
+          "Enum": [
+            "Disable",
+            "Enable"
+          ]
+        },
+        "DBClusterId": {
+          "type": "string",
+          "description": "The ID of the ApsaraDB for POLARDB cluster for which a custom connection point is to be created."
+        },
+        "EndpointConfig": {
+          "type": "object",
+          "properties": {
+            "ConsistLevel": {
+              "type": "string",
+              "description": "The consistency level of the cluster connection point. Valid values:\n0: eventual consistency\n1: session consistency\nFor example, {\"ConsistLevel\": \"0\"}.\nNote If the ReadWriteMode parameter is set to ReadOnly, the value of this parameter must be 0.",
+              "Enum": [
+                "0",
+                "1"
+              ]
+            }
+          }
+        },
+        "EndpointType": {
+          "type": "string",
+          "description": "The type of the cluster connection point. Set this parameter to Custom.",
+          "default": "Custom"
+        },
+        "Nodes": {
+          "type": "array",
+          "description": "The nodes to be added to this connection point to process read requests from this connection point. Add at least two nodes.\nIf you do not specify this parameter, all nodes of the cluster are added to this connection point by default.",
+          "items": {},
+          "minItems": 2
+        },
+        "ReadWriteMode": {
+          "type": "string",
+          "description": "The read/write mode of the cluster connection point. Valid values:\nReadWrite: receives and forwards read and write requests (automatic read-write splitting).\nReadOnly: receives and forwards only read requests.\nDefault value: ReadOnly.",
+          "default": "ReadOnly",
+          "Enum": [
+            "ReadOnly",
+            "ReadWrite"
+          ]
+        }
+      }
+    }

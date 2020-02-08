@@ -1,0 +1,52 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-accesscontrol
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_AccessControl
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AclName"
+      ],
+      "properties": {
+        "AclEntrys": {
+          "type": "array",
+          "description": "A list of acl entrys. Each entry can be IP addresses or CIDR blocks. Max length: 50.",
+          "items": {
+            "type": "object",
+            "required": [
+              "entry"
+            ],
+            "properties": {
+              "comment": {
+                "type": "string",
+                "description": "Description of the entry."
+              },
+              "entry": {
+                "type": "string",
+                "description": "IP addresses or CIDR blocks. For example: \"10.0.0.1\" or \"192.168.0.0/16\""
+              }
+            }
+          },
+          "maxItems": 50
+        },
+        "AclName": {
+          "type": "string",
+          "description": "The name of the access control list."
+        },
+        "AddressIPVersion": {
+          "type": "string",
+          "description": "IP version. Could be \"ipv4\" or \"ipv6\".",
+          "Enum": [
+            "ipv4",
+            "ipv6"
+          ]
+        }
+      }
+    }

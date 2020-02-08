@@ -1,0 +1,74 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cms-eventrule
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CMS_EventRule
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RuleName",
+        "EventPattern"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "The description of the alert rule."
+        },
+        "EventPattern": {
+          "type": "array",
+          "description": "Event pattern configuration.A maximum of 20 event patterns.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "EventTypeList": {
+                "type": "array",
+                "description": "The type of the event. A value of * indicates any type. Please refer to the configuration of CMS.",
+                "items": {}
+              },
+              "LevelList": {
+                "type": "array",
+                "description": "The severity of the event alert. Valid values: CRITICAL, WARN, INFO, and * (all severity\nlevels).",
+                "items": {}
+              },
+              "NameList": {
+                "type": "array",
+                "description": "The name of the event. Please refer to the configuration of CMS.",
+                "items": {}
+              },
+              "Product": {
+                "type": "string",
+                "description": "The name of the service. Please refer to the configuration of CMS."
+              },
+              "StatusList": {
+                "type": "array",
+                "description": "The status of the event. Please refer to the configuration of CMS.",
+                "items": {}
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "EventType": {
+          "type": "string",
+          "description": "The type of the event alert. Valid values:\nSYSTEM\nCUSTOM"
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The ID of the application group."
+        },
+        "RuleName": {
+          "type": "string",
+          "description": "The name of the alarm rule."
+        },
+        "State": {
+          "type": "string",
+          "description": "The status of the alert rule. Valid values:\nENABLED\nDISABLED"
+        }
+      }
+    }

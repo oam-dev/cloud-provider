@@ -1,0 +1,220 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: slb-listener
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLB_Listener
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "LoadBalancerId",
+        "Protocol",
+        "Bandwidth",
+        "ListenerPort",
+        "BackendServerPort"
+      ],
+      "properties": {
+        "AclId": {
+          "type": "string",
+          "description": "The ID of the access control list associated with the listener to be created.\nIf the value of the AclStatus parameter is on, this parameter is required."
+        },
+        "AclStatus": {
+          "type": "string",
+          "description": "Indicates whether to enable access control.\nValid values: on | off. Default value: off",
+          "default": "off",
+          "Enum": [
+            "on",
+            "off"
+          ]
+        },
+        "AclType": {
+          "type": "string",
+          "description": "The access control type:\n* white: Indicates a whitelist. Only requests from IP addresses or CIDR blocks in the selected access control lists are forwarded. This applies to scenarios in which an application only allows access from specific IP addresses.\nEnabling a whitelist poses some risks to your services.\nAfter a whitelist is enabled, only the IP addresses in the list can access the listener.\nIf you enable a whitelist without adding any IP addresses in the list, no requests are forwarded.\n* black: Indicates a blacklist. Requests from IP addresses or CIDR blocks in the selected access control lists are not forwarded (that is, they are blocked). This applies to scenarios in which an application only denies access from specific IP addresses.\nIf you enable a blacklist without adding any IP addresses in the list, all requests are forwarded.\n\nIf the value of the AclStatus parameter is on, this parameter is required.",
+          "Enum": [
+            "white",
+            "black"
+          ]
+        },
+        "BackendServerPort": {
+          "type": "integer",
+          "description": "Backend server can listen on ports from 1 to 65535.",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "Bandwidth": {
+          "type": "integer",
+          "description": "The bandwidth of network, unit in Mbps(Million bits per second). If the specified load balancer with \"LOAD_BALANCE_ID\" is charged by \"paybybandwidth\" and is created in classic network, each Listener's bandwidth must be greater than 0 and the sum of all of its Listeners' bandwidth can't be greater than the bandwidth of the load balancer.",
+          "minimum": -1,
+          "maximum": 1000
+        },
+        "CACertificateId": {
+          "type": "string",
+          "description": "CA server certificate id, for https listener only."
+        },
+        "HealthCheck": {
+          "type": "object",
+          "properties": {
+            "Domain": {
+              "type": "string",
+              "description": "The domain of health check target."
+            },
+            "HealthyThreshold": {
+              "type": "integer",
+              "description": "The number of consecutive health checks successes required,before identified the backend server in Healthy status.",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "HttpCode": {
+              "type": "string",
+              "description": "The expect status of health check result. Any answer other than referred status within the timeout period is considered unhealthy."
+            },
+            "Interval": {
+              "type": "integer",
+              "description": "The approximate interval, unit in seconds, between health checks of an backend server.",
+              "minimum": 1,
+              "maximum": 50
+            },
+            "Port": {
+              "type": "integer",
+              "description": "The port being checked. The range of valid ports is 0 through 65535.",
+              "maximum": 65535
+            },
+            "Timeout": {
+              "type": "integer",
+              "description": "The amount of time, in seconds, during which no response means a failed health check."
+            },
+            "URI": {
+              "type": "string",
+              "description": "The url of health check target."
+            },
+            "UnhealthyThreshold": {
+              "type": "integer",
+              "description": "The number of consecutive health checks failures required,before identified the backend server in Unhealthy status.",
+              "minimum": 1,
+              "maximum": 10
+            }
+          }
+        },
+        "HttpConfig": {
+          "type": "object",
+          "properties": {
+            "ForwardPort": {
+              "type": "integer",
+              "description": "HTTP to HTTPS listening forwarding port.\nDefault value: 443.",
+              "default": 443,
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "ListenerForward": {
+              "type": "string",
+              "description": "Whether to enable HTTP to HTTPS forwarding.\nValid values: on | off. Default value: off.",
+              "default": "off",
+              "Enum": [
+                "on",
+                "off"
+              ]
+            }
+          }
+        },
+        "IdleTimeout": {
+          "type": "integer",
+          "description": "Specify the idle connection timeout in seconds. Valid value: 1-60 If no request is received during the specified timeout period, Server Load Balancer will temporarily terminate the connection and restart the connection when the next request comes.",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "ListenerPort": {
+          "type": "integer",
+          "description": "Port for front listener. Range from 1 to 65535.",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "LoadBalancerId": {
+          "type": "string",
+          "description": "The id of load balancer to create listener."
+        },
+        "Persistence": {
+          "type": "object",
+          "required": [
+            "StickySession"
+          ],
+          "properties": {
+            "Cookie": {
+              "type": "string",
+              "description": "The type of session persistence."
+            },
+            "CookieTimeout": {
+              "type": "integer",
+              "description": "The timeout for cookie setting, in seconds. It only take effect while StickySession is setting to 'on' and StickySessionType is setting to 'insert'.",
+              "maximum": 86400
+            },
+            "PersistenceTimeout": {
+              "type": "integer",
+              "description": "The timeout number of persistence, in seconds.",
+              "maximum": 1000
+            },
+            "StickySession": {
+              "type": "string",
+              "description": "The switch of session persistence. Support 'on' and 'off'. ",
+              "Enum": [
+                "on",
+                "off"
+              ]
+            },
+            "StickySessionType": {
+              "type": "string",
+              "description": "The type of session persistence. Depends on parameter StickySession, if it is set to off, this parameter will be ignored.",
+              "Enum": [
+                "insert",
+                "server"
+              ]
+            },
+            "XForwardedFor": {
+              "type": "string",
+              "description": "Use 'X-Forwarded-For' to get real ip of accessor. On for open, off for close.",
+              "Enum": [
+                "on",
+                "off"
+              ]
+            }
+          }
+        },
+        "Protocol": {
+          "type": "string",
+          "description": "The load balancer transport protocol to use for routing: http, https, tcp, or udp.",
+          "Enum": [
+            "http",
+            "https",
+            "tcp",
+            "udp"
+          ]
+        },
+        "RequestTimeout": {
+          "type": "integer",
+          "description": "Specify the request timeout in seconds. Valid value: 1-180 If no response is received from the backend server during the specified timeout period, Server Load Balancer will stop waiting and send an HTTP 504 error to the client.",
+          "minimum": 1,
+          "maximum": 180
+        },
+        "Scheduler": {
+          "type": "string",
+          "description": "The scheduler algorithm. Support 'wrr' or 'wlc' only, default is 'wrr'",
+          "default": "wrr",
+          "Enum": [
+            "wrr",
+            "wlc"
+          ]
+        },
+        "ServerCertificateId": {
+          "type": "string",
+          "description": "Server certificate id, for https listener only, this properties is required."
+        },
+        "VServerGroupId": {
+          "type": "string",
+          "description": "The id of the VServerGroup which use in listener."
+        }
+      }
+    }

@@ -1,0 +1,297 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-prepayinstancegroupclone
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_PrepayInstanceGroupClone
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "MinAmount",
+        "SourceInstanceId",
+        "MaxAmount",
+        "Period",
+        "PeriodType"
+      ],
+      "properties": {
+        "AutoRenew": {
+          "type": "string",
+          "description": "Whether renew the fee automatically? When the parameter InstanceChargeType is PrePaid, it will take effect. Range of value:True: automatic renewal.False: no automatic renewal. Default value is False.Old instances will not be changed.",
+          "default": "False",
+          "Enum": [
+            "True",
+            "False"
+          ]
+        },
+        "AutoRenewPeriod": {
+          "type": "number",
+          "description": "The time period of auto renew. When the parameter InstanceChargeType is PrePaid, it will take effect.It could be 1, 2, 3, 6, 12. Default value is 1.Old instances will not be changed.",
+          "default": 1,
+          "Enum": [
+            1,
+            2,
+            3,
+            6,
+            12
+          ]
+        },
+        "DeploymentSetId": {
+          "type": "string",
+          "description": "Deployment set ID. The change of the property does not affect existing instances."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the instance, [2, 256] characters. Do not fill or empty, the default is empty. Old instances will not be changed."
+        },
+        "DiskMappings": {
+          "type": "array",
+          "description": "Disk mappings to attach to instance. Max support 16 disks.\nIf the image contains a data disk, you can specify other parameters of the data disk via the same value of parameter \"Device\". If parameter \"Category\" is not specified, it will be cloud_efficiency instead of \"Category\" of data disk in the image.Old instances will not be changed.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Size"
+            ],
+            "properties": {
+              "AutoSnapshotPolicyId": {
+                "type": "string",
+                "description": "Auto snapshot policy ID."
+              },
+              "Category": {
+                "type": "string",
+                "description": "The volume type.Now support: cloud|cloud_efficiency|cloud_ssd|cloud_essd|ephemeral_ssd. Default is cloud_efficiency.",
+                "default": "cloud_efficiency",
+                "Enum": [
+                  "cloud",
+                  "cloud_efficiency",
+                  "cloud_ssd",
+                  "cloud_essd",
+                  "ephemeral_ssd"
+                ]
+              },
+              "Description": {
+                "type": "string",
+                "description": "Description of the disk, [2, 256] characters. Do not fill or empty, the default is empty."
+              },
+              "Device": {
+                "type": "string",
+                "description": "The device where the volume is exposed on the instance. could be /dev/xvd[a-z]. If not specification, will use default value."
+              },
+              "DiskName": {
+                "type": "string",
+                "description": "Display name of the disk, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'."
+              },
+              "Encrypted": {
+                "type": "string",
+                "description": "Whether the data disk is encrypted or not. Options:\ntrue: Encrypted.\nfalse: Not encrypted.\nDefault value: false.",
+                "Enum": [
+                  "true",
+                  "false"
+                ]
+              },
+              "KMSKeyId": {
+                "type": "string",
+                "description": "The KMS key ID for the data disk."
+              },
+              "PerformanceLevel": {
+                "type": "string",
+                "description": "The performance level of the enhanced SSD used as the Nth data disk.Default value: PL1. Valid values:PL1: A single enhanced SSD delivers up to 50,000 random read/write IOPS.PL2: A single enhanced SSD delivers up to 100,000 random read/write IOPS.PL3: A single enhanced SSD delivers up to 1,000,000 random read/write IOPS.",
+                "Enum": [
+                  "PL1",
+                  "PL3",
+                  "PL3"
+                ]
+              },
+              "Size": {
+                "type": "string",
+                "description": "The size of the volume, unit in GB.Value range: cloud: [5,2000], cloud_efficiency: [20,32768], cloud_ssd: [20,32768], cloud_essd: [20,32768], ephemeral_ssd: [5,800].The value should be equal to or greater than the specific snapshot."
+              },
+              "SnapshotId": {
+                "type": "string",
+                "description": "ID of the snapshot to create the volume."
+              }
+            }
+          },
+          "maxItems": 16
+        },
+        "EniMappings": {
+          "type": "array",
+          "description": "NetworkInterface to attach to instance. Max support 1 ENI.",
+          "items": {
+            "type": "object",
+            "required": [
+              "VSwitchId",
+              "SecurityGroupId"
+            ],
+            "properties": {
+              "Description": {
+                "type": "string",
+                "description": "Description of your ENI. It is a string of [2, 256] English or Chinese characters."
+              },
+              "NetworkInterfaceName": {
+                "type": "string",
+                "description": "Name of your ENI. It is a string of [2, 128]  Chinese or English characters. It must begin with a letter and can contain numbers, underscores (_), colons (:), or hyphens (-)."
+              },
+              "PrimaryIpAddress": {
+                "type": "string",
+                "description": "The primary private IP address of the ENI.  The specified IP address must have the same Host ID as the VSwitch. If no IP addresses are specified, a random network ID is assigned for the ENI."
+              },
+              "SecurityGroupId": {
+                "type": "string",
+                "description": "The ID of the security group that the ENI joins. The security group and the ENI must be in a same VPC."
+              },
+              "VSwitchId": {
+                "type": "string",
+                "description": "VSwitch ID of the specified VPC. Specifies the switch ID for the VPC."
+              }
+            }
+          },
+          "maxItems": 1
+        },
+        "HpcClusterId": {
+          "type": "string",
+          "description": "The HPC cluster ID to which the instance belongs.The change of the property does not affect existing instances."
+        },
+        "ImageId": {
+          "type": "string",
+          "description": "Image ID to create ecs instance."
+        },
+        "InstanceName": {
+          "type": "string",
+          "description": "Display name of the instance, [2, 128] English or Chinese characters, must start with a letter or Chinese in size, can contain numbers, '_' or '.', '-'"
+        },
+        "InternetMaxBandwidthIn": {
+          "type": "integer",
+          "description": "Max internet out band width setting, unit in Mbps(Mega bit per second). The range is [1,200], default is 200 Mbps.",
+          "default": 200,
+          "minimum": 1,
+          "maximum": 200
+        },
+        "InternetMaxBandwidthOut": {
+          "type": "integer",
+          "description": "Set internet output bandwidth of instance. Unit is Mbps(Mega bit per second). Range is [0,200]. Default is 1.While the property is not 0, public ip will be assigned for instance.",
+          "maximum": 200
+        },
+        "KeyPairName": {
+          "type": "string",
+          "description": "SSH key pair name.Old instances will not be changed."
+        },
+        "LaunchTemplateId": {
+          "type": "string",
+          "description": "ID of launch template. Launch template id or name must be specified to use launch template"
+        },
+        "LaunchTemplateName": {
+          "type": "string",
+          "description": "Name of launch template. Launch template id or name must be specified to use launch template"
+        },
+        "LaunchTemplateVersion": {
+          "type": "string",
+          "description": "Version of launch template. Default version is used if version is not specified.",
+          "pattern": "^[1-9]\\d*$"
+        },
+        "MaxAmount": {
+          "type": "integer",
+          "description": "Max number of instances to create, should be smaller than 'MaxAmount' and smaller than 100.",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "MinAmount": {
+          "type": "integer",
+          "description": "Max number of instances to create, should be bigger than 'MinAmount' and smaller than 100.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "Password": {
+          "type": "string",
+          "description": "Password of created ecs instance. Must contain at least 3 types of special character, lower character, upper character, number."
+        },
+        "Period": {
+          "type": "number",
+          "description": "Prepaid time period. While choose by pay by month, it could be from 1 to 9. While choose pay by year, it could be from 1 to 3.",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 9
+        },
+        "PeriodType": {
+          "type": "string",
+          "description": "Charge period for created instances.",
+          "Enum": [
+            "Monthly",
+            "Yearly"
+          ]
+        },
+        "PeriodUnit": {
+          "type": "string",
+          "description": "Unit of prepaid time period, it could be Week/Month. Default value is Month.Old instances will not be changed.",
+          "default": "Month",
+          "Enum": [
+            "Week",
+            "Month"
+          ]
+        },
+        "RamRoleName": {
+          "type": "string",
+          "description": "Instance RAM role name. The name is provided and maintained by Resource Access Management (RAM) and can be queried using ListRoles. For more information, see RAM API CreateRole and ListRoles."
+        },
+        "SecurityGroupId": {
+          "type": "string",
+          "description": "Security group to create ecs instance. For classic instance need the security group not belong to VPC, for VPC instance, please make sure the security group belong to specified VPC."
+        },
+        "SourceInstanceId": {
+          "type": "string",
+          "description": "Source ecs instance used to copy properties to clone new ecs instance. It will copy the InstanceType, ImageId, InternetChargeType, InternetMaxBandwidthIn, InternetMaxBandwidthOut and the system disk and data disk configurations. If the instance network is VPC, it will also clone the relative properties. If specified instance with more than one security group, it will use the first security group to create instance. you can also specify the SecurityGroupId to override it."
+        },
+        "SystemDiskAutoSnapshotPolicyId": {
+          "type": "string",
+          "description": "Auto snapshot policy ID."
+        },
+        "SystemDiskCategory": {
+          "type": "string",
+          "description": "Category of system disk. Default is cloud_efficiency. support cloud|cloud_efficiency|cloud_ssd|cloud_essd|ephemeral_ssd.Old instances will not be changed.",
+          "default": "cloud_efficiency",
+          "Enum": [
+            "cloud",
+            "cloud_efficiency",
+            "cloud_ssd",
+            "cloud_essd",
+            "ephemeral_ssd"
+          ]
+        },
+        "SystemDiskDescription": {
+          "type": "string",
+          "description": "Description of created system disk.Old instances will not be changed."
+        },
+        "SystemDiskDiskName": {
+          "type": "string",
+          "description": "Name of created system disk.Old instances will not be changed."
+        },
+        "Tags": {
+          "type": "array",
+          "description": "Tags to attach to instance. Max support 20 tags to add during create instance. Each tag with two properties Key and Value, and Key is required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Key"
+            ],
+            "properties": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          },
+          "maxItems": 20
+        },
+        "ZoneId": {
+          "type": "string",
+          "description": "current zone to create the instance."
+        }
+      }
+    }

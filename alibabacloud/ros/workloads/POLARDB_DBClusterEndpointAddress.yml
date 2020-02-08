@@ -1,0 +1,42 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: polardb-dbclusterendpointaddress
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: POLARDB_DBClusterEndpointAddress
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DBClusterId",
+        "DBEndpointId"
+      ],
+      "properties": {
+        "ConnectionStringPrefix": {
+          "type": "string",
+          "description": "The prefix of the connection string. The prefix must comply with the following rules:\nIt must start with a letter and consist of lowercase letters, digits, and hyphens(-), cannot end with a dash.\nThe length is 6~30 characters.",
+          "pattern": "[a-z][-a-z0-9]{4,28}[a-z0-9]"
+        },
+        "DBClusterId": {
+          "type": "string",
+          "description": "The ID of the ApsaraDB for POLARDB cluster for which a public connection point is to be created."
+        },
+        "DBEndpointId": {
+          "type": "string",
+          "description": "The ID of the cluster connection point."
+        },
+        "NetType": {
+          "type": "string",
+          "description": "The network type of the connection string. \nIf set to Public, ROS will create, modify and delete Public address for you.\nIf set to Private, ROS will only modify Private address for you.\nDefault to Public.",
+          "default": "Public",
+          "Enum": [
+            "Public",
+            "Private"
+          ]
+        }
+      }
+    }

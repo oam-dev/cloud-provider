@@ -1,0 +1,30 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: kms-alias
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: KMS_Alias
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "KeyId",
+        "AliasName"
+      ],
+      "properties": {
+        "AliasName": {
+          "type": "string",
+          "description": "- The display name of the key. You can use the alias to call APIs such as Encrypt, GenerateDataKey, and DescribeKey. - Not including the prefix, the minimum length of an alias is 1 and the maximum length is 255. - The prefix alias/ must be included.",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "KeyId": {
+          "type": "string",
+          "description": "Globally unique identifier of the CMK."
+        }
+      }
+    }

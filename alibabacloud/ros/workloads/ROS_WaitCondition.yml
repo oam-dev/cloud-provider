@@ -1,0 +1,35 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ros-waitcondition
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ROS_WaitCondition
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Handle",
+        "Timeout"
+      ],
+      "properties": {
+        "Count": {
+          "type": "number",
+          "description": "The number of success signals that must be received before the stack creation process continues.",
+          "default": 1
+        },
+        "Handle": {
+          "type": "string",
+          "description": "A reference to the wait condition handle used to signal this wait condition."
+        },
+        "Timeout": {
+          "type": "number",
+          "description": "The number of seconds to wait for the correct number of signals to arrive.",
+          "minimum": 1,
+          "maximum": 43200
+        }
+      }
+    }

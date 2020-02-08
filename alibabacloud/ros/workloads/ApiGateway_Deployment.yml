@@ -1,0 +1,46 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: apigateway-deployment
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ApiGateway_Deployment
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "StageName",
+        "GroupId",
+        "ApiId"
+      ],
+      "properties": {
+        "ApiId": {
+          "type": "string",
+          "description": "The id of the API."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the deployment, less than 180 characters."
+        },
+        "GroupId": {
+          "type": "string",
+          "description": "The id of the Group."
+        },
+        "HistoryVersion": {
+          "type": "string",
+          "description": "The history version."
+        },
+        "StageName": {
+          "type": "string",
+          "description": "Bind traffic in this stage.",
+          "Enum": [
+            "TEST",
+            "RELEASE",
+            "PRE"
+          ]
+        }
+      }
+    }

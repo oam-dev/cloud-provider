@@ -1,0 +1,88 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: fc-customdomain
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FC_CustomDomain
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "DomainName",
+        "Protocol"
+      ],
+      "properties": {
+        "ApiVersion": {
+          "type": "string",
+          "description": "api version"
+        },
+        "CertConfig": {
+          "type": "object",
+          "required": [
+            "Certificate",
+            "PrivateKey",
+            "CertName"
+          ],
+          "properties": {
+            "CertName": {
+              "type": "string",
+              "description": "custom certificate name"
+            },
+            "Certificate": {
+              "type": "string",
+              "description": "certificate"
+            },
+            "PrivateKey": {
+              "type": "string",
+              "description": "private key"
+            }
+          }
+        },
+        "DomainName": {
+          "type": "string",
+          "description": "domain name"
+        },
+        "Protocol": {
+          "type": "string",
+          "description": "HTTP or HTTP,HTTPS"
+        },
+        "RouteConfig": {
+          "type": "object",
+          "required": [
+            "Routes"
+          ],
+          "properties": {
+            "Routes": {
+              "type": "array",
+              "description": "PathConfig Array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "ServiceName",
+                  "FunctionName",
+                  "Path"
+                ],
+                "properties": {
+                  "FunctionName": {
+                    "type": "string",
+                    "description": "Path to the function, for example: \"login\""
+                  },
+                  "Path": {
+                    "type": "string",
+                    "description": "HTTP request path when a function is called with a custom domain name, for example: \"/login/*\""
+                  },
+                  "ServiceName": {
+                    "type": "string",
+                    "description": "Path to the service, for example: \"blogService\""
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }

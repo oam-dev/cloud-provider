@@ -1,0 +1,58 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ApplicationConfiguration
+metadata:
+  name: nas-demo
+spec:
+  subresources:
+    status: {}
+  components:
+    - componentName: ecs-vpc
+      instanceName: vpc
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Retain"
+    - componentName: ecs-vswitch
+      instanceName: vswitch
+      parameterValues:
+        - name: VpcId
+          value: "${vpc.VpcId}"
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+    - componentName: nas-access-group
+      instanceName: nasAccessGroup
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+    - componentName: nas-file-system
+      instanceName: nasFileSystem
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+    - componentName: nas-mount-target
+      instanceName: nasMountTarget
+      parameterValues:
+        - name: AccessGroupName
+          value: "${nasAccessGroup.AccessGroupName}"
+        - name: FileSystemId
+          value: "${nasFileSystem.FileSystemId}"
+        - name: VpcId
+          value: "${vpc.VpcId}"
+        - name: VSwitchId
+          value: "${vswitch.VSwitchId}"
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+
+#  scopes:
+#    - name: resource-identity
+#      type: oam.alibaba.dev/v1.ResourceIdentity
+#      properties:
+#        appName: {fromWhichApp}
+#        aliyunAccountUid: {userWhoCreatedResources}
+#        regionId: {regionWhereCreateResources}

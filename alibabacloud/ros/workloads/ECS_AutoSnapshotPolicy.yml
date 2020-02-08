@@ -1,0 +1,53 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ecs-autosnapshotpolicy
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ECS_AutoSnapshotPolicy
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RepeatWeekdays",
+        "DiskIds",
+        "RetentionDays",
+        "TimePoints"
+      ],
+      "properties": {
+        "AutoSnapshotPolicyName": {
+          "type": "string",
+          "description": "The name of the automatic snapshot policy.\nIt can consist of [2, 128] English or Chinese characters.\nMust begin with an uppercase or lowercase letter or a Chinese character. Can contain numbers, periods (.), colons (:), underscores (_), and hyphens (-).\nCannot start with http:// or https://.\nDefault value: null."
+        },
+        "DiskIds": {
+          "type": "array",
+          "description": "The disk ID. When you want to apply the automatic snapshot policy to multiple disks, you can set the DiskIds to an array. The format is list of [\"d-xxxxxxxxx\", \"d-yyyyyyyyy\", ..., \"d-zzzzzzzzz\"] and the IDs are separated by commas (,).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "RepeatWeekdays": {
+          "type": "array",
+          "description": "The automatic snapshot repetition dates. The unit of measurement is day and the repeating cycle is a week. Value range: [1, 7], which represents days starting from Monday to Sunday, for example 1 indicates Monday. When you want to schedule multiple automatic snapshot tasks for a disk in a week, you can set the RepeatWeekdays to an array.\nA maximum of seven time points can be selected.\nThe format is a list of [1, 2, ..., 7] and the time points are separated by commas (,).",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 7
+          }
+        },
+        "RetentionDays": {
+          "type": "integer",
+          "description": "The snapshot retention time, and the unit of measurement is day. Optional values:\n-1: The automatic snapshots are retained permanently.\n[1, 65536]: The number of days retained.\nDefault value: -1.",
+          "minimum": -1,
+          "maximum": 65536
+        },
+        "TimePoints": {
+          "type": "array",
+          "description": "The automatic snapshot creation schedule, and the unit of measurement is hour. Value range: [0, 23], which represents from 00:00 to 24:00, for example 1 indicates 01:00. When you want to schedule multiple automatic snapshot tasks for a disk in a day, you can set the TimePoints to an array.\nA maximum of 24 time points can be selected.\nThe format is a list of [0, 1, ..., 23] and the time points are separated by commas (,).",
+          "items": {}
+        }
+      }
+    }

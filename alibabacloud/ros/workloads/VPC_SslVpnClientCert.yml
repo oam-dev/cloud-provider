@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-sslvpnclientcert
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_SslVpnClientCert
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "SslVpnServerId"
+      ],
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "The name of the client certificate.\nThe length is 2-128 characters and must start with a letter or Chinese. It can contain numbers, periods (.), underscores (_), and dashes (-). But it can't start with http:// or https://.",
+          "minLength": 2,
+          "maxLength": 128
+        },
+        "SslVpnServerId": {
+          "type": "string",
+          "description": "ID of the SSL-VPN server."
+        }
+      }
+    }

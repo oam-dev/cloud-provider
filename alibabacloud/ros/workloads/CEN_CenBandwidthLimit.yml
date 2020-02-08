@@ -1,0 +1,39 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cen-cenbandwidthlimit
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CEN_CenBandwidthLimit
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "LocalRegionId",
+        "OppositeRegionId",
+        "CenId",
+        "BandwidthLimit"
+      ],
+      "properties": {
+        "BandwidthLimit": {
+          "type": "integer",
+          "description": "The bandwidth configured for the interconnected regions communication. Minimal value: 1",
+          "minimum": 1
+        },
+        "CenId": {
+          "type": "string",
+          "description": "The ID of the CEN instance."
+        },
+        "LocalRegionId": {
+          "type": "string",
+          "description": "The ID of the local region."
+        },
+        "OppositeRegionId": {
+          "type": "string",
+          "description": "The ID of the other interconnected region."
+        }
+      }
+    }

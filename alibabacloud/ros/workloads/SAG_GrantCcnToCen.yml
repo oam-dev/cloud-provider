@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sag-grantccntocen
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SAG_GrantCcnToCen
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "CenUid",
+        "CcnInstanceId",
+        "CenInstanceId"
+      ],
+      "properties": {
+        "CcnInstanceId": {
+          "type": "string",
+          "description": "The ID of the CCN instance."
+        },
+        "CenInstanceId": {
+          "type": "string",
+          "description": "The ID of the CEN instance."
+        },
+        "CenUid": {
+          "type": "string",
+          "description": "The ID of the account to which the CEN instance belongs."
+        }
+      }
+    }

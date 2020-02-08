@@ -1,0 +1,59 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: cs-app
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: CS_App
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "MasterUrl",
+        "Name",
+        "ClusterId"
+      ],
+      "properties": {
+        "Ca": {
+          "type": "string",
+          "description": "CA certification of the cluster."
+        },
+        "Cert": {
+          "type": "string",
+          "description": "Client certification for connecting the cluster."
+        },
+        "ClusterId": {
+          "type": "string",
+          "description": "Id of the cluster."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the instance, [2, 256] characters. Do not fill or empty, the default is empty."
+        },
+        "Environment": {},
+        "Key": {
+          "type": "string",
+          "description": "Client key for connecting the cluster."
+        },
+        "MasterUrl": {
+          "type": "string",
+          "description": "Master url of the cluster."
+        },
+        "Name": {
+          "type": "string",
+          "description": "Name of the application."
+        },
+        "Template": {
+          "type": "string",
+          "description": "Compose template of the application."
+        },
+        "Version": {
+          "type": "string",
+          "description": "Version of the application.",
+          "default": "1.0"
+        }
+      }
+    }

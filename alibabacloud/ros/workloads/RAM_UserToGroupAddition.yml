@@ -1,0 +1,29 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ram-usertogroupaddition
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RAM_UserToGroupAddition
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "Users",
+        "GroupName"
+      ],
+      "properties": {
+        "GroupName": {
+          "type": "string",
+          "description": "Specifies the group name, containing up to 64 characters."
+        },
+        "Users": {
+          "type": "array",
+          "description": "list name of a users to which you want to add the group.",
+          "items": {}
+        }
+      }
+    }

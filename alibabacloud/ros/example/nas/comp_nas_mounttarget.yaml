@@ -1,0 +1,16 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: nas-mount-target
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the nas mount.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.NAS_MountTarget
+  osType: "linux"
+  arch: "x86"
+  containers: []
+  parameters: []
+  workloadSettings:
+    NetworkType: Vpc

@@ -1,0 +1,120 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ess-alarmtask
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: ESS_AlarmTask
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "AlarmAction",
+        "ScalingGroupId",
+        "MetricName",
+        "Threshold"
+      ],
+      "properties": {
+        "AlarmAction": {
+          "type": "array",
+          "description": "Alarm Actions",
+          "items": {
+            "type": "string",
+            "description": "Alarm Action"
+          },
+          "minItems": 1,
+          "maxItems": 5
+        },
+        "ComparisonOperator": {
+          "type": "string",
+          "description": "Comparison Operator",
+          "Enum": [
+            "\u003e=",
+            "\u003c=",
+            "\u003e",
+            "\u003c"
+          ]
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description"
+        },
+        "Dimensions": {
+          "type": "array",
+          "description": "Dimensions",
+          "items": {
+            "type": "object",
+            "required": [
+              "DimensionValue",
+              "DimensionKey"
+            ],
+            "properties": {
+              "DimensionKey": {
+                "type": "string",
+                "description": "DimensionKey"
+              },
+              "DimensionValue": {
+                "type": "string",
+                "description": "DimensionValue"
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "EvaluationCount": {
+          "type": "integer",
+          "description": "Evaluation Count",
+          "minimum": 1
+        },
+        "GroupId": {
+          "type": "integer",
+          "description": "Group Id"
+        },
+        "MetricName": {
+          "type": "string",
+          "description": "Metric Name"
+        },
+        "MetricType": {
+          "type": "string",
+          "description": "Metric Type",
+          "Enum": [
+            "system",
+            "custom"
+          ]
+        },
+        "Name": {
+          "type": "string",
+          "description": "Name"
+        },
+        "Period": {
+          "type": "integer",
+          "description": "Period",
+          "Enum": [
+            60,
+            120,
+            300,
+            900
+          ]
+        },
+        "ScalingGroupId": {
+          "type": "string",
+          "description": "The ID of the scaling group."
+        },
+        "Statistics": {
+          "type": "string",
+          "description": "Statistics",
+          "Enum": [
+            "Average",
+            "Minimum",
+            "Maximum"
+          ]
+        },
+        "Threshold": {
+          "type": "number",
+          "description": "Threshold"
+        }
+      }
+    }

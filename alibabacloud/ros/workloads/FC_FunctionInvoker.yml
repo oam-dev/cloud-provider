@@ -1,0 +1,47 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: fc-functioninvoker
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: FC_FunctionInvoker
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "ServiceName",
+        "FunctionName"
+      ],
+      "properties": {
+        "Async": {
+          "type": "boolean",
+          "description": "Invocation type, Sync or Async. Defaults to Sync.",
+          "default": false
+        },
+        "Event": {
+          "type": "string",
+          "description": "This value is passed to function as utf-8 encoded string.It’s function’s responsibility to interpret the value.\nIf the value needs to be binary, encode it via base64 before passing to this property."
+        },
+        "ExecuteVersion": {
+          "type": "integer",
+          "description": "If the property is not specified for creation and update, the function will not be invoked. The change of the property leads to the invoke of the function."
+        },
+        "FunctionName": {
+          "type": "string",
+          "description": "Function name"
+        },
+        "Qualifier": {
+          "type": "string",
+          "description": "service version, can be versionId or aliasName"
+        },
+        "ServiceName": {
+          "type": "string",
+          "description": "Service name",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }

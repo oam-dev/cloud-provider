@@ -1,0 +1,31 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: vpc-routetable
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: VPC_RouteTable
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "VpcId"
+      ],
+      "properties": {
+        "Description": {
+          "type": "string",
+          "description": "The description of the route table.\nThe description must be 2 to 256 characters in length. The description must start with a letter, but cannot start with http:// or https://."
+        },
+        "RouteTableName": {
+          "type": "string",
+          "description": "The name of the route table.\nThe name must be 2 to 128 characters in length. It can contain letters, numbers, periods (.), underscores (_), and hyphens (-). It must start with a letter and cannot start with http:// or https://."
+        },
+        "VpcId": {
+          "type": "string",
+          "description": "The ID of the VPC to which the custom route table belongs."
+        }
+      }
+    }

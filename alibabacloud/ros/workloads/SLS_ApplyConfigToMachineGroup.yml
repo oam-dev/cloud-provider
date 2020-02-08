@@ -1,0 +1,28 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: sls-applyconfigtomachinegroup
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: SLS_ApplyConfigToMachineGroup
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ConfigName": {
+          "type": "string",
+          "description": "Apply config to the config name"
+        },
+        "GroupName": {
+          "type": "string",
+          "description": "Apply config to the group name"
+        },
+        "ProjectName": {
+          "type": "string",
+          "description": "Apply config to the project name."
+        }
+      }
+    }

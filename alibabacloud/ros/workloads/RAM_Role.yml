@@ -1,0 +1,153 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkloadType
+metadata:
+  name: ram-role
+spec:
+  group: ros.aliyun.com
+  version: v1alpha1
+  names:
+    kind: RAM_Role
+  workloadSettings: |-
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "RoleName",
+        "AssumeRolePolicyDocument"
+      ],
+      "properties": {
+        "AssumeRolePolicyDocument": {
+          "type": "object",
+          "properties": {
+            "Statement": {
+              "type": "array",
+              "description": "A policy consists of one or more statements.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Action": {
+                    "type": "string",
+                    "description": "What action you will allow."
+                  },
+                  "Condition": {
+                    "type": "object",
+                    "properties": {
+                      "Bool": {},
+                      "DateEquals": {},
+                      "DateGreaterThan": {},
+                      "DateGreaterThanEquals": {},
+                      "DateLessThan": {},
+                      "DateLessThanEquals": {},
+                      "DateNotEquals": {},
+                      "IpAddress": {},
+                      "NotIpAddress": {},
+                      "NumericEquals": {},
+                      "NumericGreaterThan": {},
+                      "NumericGreaterThanEquals": {},
+                      "NumericLessThan": {},
+                      "NumericLessThanEquals": {},
+                      "NumericNotEquals": {},
+                      "StringEquals": {},
+                      "StringEqualsIgnoreCase": {},
+                      "StringLike": {},
+                      "StringNotEquals": {},
+                      "StringNotEqualsIgnoreCase": {},
+                      "StringNotLike": {}
+                    }
+                  },
+                  "Effect": {
+                    "type": "string",
+                    "description": "What the effect will be when the user requests access-either allow or deny."
+                  },
+                  "Principal": {
+                    "type": "object",
+                    "properties": {
+                      "Federated": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "RAM": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "Service": {
+                        "type": "array",
+                        "items": {}
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "Version": {
+              "type": "string",
+              "description": "You can use versions to track changes to a managed policy."
+            }
+          }
+        },
+        "Description": {
+          "type": "string",
+          "description": "Remark information, up to 1024 characters or Chinese characters.",
+          "maxLength": 1024
+        },
+        "Policies": {
+          "type": "array",
+          "description": "Describes what actions are allowed on what resources.",
+          "items": {
+            "type": "object",
+            "required": [
+              "PolicyName",
+              "PolicyDocument"
+            ],
+            "properties": {
+              "Description": {
+                "type": "string",
+                "description": "Specifies the authorization policy description, containing up to 1024 characters.",
+                "maxLength": 1024
+              },
+              "PolicyDocument": {
+                "type": "object",
+                "properties": {
+                  "Statement": {
+                    "type": "array",
+                    "description": "A policy consists of one or more statements.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "Action": {
+                          "type": "array",
+                          "description": "What actions you will allow.",
+                          "items": {}
+                        },
+                        "Condition": {},
+                        "Effect": {
+                          "type": "string",
+                          "description": "What the effect will be when the user requests access-either allow or deny."
+                        },
+                        "Resource": {
+                          "type": "array",
+                          "description": "Which resources you allow the action on.",
+                          "items": {}
+                        }
+                      }
+                    }
+                  },
+                  "Version": {
+                    "type": "string",
+                    "description": "You can use versions to track changes to a managed policy."
+                  }
+                }
+              },
+              "PolicyName": {
+                "type": "string",
+                "description": "Specifies the authorization policy name, containing up to 128 characters."
+              }
+            }
+          }
+        },
+        "RoleName": {
+          "type": "string",
+          "description": "Specifies the role name, containing up to 64 characters."
+        }
+      }
+    }
