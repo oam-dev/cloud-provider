@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: sls-index
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the sls index for logstore.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.SLS_Index
+  workloadSettings:
+    FullTextIndex:
+      Enable: true
+      IncludeChinese: false

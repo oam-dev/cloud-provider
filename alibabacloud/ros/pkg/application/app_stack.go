@@ -7,10 +7,9 @@ import (
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/k8s"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/ros"
+	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"strings"
 )
 
@@ -26,7 +25,7 @@ const (
 	Failed      = "Failed"
 )
 
-type SetAppStackStatusFunc func(*v1alpha1.ApplicationConfiguration, string) error
+type SetAppStackStatusFunc func(*rosv1alpha1.ApplicationConfiguration, string) error
 
 func IsAppStackProgressing(data map[string]string) bool {
 	return data[AppStackStatus] == Progressing
@@ -164,8 +163,7 @@ func maybeSetAppCondition(rosContext *ros.Context, phase v1alpha1.ApplicationPha
 		type_ = v1alpha1.Ready
 	}
 
-	appConfInterface := rosContext.K8sClient.CoreV1alpha1().ApplicationConfigurations(rosContext.AppConf.Namespace)
-	updateConf, err := appConfInterface.Get(rosContext.AppConf.Name, v1.GetOptions{})
+	updateConf, err := rosContext.GetAppConf()
 	if errors.IsNotFound(err) {
 		return nil
 	}
@@ -174,31 +172,7 @@ func maybeSetAppCondition(rosContext *ros.Context, phase v1alpha1.ApplicationPha
 		return err
 	}
 
-	if updateConf.Status.Conditions == nil {
-		condition := v1alpha1.ApplicationCondition{
-			Type:               type_,
-			Status:             corev1.ConditionTrue,
-			LastUpdateTime:     v1.Now(),
-			LastTransitionTime: v1.Now(),
-			Reason:             message,
-			Message:            message,
-		}
-
-		updateConf.Status = v1alpha1.ApplicationConfigurationStatus{
-			Phase:      phase,
-			Conditions: []v1alpha1.ApplicationCondition{condition},
-		}
-	} else {
-		updateConf.Status.Phase = phase
-		condition := &updateConf.Status.Conditions[0]
-		condition.Type = type_
-		condition.LastUpdateTime = v1.Now()
-		condition.LastTransitionTime = v1.Now()
-		if message != "" {
-			condition.Message = message
-		}
-	}
-	_, err = appConfInterface.UpdateStatus(updateConf)
+	err = rosContext.UpdateAppConfStatus(updateConf, phase, type_, message)
 	if err != nil {
 		logging.Default.Error(err, "Update app conf error")
 	}
