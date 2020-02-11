@@ -8,6 +8,7 @@ import (
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
+	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
 	"regexp"
 	"strings"
@@ -42,7 +43,7 @@ type Output struct {
 }
 
 // NewTemplate parses application configuration and returns ROS template
-func NewTemplate(rosContext *Context, appConf *v1alpha1.ApplicationConfiguration) (*Template, error) {
+func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfiguration) (*Template, error) {
 	template := Template{
 		ROSTemplateFormatVersion: "2015-09-01",
 		Parameters:               make(map[string]Parameter),

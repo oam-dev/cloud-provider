@@ -2,30 +2,29 @@ package handlers
 
 import (
 	"errors"
+	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"time"
 
-	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
-	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
-	"github.com/oam-dev/oam-go-sdk/pkg/finalizer"
-	"github.com/oam-dev/oam-go-sdk/pkg/oam"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/application"
-	rosclient "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
+	roscrd "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/ros"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
+	"github.com/oam-dev/oam-go-sdk/pkg/finalizer"
+	"github.com/oam-dev/oam-go-sdk/pkg/oam"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-//TDOO use rosclient in ROSStack case
+//TDOO use roscrd in ROSStack case
 type AppConfHandler struct {
-	Client    *versioned.Clientset
-	RosClient *rosclient.Clientset
-	Name      string
+	OamCrdClient *versioned.Clientset
+	RosCrdClient *roscrd.Clientset
+	Name         string
 }
 
 func (a *AppConfHandler) Handle(ctx *oam.ActionContext, ac runtime.Object, eType oam.EType) error {
-	appConf, ok := ac.(*v1alpha1.ApplicationConfiguration)
+	appConf, ok := rosv1alpha1.NewApplicationConfiguration(ac)
 	if !ok {
 		return errors.New("type mismatch")
 	}
@@ -43,11 +42,11 @@ func (a *AppConfHandler) Id() string {
 	return "appConfHandler"
 }
 
-func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *v1alpha1.ApplicationConfiguration) (err error) {
+func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
 	logging.Default.Info("Handle create or update", "AppConf", appConf)
 
 	// ros context
-	rosContext, err := ros.GetContext(appConf, a.Client)
+	rosContext, err := ros.GetContext(appConf, a.OamCrdClient, a.RosCrdClient)
 	if err != nil {
 		return
 	}
@@ -143,13 +142,13 @@ func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *v1alpha
 	return
 }
 
-func (a *AppConfHandler) Delete(ctx *oam.ActionContext, appConf *v1alpha1.ApplicationConfiguration) (err error) {
+func (a *AppConfHandler) Delete(ctx *oam.ActionContext, appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
 	logging.Default.Info("Handle delete", "AppConf", appConf)
 
 	appName := appConf.Name
 
 	// ros context
-	rosContext, err := ros.GetContext(appConf, a.Client)
+	rosContext, err := ros.GetContext(appConf, a.OamCrdClient, a.RosCrdClient)
 	if err != nil {
 		return
 	}
@@ -199,29 +198,27 @@ func (a *AppConfHandler) Delete(ctx *oam.ActionContext, appConf *v1alpha1.Applic
 
 func addCleanUpFinalizer(rosContext *ros.Context) (err error) {
 	logging.Default.Info("Add ROS finalizer")
-	appConf, err := rosContext.K8sClient.CoreV1alpha1().ApplicationConfigurations(rosContext.AppConf.Namespace).
-		Get(rosContext.AppConf.Name, v1.GetOptions{})
+	appConf, err := rosContext.GetAppConf()
 	if err != nil {
 		return err
 	}
 
-	finalizer.Add(interface{}(appConf).(v1.Object), config.ROS_FINALIZER)
+	finalizer.Add(appConf.ToObject(), config.ROS_FINALIZER)
 
-	_, err = rosContext.K8sClient.CoreV1alpha1().ApplicationConfigurations(appConf.Namespace).Update(appConf)
+	err = rosContext.UpdateAppConf(appConf)
 	return err
 }
 
 func removeCleanUpFinalizer(rosContext *ros.Context) (err error) {
 	logging.Default.Info("Remove ROS finalizer")
-	appConf, err := rosContext.K8sClient.CoreV1alpha1().ApplicationConfigurations(rosContext.AppConf.Namespace).
-		Get(rosContext.AppConf.Name, v1.GetOptions{})
+	appConf, err := rosContext.GetAppConf()
 	if err != nil {
 		return err
 	}
 
-	finalizer.Remove(interface{}(appConf).(v1.Object), config.ROS_FINALIZER)
+	finalizer.Remove(appConf.ToObject(), config.ROS_FINALIZER)
 
-	_, err = rosContext.K8sClient.CoreV1alpha1().ApplicationConfigurations(appConf.Namespace).Update(appConf)
+	err = rosContext.UpdateAppConf(appConf)
 	return err
 }
 

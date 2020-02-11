@@ -4,15 +4,15 @@ import (
 	"flag"
 	"os"
 
-	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
-	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
-	"github.com/oam-dev/oam-go-sdk/pkg/oam"
 	rosapi "github.com/oam-dev/cloud-provider/alibabacloud/ros/apis/ros.alibabacloud.com/v1alpha1"
 	rosclient "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/handlers"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/k8s"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
+	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
+	"github.com/oam-dev/oam-go-sdk/pkg/client/clientset/versioned"
+	"github.com/oam-dev/oam-go-sdk/pkg/oam"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -55,8 +55,8 @@ func main() {
 	flag.StringVar(&namespace, "namespace", "default", "App namespace.")
 	var updateApp bool
 	flag.BoolVar(&updateApp, "update-app", false, "Whether update application status")
-	var workAsROSStack bool
-	flag.BoolVar(&workAsROSStack, "ros-stack", false, "whether this controller work as rosStack or OAM runtime")
+	var workAsRosCrd bool
+	flag.BoolVar(&workAsRosCrd, "ros-crd", false, "whether this controller work as ROS or OAM CRD")
 	flag.Parse()
 
 	// init controller conf
@@ -88,23 +88,23 @@ func main() {
 
 	// register hooks and handlers
 	var option oam.Option
-	if workAsROSStack {
+	if workAsRosCrd {
 		oam.RegisterObject("rosstack", new(rosapi.RosStack))
 
 		client, err := rosclient.NewForConfig(ctrl.GetConfigOrDie())
 		if err != nil {
-			logging.SetUp.Error(err, "Create client err")
+			logging.SetUp.Error(err, "Create ros runtime client err")
 			os.Exit(1)
 		}
-		oam.RegisterHandlers("rosstack", &handlers.AppConfHandler{Name: "app", RosClient: client})
+		oam.RegisterHandlers("rosstack", &handlers.AppConfHandler{Name: "app", RosCrdClient: client})
 		option = oam.WithSpec("rosstack")
 	} else {
 		client, err := versioned.NewForConfig(ctrl.GetConfigOrDie())
 		if err != nil {
-			logging.SetUp.Error(err, "Create client err")
+			logging.SetUp.Error(err, "Create oam runtime client err")
 			os.Exit(1)
 		}
-		oam.RegisterHandlers(oam.STypeApplicationConfiguration, &handlers.AppConfHandler{Name: "app", Client: client})
+		oam.RegisterHandlers(oam.STypeApplicationConfiguration, &handlers.AppConfHandler{Name: "app", OamCrdClient: client})
 		option = oam.WithApplicationConfiguration()
 	}
 

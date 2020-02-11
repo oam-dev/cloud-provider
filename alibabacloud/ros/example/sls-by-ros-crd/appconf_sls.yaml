@@ -1,0 +1,40 @@
+apiVersion: ros.alibabacloud.com/v1alpha1
+kind: RosStack
+metadata:
+  name: sls-by-ros-crd-demo
+spec:
+  components:
+    - componentName: sls-project
+      instanceName: sls-project
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+    - componentName: sls-logstore
+      instanceName: sls-logstore
+      parameterValues:
+        - name: ProjectName
+          value: "${sls-project.Name}"
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+    - componentName: sls-index
+      instanceName: sls-index
+      parameterValues:
+        - name: ProjectName
+          value: "${sls-project.Name}"
+        - name: LogstoreName
+          value: "${sls-logstore.LogstoreName}"
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: "Delete"
+
+#  scopes:
+#    - name: resource-identity
+#      type: oam.alibaba.dev/v1.ResourceIdentity
+#      properties:
+#        appName: {fromWhichApp}
+#        aliyunAccountUid: {userWhoCreatedResources}
+#        regionId: {regionWhereCreateResources}
