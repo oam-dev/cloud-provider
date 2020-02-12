@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strings"
 )
 
 const (
@@ -11,6 +12,7 @@ const (
 	RESOURCE_IDENTITY_TYPE = "oam.alibaba.dev/v1.ResourceIdentity"
 	ROS_GROUP              = "ros.aliyun.com"
 	ROS_FINALIZER          = "ros.aliyun.com/ros-finalizer"
+	BASE_USER_AGENT        = "ros-oam"
 )
 
 var (
@@ -26,7 +28,8 @@ type RosControllerConfig struct {
 	Namespace string
 
 	// Env
-	Env string
+	Env       string
+	UserAgent string
 
 	// Log
 	LoggerDebug bool
@@ -56,7 +59,8 @@ func InitRosCtrlConf(
 	credentialSecretName string,
 	leaderElectionNamespace string,
 	namespace string,
-	updateApp bool) {
+	updateApp bool,
+	serviceUserAgent string) {
 
 	RosCtrlConf.Env = env
 	RosCtrlConf.StackCheckInterval = 5
@@ -93,6 +97,11 @@ func InitRosCtrlConf(
 	RosCtrlConf.Namespace = namespace
 	if namespace == "" {
 		RosCtrlConf.Namespace = os.Getenv("NAMESPACE")
+	}
+
+	RosCtrlConf.UserAgent = BASE_USER_AGENT
+	if serviceUserAgent != "" {
+		RosCtrlConf.UserAgent = BASE_USER_AGENT + ":" + strings.ReplaceAll(serviceUserAgent, " ", "-")
 	}
 
 	// controller options, log settings

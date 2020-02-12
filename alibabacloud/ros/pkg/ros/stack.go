@@ -2,6 +2,7 @@ package ros
 
 import (
 	"encoding/json"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
 	"time"
@@ -67,6 +68,7 @@ func NewStack(rosContext *Context, stackName string, template *Template) (stack 
 
 	// create stack
 	request := rosapi.CreateCreateStackRequest()
+	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 	request.TimeoutInMinutes = "60"
 	request.StackName = stackName
 	request.DisableRollback = "false"
@@ -104,7 +106,7 @@ func (stack *Stack) Update(rosContext *Context, template *Template) error {
 
 	// update stack
 	request := rosapi.CreateUpdateStackRequest()
-	request.GetActionName()
+	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 	request.StackId = stack.Id
 	request.Parameters = &parameters
 	request.TemplateBody = string(templateBody)
@@ -119,6 +121,7 @@ func (stack *Stack) Update(rosContext *Context, template *Template) error {
 
 func (stack *Stack) Delete(rosContext *Context) error {
 	request := rosapi.CreateDeleteStackRequest()
+	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 	request.StackId = stack.Id
 
 	_, err := rosContext.RosClient.DeleteStack(request)
@@ -131,6 +134,7 @@ func (stack *Stack) Delete(rosContext *Context) error {
 
 func (stack *Stack) Refresh(rosContext *Context) error {
 	request := rosapi.CreateGetStackRequest()
+	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 	request.StackId = stack.Id
 
 	resp, err := rosContext.RosClient.GetStack(request)

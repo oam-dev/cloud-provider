@@ -54,13 +54,15 @@ func main() {
 	var namespace string
 	flag.StringVar(&namespace, "namespace", "default", "App namespace.")
 	var updateApp bool
-	flag.BoolVar(&updateApp, "update-app", false, "Whether update application status")
+	flag.BoolVar(&updateApp, "update-app", false, "Whether update application status.")
 	var workAsRosCrd bool
-	flag.BoolVar(&workAsRosCrd, "ros-crd", false, "whether this controller work as ROS or OAM CRD")
+	flag.BoolVar(&workAsRosCrd, "ros-crd", false, "Whether this controller work as ROS or OAM CRD.")
+	var serviceUserAgent string
+	flag.StringVar(&serviceUserAgent, "service-user-agent", "", "Current service/application name which will be set to User-Agent for identification.")
 	flag.Parse()
 
 	// init controller conf
-	config.InitRosCtrlConf(env, endpoint, regionId, accessKeyId, accessKeySecret, credentialSecretName, leaderElectionNamespace, namespace, updateApp)
+	config.InitRosCtrlConf(env, endpoint, regionId, accessKeyId, accessKeySecret, credentialSecretName, leaderElectionNamespace, namespace, updateApp, serviceUserAgent)
 
 	// init log
 	logging.Init()
