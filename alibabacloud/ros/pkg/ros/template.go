@@ -78,6 +78,7 @@ func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfigurat
 
 		// get resource type detail
 		request := rosapi.CreateGetResourceTypeRequest()
+		request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 		request.ResourceType = resourceType
 		response, err := rosContext.RosClient.GetResourceType(request)
 		if err != nil {
