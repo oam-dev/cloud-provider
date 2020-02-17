@@ -48,7 +48,7 @@ and you will see the created stack, which contains related SLS resources.
 
 ### Delete Resources from OAM Configurations
 
-By deleting OAM configurations files, you can create SLS resources.
+By deleting OAM configurations files, you can delete SLS resources.
 
 ```shell script
 kubectl delete applicationconfigurations.core.oam.dev sls-demo
