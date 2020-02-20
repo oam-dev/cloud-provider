@@ -1,0 +1,11 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: fc-function
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the fc function.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.FC_Function
+  workloadSettings: {}

@@ -1,0 +1,98 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ApplicationConfiguration
+metadata:
+  name: fc-apigateway-demo
+spec:
+  components:
+    - componentName: ram-role
+      instanceName: ApiGatewayAssumeFcRole
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: Delete
+    - componentName: fc-service
+      instanceName: FcService
+      parameterValues:
+        - name: Role
+          value: "${ApiGatewayAssumeFcRole.Arn}"
+        - name: ServiceName
+          value: MyFcService
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: Delete
+    - componentName: fc-function
+        instanceName: FcFunction
+        parameterValues:
+          - name: FunctionName
+            value: MyFcFunction
+          - name: ServiceName
+            value: "${FcService.ServiceName}"
+          - name: Code
+            value:
+              OssBucketName: MyBucket
+              OssObjectName: MyObject
+          - name: Handler
+            value: index.handler
+          - name: Runtime
+            value: nodejs8
+        traits:
+          - name: DeletionPolicy
+            properties:
+              policy: Delete
+    - componentName: apigateway-group
+      instanceName: ApiGatewayGroup
+      parameterValues:
+        - name: GroupName
+          value: MyGroup
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: Delete
+    - componentName: apigateway-api
+      instanceName: ApiGatewayApi
+      parameterValues:
+        - name: ApiName
+          value: MyApi
+        - name: GroupId
+          value: "${ApiGatewayGroup.GroupId}"
+        - name: ServiceConfig
+          value:
+            ServiceProtocol: FunctionCompute
+            FunctionComputeConfig:
+              fcRegionId: cn-hangzhou
+              roleArn:
+                Fn::Sub: "acs:ram::${ALIYUN::TenantId}:role/aliyunapigatewayaccessingfcrole"
+              serviceName: MyFcService
+              functionName: MyFcFunction
+            ContentTypeCatagory: CLIENT
+        - name: RequestConfig
+          value:
+            RequestMode: MAPPING
+            RequestPath: /home
+            RequestProtocol: HTTP,HTTPS
+            RequestHttpMethod: POST
+            BodyFormat: FORM
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: Delete
+    - componentName: apigateway-deployment
+      instanceName: ApiGatewayDeployment
+      parameterValues:
+        - name: GroupId
+          value: "${ApiGatewayGroup.GroupId}"
+        - name: ApiId
+          value: "${ApiGatewayApi.ApiId}"
+      traits:
+        - name: DeletionPolicy
+          properties:
+            policy: Delete
+
+#  scopes:
+#    - name: resource-identity
+#      type: oam.alibaba.dev/v1.ResourceIdentity
+#      properties:
+#        appName: {fromWhichApp}
+#        aliyunAccountUid: {userWhoCreatedResources}
+#        regionId: {regionWhereCreateResources}

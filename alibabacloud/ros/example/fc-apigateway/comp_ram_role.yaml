@@ -1,0 +1,31 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: ComponentSchematic
+metadata:
+  name: ram-role
+  annotations:
+    version: v1.0.0
+    description: >
+      component schematic that describes the ram role.
+spec:
+  workloadType: ros.aliyun.com/v1alpha1.RAM_Role
+  workloadSettings:
+    RoleName: ApiGatewayAssumeFcRole
+    Description: API Gateway access FunctionCompute
+    AssumeRolePolicyDocument:
+      Version: 1
+      Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+              - fc.aliyuncs.com
+      Policies:
+        PolicyName: ApiGatewayAssumeFcPolicy
+        PolicyDocument:
+          Version: 1
+          Statement:
+            - Effect: Allow
+              Action:
+                - apigateway:*
+              Resource:
+                - *
