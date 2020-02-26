@@ -33,7 +33,8 @@ test-coverage: ## Run tests with coverage
 
 .PHONY: build-binary
 build-binary: ## Build the binary file
-	@go build -i $(PKG)
+	@go build -i $(PKG)/cmd/ros
+	@go build -i $(PKG)/cmd/auto-convert
 
 # Generate manifests e.g. CRD, RBAC etc.
 manifests: controller-gen

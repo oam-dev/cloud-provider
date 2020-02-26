@@ -242,6 +242,7 @@ github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8m
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f/go.mod h1:ZdcZmHo+o7JKHSa8/e818NopupXU1YMK5fe1lsApnBw=
 github.com/oam-dev/cloud-provider v0.0.0-20200116021145-87752bf157fb h1:0E12W0wRUIbIc5tJxzwTexrHADRY40uCiw6o7DXecxo=
+github.com/oam-dev/cloud-provider v0.0.0-20200218053057-048341d9ccbf h1:TFV4LdKwq2j6mK5EQ+0OFn0e90f1uvUhYChVdRqVP3k=
 github.com/oam-dev/oam-go-sdk v0.0.0-20200116043142-d934017ed4cd h1:tmUrvdr9AMQhafXg32VbXyHPXjUBYyU8A3TabMWMDR4=
 github.com/oam-dev/oam-go-sdk v0.0.0-20200116043142-d934017ed4cd/go.mod h1:Y2qsJt8tlMo7JjV/kugALa37jyR2GmOakq+SGQJbXxk=
 github.com/oam-dev/oam-go-sdk v0.0.0-20200205063356-e984098cb047 h1:M21io81VB0dni+hABhaG76LS1vLMLt5z7bqwgyDQphU=

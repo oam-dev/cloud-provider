@@ -1,20 +1,107 @@
 # ROS OAM Framework
 
-## Install ROS Controller with [Helm v3](https://github.com/helm/helm/releases)
+## Introduction
 
-```
+`ROS OAM Framework` is an implementation of Alibaba Cloud resource orchestration
+that follows OAM standards. It is based on [ROS](https://www.alibabacloud.com/help/doc-detail/28852.html),
+and you can easily orchestrate various service resources of Alibaba Cloud through OAM spec.
+
+## Installation & Running
+
+### By using [Helm v3](https://github.com/helm/helm/releases)
+
+```shell script
 helm install ros ./charts/ros --set accessKey=<AccessKeyId>,secretKey=<AccessKeySecret>
 ```
 
-## Apply workloads
+### Or by running go run
 
+```shell script
+go run cmd/ros/main.go --access-key-id=<AccessKeyId> --access-key-secret=<AccessKeySecret>
+```
+
+## Quick Start
+> Please make sure you have a kubernetes cluster running.
+
+After installation and running, let's start with an example which creates 
+Alibaba Cloud [SLS](https://www.alibabacloud.com/help/doc-detail/48869.htm) project, logstore and index.
+
+### Write OAM Configurations
+In `example/sls`, there are server yaml files which follow OAM standards:
+- `appconf_sls.yaml` is an OAM application which specify three SLS components
+- `comp_sls_project.yaml` is an OAM component which indicates Alibaba Cloud SLS project
+- `comp_sls_logstore.yaml` is an OAM component which indicates Alibaba Cloud SLS logstore
+- `comp_sls_index.yaml` is an OAM component which indicates Alibaba Cloud SLS index
+
+These files will convert to a ROS template by this controller and create
+the Alibaba Cloud resources you want.
+
+### Create Resources by OAM Configurations
+By applying OAM configurations, you can create SLS resources.
+
+```shell script
+kubectl apply -f example/sls
+```
+
+After a few seconds visit the [ROS Console](https://rosnext.console.aliyun.com/cn-hangzhou/stacks),
+and you will see the created stack, which contains related SLS resources.
+
+### Delete Resources from OAM Configurations
+
+By deleting OAM configurations files, you can delete SLS resources.
+
+```shell script
+kubectl delete applicationconfigurations.core.oam.dev sls-demo
+```
+
+After a few seconds visit the [ROS Console](https://rosnext.console.aliyun.com/cn-hangzhou/stacks),
+and you will see the stack and related SLS resources are deleted.
+
+
+## Usage
+### Application Cmdline
+The ROS OAM Framework application supports many options to run with:
+```
+Usage of ./main:
+  -access-key-id string
+    	User's access key ID.
+  -access-key-secret string
+    	User's Access key secret.
+  -credential-secret-name string
+    	User's credential secret name.
+  -endpoint string
+    	ROS api endpoint. (default "https://ros.aliyuncs.com")
+  -env string
+    	App running environment. (default "test")
+  -kubeconfig string
+    	Paths to a kubeconfig. Only required if out-of-cluster.
+  -leader-election-namespace string
+    	Leader election namespace. (default "default")
+  -master --kubeconfig
+    	(Deprecated: switch to --kubeconfig) The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.
+  -metrics-addr string
+    	The address the metric endpoint binds to. (default ":8080")
+  -namespace string
+    	App namespace. (default "default")
+  -region-id string
+    	Region where ROS creates resources from. (default "cn-hangzhou")
+  -ros-crd
+    	Whether this controller work as ROS or OAM CRD.
+  -service-user-agent string
+    	Current service/application name which will be set to User-Agent for identification.
+  -update-app
+    	Whether update application status.
+```
+
+You can specify one or many of them to run the application.
+
+### Workloads
+- Apply workloads
 ```shell script
 kubectl apply -f workloads/
 ```
 
-## Check which workload could be used
-
-Check the workload list you have:
+- Check which workload could be used
 
 ```shell script
 $ kubectl get workloadtypes
@@ -28,7 +115,7 @@ apigateway-authorization                  53s
 ...
 ```
 
-Check the detail of one workload
+- Check the detail of one workload
 
 ```shell script
 $ kubectl get workloadtypes actiontrail-trail -o yaml
@@ -90,36 +177,20 @@ spec:
     }
 ```
 
-## Play With ROS Controller
+- Sync workloads will fetch all resource info and generate workloads to current `workloads` path.
 
-There is a demo OAM ApplicationConfiguration(AC) and ComponentSchematic YAML file in ${ProjectRootDir}/example/poc/nas\_appconf.yaml
-
-1. run ROS controller
-```
-go run cmd/ros/main.go
+```shell script
+go run gen.go -i <AccessKeyId> -s <AccessKeySecret>
 ```
 
-2. apply demo
-ROS controller will convert appplication configuration to ROS template and the run as a stack.
-```
-kubectl apply -f example/sls
-```
-
-3. delete demo
-ROS controller will delete stack which refers to application configuration.
-```
-kubectl delete applicationconfigurations.core.oam.dev sls-demo
+- You can apply them again to update this info in cluster.
+```shell script
+kubectl apply -f workloads/
 ```
 
 ## Contributing ROS Controller
 
 ### How ROS Controller work
 
-When user update AC content, kubernetes will emit AC change event, ROS Controller use oam-go-sdk to listen and process AC change events , please [see details](https://github.com/oam-dev/oam-go-sdk) to know more.
-
-## Generate workloads
-```plain
-$ go build gen.go
-$ ./gen -i <AccessKeyId> -s <AccessKeySecret>
-```
-And workloads will be generated to current 'workloads' path.
+When user update AC content, kubernetes will emit AC change event, ROS Controller use oam-go-sdk to listen and process
+AC change events , please [see details](https://github.com/oam-dev/oam-go-sdk) to know more.
