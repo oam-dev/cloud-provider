@@ -116,13 +116,18 @@ func (t *Template) genParametersAndResource(
 		DependsOn:  make([]string, 0),
 	}
 
-	// compConf parameterValues to ROS Properties
+	// compSpec workload settings to ROS Properties
 	properties := make(map[string]interface{})
 	err := json.Unmarshal(compSpec.WorkloadSettings.Raw, &properties)
 	if err != nil {
 		return err
 	}
 
+	for name, value := range properties {
+		resource.Properties[name] = value
+	}
+
+	// compConf parameterValues to ROS Properties
 	for _, ParameterValue := range compConf.ParameterValues {
 		name := ParameterValue.Name
 		value := ParameterValue.Value
@@ -166,11 +171,6 @@ func (t *Template) genParametersAndResource(
 		} else {
 			resource.Properties[name] = value
 		}
-	}
-
-	// compSpec workload settings to ROS Properties
-	for name, value := range properties {
-		resource.Properties[name] = value
 	}
 
 	// Resource DeletionPolicy
