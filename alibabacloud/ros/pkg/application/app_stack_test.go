@@ -10,7 +10,7 @@ import (
 )
 
 func TestIsAppStackProgressing(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		input map[string]string
 		exp   bool
 	}{
@@ -46,15 +46,21 @@ func TestIsAppStackFailed(t *testing.T) {
 	}{
 		{
 			input: map[string]string{
-				AppStackStatus: Failed,
+				AppStackStatus: Progressing,
 			},
-			exp: true,
+			exp: false,
 		},
 		{
 			input: map[string]string{
 				AppStackStatus: Ready,
 			},
 			exp: false,
+		},
+		{
+			input: map[string]string{
+				AppStackStatus: Failed,
+			},
+			exp: true,
 		},
 	}
 	for _, ti := range tests {
@@ -86,7 +92,7 @@ func TestGetAppStackSecretName(t *testing.T) {
 }
 
 func TestGetAppStackOutputSecretName(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		input1 *ros.Context
 		input2 string
 		exp    string
