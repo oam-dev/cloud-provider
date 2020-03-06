@@ -186,8 +186,8 @@ func (t *Template) genParametersAndResource(
 		}
 
 		policy, _ := props["policy"]
-		if policy == "Retain" {
-			resource.DeletionPolicy = "Retain"
+		if policy == "Retain" || policy == "Delete" {
+			resource.DeletionPolicy = policy
 		}
 	}
 
