@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.60.293
-	github.com/oam-dev/oam-go-sdk v0.0.0-20200205063356-e984098cb047
+	github.com/oam-dev/oam-go-sdk v0.0.0-20200311031835-ce9ec52bd420
 	github.com/stretchr/testify v1.4.0
 	github.com/urfave/cli/v2 v2.0.0
 	go.uber.org/zap v1.10.0

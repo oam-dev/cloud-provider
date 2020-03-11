@@ -247,6 +247,8 @@ github.com/oam-dev/oam-go-sdk v0.0.0-20200116043142-d934017ed4cd h1:tmUrvdr9AMQh
 github.com/oam-dev/oam-go-sdk v0.0.0-20200116043142-d934017ed4cd/go.mod h1:Y2qsJt8tlMo7JjV/kugALa37jyR2GmOakq+SGQJbXxk=
 github.com/oam-dev/oam-go-sdk v0.0.0-20200205063356-e984098cb047 h1:M21io81VB0dni+hABhaG76LS1vLMLt5z7bqwgyDQphU=
 github.com/oam-dev/oam-go-sdk v0.0.0-20200205063356-e984098cb047/go.mod h1:krUIRlqu2r8qfblnztYvIWvEoiWf2F9ZvRzJQ+c/S1g=
+github.com/oam-dev/oam-go-sdk v0.0.0-20200311031835-ce9ec52bd420 h1:NZCaTXKx7SsL37Bke7GnHWZ0DNjBeCGw+gsN33TE4yY=
+github.com/oam-dev/oam-go-sdk v0.0.0-20200311031835-ce9ec52bd420/go.mod h1:krUIRlqu2r8qfblnztYvIWvEoiWf2F9ZvRzJQ+c/S1g=
 github.com/olekukonko/tablewriter v0.0.0-20170122224234-a0225b3f23b5/go.mod h1:vsDQFd/mU46D+Z4whnwzcISnGGzXWMclvtLoiIKAKIo=
 github.com/onsi/ginkgo v0.0.0-20170829012221-11459a886d9c/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v1.4.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=

@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.4
+    controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
   name: componentschematics.core.oam.dev
 spec:
@@ -36,17 +36,6 @@ spec:
           properties:
             arch:
               type: string
-            consume:
-              items:
-                properties:
-                  as:
-                    type: string
-                  name:
-                    type: string
-                required:
-                - name
-                type: object
-              type: array
             containers:
               items:
                 description: Container describes the container configuration for a
@@ -72,7 +61,7 @@ spec:
                         value:
                           type: string
                       required:
-                      - path
+                        - path
                       type: object
                     type: array
                   env:
@@ -86,7 +75,7 @@ spec:
                         value:
                           type: string
                       required:
-                      - name
+                        - name
                       type: object
                     type: array
                   image:
@@ -104,7 +93,7 @@ spec:
                               type: string
                             type: array
                         required:
-                        - command
+                          - command
                         type: object
                       failureThreshold:
                         format: int32
@@ -119,8 +108,8 @@ spec:
                                 value:
                                   type: string
                               required:
-                              - name
-                              - value
+                                - name
+                                - value
                               type: object
                             type: array
                           path:
@@ -129,8 +118,8 @@ spec:
                             format: int32
                             type: integer
                         required:
-                        - path
-                        - port
+                          - path
+                          - port
                         type: object
                       initialDelaySeconds:
                         format: int32
@@ -149,7 +138,7 @@ spec:
                             format: int32
                             type: integer
                         required:
-                        - port
+                          - port
                         type: object
                       timeoutSeconds:
                         format: int32
@@ -169,8 +158,8 @@ spec:
                         protocol:
                           type: string
                       required:
-                      - containerPort
-                      - name
+                        - containerPort
+                        - name
                       type: object
                     type: array
                   readinessProbe:
@@ -184,7 +173,7 @@ spec:
                               type: string
                             type: array
                         required:
-                        - command
+                          - command
                         type: object
                       failureThreshold:
                         format: int32
@@ -199,8 +188,8 @@ spec:
                                 value:
                                   type: string
                               required:
-                              - name
-                              - value
+                                - name
+                                - value
                               type: object
                             type: array
                           path:
@@ -209,8 +198,8 @@ spec:
                             format: int32
                             type: integer
                         required:
-                        - path
-                        - port
+                          - path
+                          - port
                         type: object
                       initialDelaySeconds:
                         format: int32
@@ -229,7 +218,7 @@ spec:
                             format: int32
                             type: integer
                         required:
-                        - port
+                          - port
                         type: object
                       timeoutSeconds:
                         format: int32
@@ -244,9 +233,13 @@ spec:
                           for running this container.
                         properties:
                           required:
-                            type: string
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
                         required:
-                        - required
+                          - required
                         type: object
                       extended:
                         items:
@@ -257,8 +250,8 @@ spec:
                             required:
                               type: string
                           required:
-                          - name
-                          - required
+                            - name
+                            - required
                           type: object
                         type: array
                       gpu:
@@ -267,9 +260,13 @@ spec:
                           container.
                         properties:
                           required:
-                            type: string
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
                         required:
-                        - required
+                          - required
                         type: object
                       memory:
                         description: / Memory describes the memory allocation for
@@ -278,9 +275,13 @@ spec:
                           integer, greater than zero.
                         properties:
                           required:
-                            type: string
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
                         required:
-                        - required
+                          - required
                         type: object
                       volumes:
                         items:
@@ -302,7 +303,7 @@ spec:
                                 required:
                                   type: string
                               required:
-                              - required
+                                - required
                               type: object
                             mountPath:
                               type: string
@@ -314,22 +315,19 @@ spec:
                                 filesystem can only be attached to one container.
                               type: string
                           required:
-                          - mountPath
-                          - name
+                            - mountPath
+                            - name
                           type: object
                         type: array
                     required:
-                    - cpu
-                    - memory
+                      - cpu
+                      - memory
                     type: object
                 required:
-                - image
-                - name
-                - resources
+                  - image
+                  - name
                 type: object
               type: array
-            expose:
-              type: string
             osType:
               type: string
             parameters:
@@ -356,8 +354,8 @@ spec:
                       Validation spec
                     type: string
                 required:
-                - name
-                - type
+                  - name
+                  - type
                 type: object
               type: array
             workloadSettings:
@@ -365,18 +363,18 @@ spec:
             workloadType:
               type: string
           required:
-          - workloadType
+            - workloadType
           type: object
         status:
           type: object
       required:
-      - spec
+        - spec
       type: object
   version: v1alpha1
   versions:
-  - name: v1alpha1
-    served: true
-    storage: true
+    - name: v1alpha1
+      served: true
+      storage: true
 status:
   acceptedNames:
     kind: ""

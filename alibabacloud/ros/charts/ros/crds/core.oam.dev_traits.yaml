@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.4
+    controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
   name: traits.core.oam.dev
 spec:
@@ -52,7 +52,7 @@ spec:
                 singular:
                   type: string
               required:
-              - kind
+                - kind
               type: object
             properties:
               description: description of json schema
@@ -62,9 +62,9 @@ spec:
             version:
               type: string
           required:
-          - names
-          - type
-          - version
+            - names
+            - type
+            - version
           type: object
         status:
           description: TraitStatus defines the observed state of Trait
@@ -72,9 +72,9 @@ spec:
       type: object
   version: v1alpha1
   versions:
-  - name: v1alpha1
-    served: true
-    storage: true
+    - name: v1alpha1
+      served: true
+      storage: true
 status:
   acceptedNames:
     kind: ""

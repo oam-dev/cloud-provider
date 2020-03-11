@@ -10,7 +10,6 @@ import (
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
 	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
-	"regexp"
 	"strings"
 )
 
@@ -41,6 +40,7 @@ type Output struct {
 	Description string      `json:"Description,omitempty"`
 	Value       interface{} `json:"Value,omitempty"`
 }
+
 
 // NewTemplate parses application configuration and returns ROS template
 func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfiguration) (*Template, error) {
@@ -109,7 +109,6 @@ func (t *Template) genParametersAndResource(
 	compSpec v1alpha1.ComponentSpec,
 	compConfs []v1alpha1.ComponentConfiguration,
 ) error {
-	r, _ := regexp.Compile("^\\${(\\s*[a-zA-Z\\-]+)\\.([a-zA-Z]+\\s*)?}$")
 	resource := Resource{
 		Type:       resourceType,
 		Properties: make(map[string]interface{}),
@@ -131,45 +130,52 @@ func (t *Template) genParametersAndResource(
 	for _, ParameterValue := range compConf.ParameterValues {
 		name := ParameterValue.Name
 		value := ParameterValue.Value
-		matchStrings := r.FindStringSubmatch(value)
+		valueFrom := ParameterValue.From
 
-		// if match, there is reference
-		if matchStrings != nil {
-			refCompConfInstanceName := strings.TrimSpace(matchStrings[1])
-			refField := strings.TrimSpace(matchStrings[2])
+		// if supply from, use it for its high priority
+		if valueFrom != nil {
+			refCompInstanceName := valueFrom.Component
+			refField := valueFrom.FieldPath
+			if strings.HasPrefix(refField, ".status.") {
+				refField = strings.Replace(refField, ".status.", "", 1)
+				if strings.Contains(refField, ".") {
+					return errors.New(fmt.Sprintf("Invalid fieldPath '%s' does not meet format (.status.{FieldName})", valueFrom.FieldPath))
+				}
+			}
 
 			// check whether ref comp exists
 			found := false
 			for _, conf := range compConfs {
-				if conf.InstanceName == refCompConfInstanceName {
+				if conf.InstanceName == refCompInstanceName {
 					found = true
 				}
 			}
 			if !found {
-				return errors.New(fmt.Sprintf("Invalid reference '%s' which refers a no exist component instance", refCompConfInstanceName))
+				return errors.New(fmt.Sprintf("Invalid reference '%s' which refers a no exist component instance", refCompInstanceName))
 			}
 
 			// check ref self
-			if refCompConfInstanceName == compConf.InstanceName {
-				return errors.New(fmt.Sprintf("Invalid reference '%s' which refers to component instance itself", refCompConfInstanceName))
+			if refCompInstanceName == compConf.InstanceName {
+				return errors.New(fmt.Sprintf("Invalid reference '%s' which refers to component instance itself", refCompInstanceName))
 			}
 
 			// set property
-			resource.Properties[name] = map[string][]string{"Fn::GetAtt": {refCompConfInstanceName, refField}}
+			resource.Properties[name] = map[string][]string{"Fn::GetAtt": {refCompInstanceName, refField}}
 
 			// set ROS DependsOn
 			found = false
 			for _, dependOn := range resource.DependsOn {
-				if dependOn == refCompConfInstanceName {
+				if dependOn == refCompInstanceName {
 					found = true
 				}
 			}
 			if !found {
-				resource.DependsOn = append(resource.DependsOn, refCompConfInstanceName)
+				resource.DependsOn = append(resource.DependsOn, refCompInstanceName)
 			}
-
-		} else {
+		} else if value != "" {
 			resource.Properties[name] = value
+		} else {
+			return errors.New(fmt.Sprintf("Either value or from should be supplied from parameterValues"))
 		}
 	}
 
