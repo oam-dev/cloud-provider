@@ -48,6 +48,9 @@ type RosControllerConfig struct {
 	// Lifecycle
 	UpdateApp          bool
 	StackCheckInterval int
+
+	// dryRun
+	DryRun bool
 }
 
 func InitRosCtrlConf(
@@ -60,7 +63,8 @@ func InitRosCtrlConf(
 	leaderElectionNamespace string,
 	namespace string,
 	updateApp bool,
-	serviceUserAgent string) {
+	serviceUserAgent string,
+	dryRun bool) {
 
 	RosCtrlConf.Env = env
 	RosCtrlConf.StackCheckInterval = 5
@@ -74,19 +78,24 @@ func InitRosCtrlConf(
 		RosCtrlConf.RegionId = regionId
 	}
 
-	RosCtrlConf.AccessKeyId = accessKeyId
-	if accessKeyId == "" {
-		RosCtrlConf.AccessKeyId = os.Getenv("ACCESS_KEY_ID")
-	}
+	RosCtrlConf.DryRun = dryRun
 
-	RosCtrlConf.AccessKeySecret = accessKeySecret
-	if accessKeySecret == "" {
-		RosCtrlConf.AccessKeySecret = os.Getenv("ACCESS_KEY_SECRET")
-	}
+	// dry run don't do real action, so we don't need ak/sk here.
+	if !dryRun {
+		RosCtrlConf.AccessKeyId = accessKeyId
+		if accessKeyId == "" {
+			RosCtrlConf.AccessKeyId = os.Getenv("ACCESS_KEY_ID")
+		}
 
-	RosCtrlConf.CredentialSecretName = credentialSecretName
-	if credentialSecretName == "" {
-		RosCtrlConf.CredentialSecretName = os.Getenv("CREDENTIAL_SECRET_NAME")
+		RosCtrlConf.AccessKeySecret = accessKeySecret
+		if accessKeySecret == "" {
+			RosCtrlConf.AccessKeySecret = os.Getenv("ACCESS_KEY_SECRET")
+		}
+
+		RosCtrlConf.CredentialSecretName = credentialSecretName
+		if credentialSecretName == "" {
+			RosCtrlConf.CredentialSecretName = os.Getenv("CREDENTIAL_SECRET_NAME")
+		}
 	}
 
 	RosCtrlConf.LeaderElectionNamespace = leaderElectionNamespace
@@ -119,4 +128,5 @@ func InitRosCtrlConf(
 		RosCtrlConf.LoggerDebug = true
 		RosCtrlConf.LogToFile = false
 	}
+
 }

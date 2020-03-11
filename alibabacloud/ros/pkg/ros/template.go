@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/component"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
 	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
-	"strings"
 )
 
 type Template struct {
@@ -41,7 +42,6 @@ type Output struct {
 	Value       interface{} `json:"Value,omitempty"`
 }
 
-
 // NewTemplate parses application configuration and returns ROS template
 func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfiguration) (*Template, error) {
 	template := Template{
@@ -62,27 +62,18 @@ func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfigurat
 		logging.Default.Info(
 			"Convert component to ROS template",
 			"ComponentName", compConf.ComponentName,
-			"WordloadType", workloadType,
+			"WorkloadType", workloadType,
 		)
 
 		// get resource type
 		resourceType, err := getResourceType(workloadType)
 		if err != nil {
 			logging.Default.Error(
-				err, "Ignore component due to invalid worload type",
+				err, "Ignore component due to invalid workload type",
 				"ComponentName", compConf.ComponentName,
-				"WordloadType", workloadType,
+				"WorkloadType", workloadType,
 			)
 			continue
-		}
-
-		// get resource type detail
-		request := rosapi.CreateGetResourceTypeRequest()
-		request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
-		request.ResourceType = resourceType
-		response, err := rosContext.RosClient.GetResourceType(request)
-		if err != nil {
-			return nil, err
 		}
 
 		// generate template parts
@@ -90,8 +81,18 @@ func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfigurat
 		if err != nil {
 			return nil, err
 		}
-
-		template.genOutputs(instanceName, response.Attributes)
+		// TODO(Prodesire): dry run mode also need to add outputs
+		if !rosContext.DryRun {
+			// get resource type detail
+			request := rosapi.CreateGetResourceTypeRequest()
+			request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
+			request.ResourceType = resourceType
+			response, err := rosContext.RosClient.GetResourceType(request)
+			if err != nil {
+				return nil, err
+			}
+			template.genOutputs(instanceName, response.Attributes)
+		}
 	}
 
 	return &template, nil
