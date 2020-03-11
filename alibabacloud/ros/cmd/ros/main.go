@@ -43,6 +43,8 @@ func main() {
 	flag.StringVar(&endpoint, "endpoint", "https://ros.aliyuncs.com", "ROS api endpoint.")
 	var regionId string
 	flag.StringVar(&regionId, "region-id", "cn-hangzhou", "Region where ROS creates resources from.")
+	var dryRun bool
+	flag.BoolVar(&dryRun, "dry-run", false, "Just render ROS template without real create/update/delete")
 	var accessKeyId string
 	flag.StringVar(&accessKeyId, "access-key-id", "", "User's access key ID.")
 	var accessKeySecret string
@@ -62,13 +64,20 @@ func main() {
 	flag.Parse()
 
 	// init controller conf
-	config.InitRosCtrlConf(env, endpoint, regionId, accessKeyId, accessKeySecret, credentialSecretName, leaderElectionNamespace, namespace, updateApp, serviceUserAgent)
+	config.InitRosCtrlConf(env, endpoint, regionId, accessKeyId, accessKeySecret, credentialSecretName, leaderElectionNamespace, namespace, updateApp, serviceUserAgent, dryRun)
 
 	// init log
 	logging.Init()
 	logging.SetUp.Info("ROS OAM controller stating")
 	logging.SetUp.Info("Init ros-oam controller conf", "RosCtrlConf", config.RosCtrlConf)
-
+	if dryRun {
+		logging.SetUp.Info("============================================================")
+		logging.SetUp.Info("||                          Notice:                       ||")
+		logging.SetUp.Info("||     ROS OAM controller is running on DRY RUN MODE!     ||")
+		logging.SetUp.Info("||     DRY RUN MODE will not affect any real resource!    ||")
+		logging.SetUp.Info("||   DRY RUN MODE is only recommended in develop or test! ||")
+		logging.SetUp.Info("============================================================")
+	}
 	// init k8s client
 	if err := k8s.Init(); err != nil {
 		logging.SetUp.Error(err, "Problem occurs during stating ros controller")

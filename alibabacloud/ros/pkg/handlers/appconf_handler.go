@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
-	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
+	"fmt"
 	"time"
+
+	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/application"
 	roscrd "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
@@ -43,7 +46,11 @@ func (a *AppConfHandler) Id() string {
 }
 
 func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
-	logging.Default.Info("Handle create or update", "AppConf", appConf)
+	appConfStr, err := json.MarshalIndent(appConf, "", "  ")
+	if err != nil {
+		return err
+	}
+	logging.Default.Info(fmt.Sprintf("Handle create or update appConf: \n%s", string(appConfStr)))
 
 	// ros context
 	rosContext, err := ros.GetContext(appConf, a.OamCrdClient, a.RosCrdClient)
@@ -143,7 +150,11 @@ func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *rosv1al
 }
 
 func (a *AppConfHandler) Delete(ctx *oam.ActionContext, appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
-	logging.Default.Info("Handle delete", "AppConf", appConf)
+	appConfStr, err := json.MarshalIndent(appConf, "", "  ")
+	if err != nil {
+		return err
+	}
+	logging.Default.Info(fmt.Sprintf("Handle delete AppConf: \n%s", string(appConfStr)))
 
 	appName := appConf.Name
 

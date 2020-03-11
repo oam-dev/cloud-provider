@@ -2,11 +2,15 @@ package ros
 
 import (
 	"encoding/json"
+	"fmt"
+	"time"
+
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
-	"time"
 )
+
+const DryRunFakeStack = "DryRunFakeStack"
 
 const (
 	StackId     = "StackId"
@@ -65,6 +69,13 @@ func NewStack(rosContext *Context, stackName string, template *Template) (stack 
 		}
 		parameters = append(parameters, stackParameter)
 	}
+	if rosContext.DryRun {
+		stack = &Stack{
+			Id:   DryRunFakeStack,
+			Name: stackName,
+		}
+		return stack, stack.DryRun(rosContext, template)
+	}
 
 	// create stack
 	request := rosapi.CreateCreateStackRequest()
@@ -86,8 +97,20 @@ func NewStack(rosContext *Context, stackName string, template *Template) (stack 
 	}
 	return
 }
+func (stack *Stack) DryRun(rosContext *Context, template *Template) error {
+	templateVal, err := json.MarshalIndent(template, "", "  ")
+	if err != nil {
+		logging.Default.Error(err, "Dry run stack marshal err")
+		return nil
+	}
+	logging.Default.Info(fmt.Sprintf("Dry run stack %s, template: \n%s", stack.Name, string(templateVal)))
+	return nil
+}
 
 func (stack *Stack) Update(rosContext *Context, template *Template) error {
+	if stack.Id == DryRunFakeStack {
+		return stack.DryRun(rosContext, template)
+	}
 	// template body
 	templateBody, err := json.Marshal(template)
 	if err != nil {
@@ -120,10 +143,12 @@ func (stack *Stack) Update(rosContext *Context, template *Template) error {
 }
 
 func (stack *Stack) Delete(rosContext *Context) error {
+	if stack.Id == DryRunFakeStack {
+		return nil
+	}
 	request := rosapi.CreateDeleteStackRequest()
 	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 	request.StackId = stack.Id
-
 	_, err := rosContext.RosClient.DeleteStack(request)
 	if err != nil {
 		return err
@@ -133,6 +158,10 @@ func (stack *Stack) Delete(rosContext *Context) error {
 }
 
 func (stack *Stack) Refresh(rosContext *Context) error {
+	if stack.Id == DryRunFakeStack {
+		stack.Status = string(CheckComplete)
+		return nil
+	}
 	request := rosapi.CreateGetStackRequest()
 	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 	request.StackId = stack.Id
