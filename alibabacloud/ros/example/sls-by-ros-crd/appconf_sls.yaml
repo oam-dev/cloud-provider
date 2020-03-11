@@ -5,27 +5,33 @@ metadata:
 spec:
   components:
     - componentName: sls-project
-      instanceName: sls-project
+      instanceName: slsProject
       traits:
         - name: DeletionPolicy
           properties:
             policy: "Delete"
     - componentName: sls-logstore
-      instanceName: sls-logstore
+      instanceName: slsLogstore
       parameterValues:
         - name: ProjectName
-          value: "${sls-project.Name}"
+          from:
+            component: slsProject
+            fieldPath: ".status.Name"
       traits:
         - name: DeletionPolicy
           properties:
             policy: "Delete"
     - componentName: sls-index
-      instanceName: sls-index
+      instanceName: slsIndex
       parameterValues:
         - name: ProjectName
-          value: "${sls-project.Name}"
+          from:
+            component: slsProject
+            fieldPath: ".status.Name"
         - name: LogstoreName
-          value: "${sls-logstore.LogstoreName}"
+          from:
+            component: slsLogstore
+            fieldPath: ".status.LogstoreName"
       traits:
         - name: DeletionPolicy
           properties:

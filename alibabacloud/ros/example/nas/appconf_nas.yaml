@@ -16,7 +16,9 @@ spec:
       instanceName: vswitch
       parameterValues:
         - name: VpcId
-          value: "${vpc.VpcId}"
+          from:
+            component: vpc
+            fieldPath: ".status.VpcId"
       traits:
         - name: DeletionPolicy
           properties:
@@ -37,13 +39,21 @@ spec:
       instanceName: nasMountTarget
       parameterValues:
         - name: AccessGroupName
-          value: "${nasAccessGroup.AccessGroupName}"
+          from:
+            component: nasAccessGroup
+            fieldPath: ".status.AccessGroupName"
         - name: FileSystemId
-          value: "${nasFileSystem.FileSystemId}"
+          from:
+            component: nasFileSystem
+            fieldPath: ".status.FileSystemId"
         - name: VpcId
-          value: "${vpc.VpcId}"
+          from:
+            component: vpc
+            fieldPath: ".status.VpcId"
         - name: VSwitchId
-          value: "${vswitch.VSwitchId}"
+          from:
+            component: vswitch
+            fieldPath: ".status.VSwitchId"
       traits:
         - name: DeletionPolicy
           properties:
