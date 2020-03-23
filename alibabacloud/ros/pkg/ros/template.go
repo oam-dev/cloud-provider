@@ -111,9 +111,10 @@ func (t *Template) genParametersAndResource(
 	compConfs []v1alpha1.ComponentConfiguration,
 ) error {
 	resource := Resource{
-		Type:       resourceType,
-		Properties: make(map[string]interface{}),
-		DependsOn:  make([]string, 0),
+		Type:           resourceType,
+		Properties:     make(map[string]interface{}),
+		DependsOn:      make([]string, 0),
+		DeletionPolicy: "Retain",
 	}
 
 	// compSpec workload settings to ROS Properties
@@ -193,7 +194,7 @@ func (t *Template) genParametersAndResource(
 		}
 
 		policy, _ := props["policy"]
-		if policy == "Retain" || policy == "Delete" {
+		if policy == "Delete" {
 			resource.DeletionPolicy = policy
 		}
 	}
