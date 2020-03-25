@@ -140,6 +140,11 @@ func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *rosv1al
 				err = application.SetAppStackError(rosContext, err)
 				return err
 			}
+		} else {
+			err = application.SetAppStackIdAndTemplate(rosContext, stack.Id, templateBody)
+			if err != nil {
+				return err
+			}
 		}
 		err = application.SetAppStackProgressing(rosContext)
 	}
