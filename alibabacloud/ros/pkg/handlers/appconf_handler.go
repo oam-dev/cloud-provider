@@ -261,13 +261,6 @@ func waitStackDoneAndSaveOutputs(rosContext *ros.Context, stack *ros.Stack, dele
 	if success {
 		logging.Default.Info("Stack runs done")
 
-		if !deleteAppStack {
-			err = application.SetAppStackReady(rosContext)
-			if err != nil {
-				logging.Default.Error(err, "Set app stack ready failed", "AppName", appName)
-			}
-		}
-
 		switch ros.StackStatusType(stack.Status) {
 		case ros.CreateComplete:
 			fallthrough
@@ -275,6 +268,13 @@ func waitStackDoneAndSaveOutputs(rosContext *ros.Context, stack *ros.Stack, dele
 			fallthrough
 		case ros.CheckComplete:
 			application.SaveAppStackOutputs(rosContext, stack)
+		}
+
+		if !deleteAppStack {
+			err = application.SetAppStackReady(rosContext)
+			if err != nil {
+				logging.Default.Error(err, "Set app stack ready failed", "AppName", appName)
+			}
 		}
 	} else {
 		logging.Default.Error(err, "Stack runs failed")
