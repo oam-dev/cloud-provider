@@ -28,8 +28,9 @@ type RosControllerConfig struct {
 	Namespace string
 
 	// Env
-	Env       string
-	UserAgent string
+	Env          string
+	UserAgent    string
+	WorkAsRosCrd bool
 
 	// Log
 	LoggerDebug bool
@@ -64,9 +65,11 @@ func InitRosCtrlConf(
 	namespace string,
 	updateApp bool,
 	serviceUserAgent string,
-	dryRun bool) {
+	dryRun bool,
+	workAsRosCrd bool) {
 
 	RosCtrlConf.Env = env
+	RosCtrlConf.WorkAsRosCrd = workAsRosCrd
 	RosCtrlConf.StackCheckInterval = 5
 	RosCtrlConf.UpdateApp = updateApp
 
