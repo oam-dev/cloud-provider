@@ -1,3 +1,4 @@
+//go:generate mockgen -destination mock_sdkerrors.go -package ros github.com/aliyun/alibaba-cloud-sdk-go/sdk/errors Error
 package ros
 
 import (
@@ -5,8 +6,8 @@ import (
 	"strings"
 )
 
-// CodeForError returns the Code for a particular error.
-func CodeForError(error error) string {
+// CodeOfError returns the Code for a particular error.
+func CodeOfError(error error) string {
 	switch t := error.(type) {
 	case sdkerrors.Error:
 		return t.ErrorCode()
@@ -16,7 +17,7 @@ func CodeForError(error error) string {
 
 // IsStackNotFound returns true if the stack not found.
 func IsStackNotFound(error error) bool {
-	return CodeForError(error) == "StackNotFound"
+	return CodeOfError(error) == "StackNotFound"
 }
 
 // IsStackSame returns true if the stack is completely same.

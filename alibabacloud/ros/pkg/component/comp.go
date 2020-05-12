@@ -7,10 +7,12 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-// get component schematic by namespace and name
+// Get takes namespace and name. Returns component schematic and an error if there is any.
 func Get(namespace, name string) (*v1alpha1.ComponentSchematic, error) {
 	comp := &v1alpha1.ComponentSchematic{}
-	if err := oam.GetMgr().GetClient().Get(context.Background(), types.NamespacedName{Namespace: namespace, Name: name}, comp); err != nil {
+	backgroud := context.Background()
+	namespacedName := types.NamespacedName{Namespace: namespace, Name: name}
+	if err := oam.GetMgr().GetClient().Get(backgroud, namespacedName, comp); err != nil {
 		return nil, err
 	}
 	return comp, nil

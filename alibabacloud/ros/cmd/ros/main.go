@@ -5,7 +5,7 @@ import (
 	"os"
 
 	rosapi "github.com/oam-dev/cloud-provider/alibabacloud/ros/apis/ros.alibabacloud.com/v1alpha1"
-	rosclient "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
+	roscrd "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/client/clientset/versioned"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/handlers"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/k8s"
@@ -64,7 +64,10 @@ func main() {
 	flag.Parse()
 
 	// init controller conf
-	config.InitRosCtrlConf(env, endpoint, regionId, accessKeyId, accessKeySecret, credentialSecretName, leaderElectionNamespace, namespace, updateApp, serviceUserAgent, dryRun)
+	config.InitRosCtrlConf(
+		env, endpoint, regionId, accessKeyId, accessKeySecret,
+		credentialSecretName, leaderElectionNamespace, namespace,
+		updateApp, serviceUserAgent, dryRun, workAsRosCrd)
 
 	// init log
 	logging.Init()
@@ -99,27 +102,33 @@ func main() {
 
 	// register hooks and handlers
 	var option oam.Option
+	var oamCrdClient *versioned.Clientset
+	var rosCrdClient *roscrd.Clientset
+
 	if workAsRosCrd {
 		oam.RegisterObject("rosstack", new(rosapi.RosStack))
 
-		client, err := rosclient.NewForConfig(ctrl.GetConfigOrDie())
+		client, err := roscrd.NewForConfig(ctrl.GetConfigOrDie())
+		rosCrdClient = client
 		if err != nil {
 			logging.SetUp.Error(err, "Create ros runtime client err")
 			os.Exit(1)
 		}
-		oam.RegisterHandlers("rosstack", &handlers.AppConfHandler{Name: "app", RosCrdClient: client})
+		oam.RegisterHandlers("rosstack", &handlers.AppConfHandler{Name: "app", RosCrdClient: rosCrdClient})
 		option = oam.WithSpec("rosstack")
 	} else {
 		client, err := versioned.NewForConfig(ctrl.GetConfigOrDie())
+		oamCrdClient = client
 		if err != nil {
 			logging.SetUp.Error(err, "Create oam runtime client err")
 			os.Exit(1)
 		}
-		oam.RegisterHandlers(oam.STypeApplicationConfiguration, &handlers.AppConfHandler{Name: "app", OamCrdClient: client})
+		oam.RegisterHandlers(oam.STypeApplicationConfiguration, &handlers.AppConfHandler{Name: "app", OamCrdClient: oamCrdClient})
 		option = oam.WithApplicationConfiguration()
 	}
-
 	logging.SetUp.Info("Add hooks and handlers success")
+
+	handlers.RecoverProgressingAppStacks(oamCrdClient, rosCrdClient)
 
 	if err := oam.Run(option); err != nil {
 		logging.SetUp.Error(err, "Problem occurs during stating ros controller")

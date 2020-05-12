@@ -23,11 +23,16 @@ func (ari *AliyunResourceIdentity) IdentityAsKey() string {
 	return ari.AppName + "." + ari.RegionId + "." + ari.AliUid
 }
 
-func ReadCredentialFromSecret(secretName string) (credential *AliyunCredential, err error) {
-	credentialSecretData, err := k8s.GetSecretData(secretName)
+func ReadCredentialFromSecretName(secretName string) (credential *AliyunCredential, err error) {
+	secret := k8s.NewSecret(secretName)
+	return ReadCredentialFromSecret(secret)
+}
+
+func ReadCredentialFromSecret(secret k8s.SecretInterface) (credential *AliyunCredential, err error) {
+	credentialSecretData, err := secret.GetData()
 
 	if err != nil {
-		logging.Default.Error(err, "Get secret error")
+		logging.Default.Error(err, "Get secret error to read credential")
 		return
 	}
 
@@ -35,7 +40,7 @@ func ReadCredentialFromSecret(secretName string) (credential *AliyunCredential, 
 		credentialSecretData["AccessKeyId"] == "" ||
 		credentialSecretData["AccessKeySecret"] == "" {
 		err = errors.New("secret is invalid. AccessKeyId and AccessKeySecret must be supplied")
-		logging.Default.Error(err, "Read credential from secret error", "SecretName", secretName)
+		logging.Default.Error(err, "Read credential from secret error", "SecretName", secret.GetName())
 		return
 	}
 

@@ -2,12 +2,12 @@ package ros
 
 import (
 	"encoding/json"
-	"fmt"
-	"time"
-
+	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/appconf"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
+	"time"
 )
 
 const DryRunFakeStack = "DryRunFakeStack"
@@ -21,11 +21,13 @@ const (
 )
 
 type Stack struct {
-	Id           string                   `json:"Id"`
-	Name         string                   `json:"Name"`
-	Status       string                   `json:"Status"`
-	StatusReason string                   `json:"StatusReason"`
-	Outputs      []map[string]interface{} `json:"Outputs"`
+	Client        *rosapi.Client
+	Id            string                   `json:"Id"`
+	Name          string                   `json:"Name"`
+	Status        string                   `json:"Status"`
+	StatusReason  string                   `json:"StatusReason"`
+	Outputs       []map[string]interface{} `json:"Outputs"`
+	dryRunHandler func(stack *Stack, request requests.AcsRequest) error
 }
 
 type StackStatusType string
@@ -52,8 +54,55 @@ const (
 	ReviewInProgress         StackStatusType = "REVIEW_IN_PROGRESS"
 )
 
-// NewStack parses application configuration and returns ROS template
-func NewStack(rosContext *Context, stackName string, template *Template) (stack *Stack, err error) {
+// stackOption defines secret option
+type stackOption struct {
+	DryRunHandler func(stack *Stack, request requests.AcsRequest) error
+}
+
+// StackOption has methods to work with secret option.
+type StackOption interface {
+	apply(*stackOption)
+}
+
+// stackFuncOption defines function used for secret option
+type stackFuncOption struct {
+	f func(*stackOption)
+}
+
+// apply executes stackFuncOption's func
+func (fdo *stackFuncOption) apply(do *stackOption) {
+	fdo.f(do)
+}
+
+// newStackFuncOption returns function option
+func newStackFuncOption(f func(*stackOption)) *stackFuncOption {
+	return &stackFuncOption{
+		f: f,
+	}
+}
+
+// WithDryRunHandler sets client set in secret option
+func WithDryRunHandler(dryRunHandler func(stack *Stack, request requests.AcsRequest) error) StackOption {
+	return newStackFuncOption(func(o *stackOption) {
+		o.DryRunHandler = dryRunHandler
+	})
+}
+
+// NewStack parses application configuration and creates a ROS stack
+func NewStack(appContext *appconf.Context, stackName string, template *Template, opts ...StackOption) (stack *Stack, err error) {
+	// init option
+	o := &stackOption{}
+	for _, opt := range opts {
+		opt.apply(o)
+	}
+
+	if o.DryRunHandler == nil {
+		o.DryRunHandler = func(stack *Stack, request requests.AcsRequest) error {
+			logging.Default.Info("Dry run", "request", request)
+			return nil
+		}
+	}
+
 	// template body
 	templateBody, err := json.Marshal(template)
 	if err != nil {
@@ -69,13 +118,6 @@ func NewStack(rosContext *Context, stackName string, template *Template) (stack 
 		}
 		parameters = append(parameters, stackParameter)
 	}
-	if rosContext.DryRun {
-		stack = &Stack{
-			Id:   DryRunFakeStack,
-			Name: stackName,
-		}
-		return stack, stack.DryRun(rosContext, template)
-	}
 
 	// create stack
 	request := rosapi.CreateCreateStackRequest()
@@ -86,31 +128,27 @@ func NewStack(rosContext *Context, stackName string, template *Template) (stack 
 	request.Parameters = &parameters
 	request.TemplateBody = string(templateBody)
 
-	response, err := rosContext.RosClient.CreateStack(request)
+	stack = &Stack{
+		Client:        appContext.RosClient,
+		Name:          stackName,
+		dryRunHandler: o.DryRunHandler,
+	}
+
+	if appContext.DryRun {
+		stack.Id = DryRunFakeStack
+		return stack, stack.dryRunHandler(stack, request)
+	}
+
+	response, err := appContext.RosClient.CreateStack(request)
 	if err != nil {
 		return
 	}
 
-	stack = &Stack{
-		Id:   response.StackId,
-		Name: stackName,
-	}
+	stack.Id = response.StackId
 	return
 }
-func (stack *Stack) DryRun(rosContext *Context, template *Template) error {
-	templateVal, err := json.MarshalIndent(template, "", "  ")
-	if err != nil {
-		logging.Default.Error(err, "Dry run stack marshal err")
-		return nil
-	}
-	logging.Default.Info(fmt.Sprintf("Dry run stack %s, template: \n%s", stack.Name, string(templateVal)))
-	return nil
-}
 
-func (stack *Stack) Update(rosContext *Context, template *Template) error {
-	if stack.Id == DryRunFakeStack {
-		return stack.DryRun(rosContext, template)
-	}
+func (s *Stack) Update(template *Template) error {
 	// template body
 	templateBody, err := json.Marshal(template)
 	if err != nil {
@@ -130,11 +168,15 @@ func (stack *Stack) Update(rosContext *Context, template *Template) error {
 	// update stack
 	request := rosapi.CreateUpdateStackRequest()
 	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
-	request.StackId = stack.Id
+	request.StackId = s.Id
 	request.Parameters = &parameters
 	request.TemplateBody = string(templateBody)
 
-	_, err = rosContext.RosClient.UpdateStack(request)
+	if s.Id == DryRunFakeStack {
+		return s.dryRunHandler(s, request)
+	}
+
+	_, err = s.Client.UpdateStack(request)
 	if err != nil {
 		return err
 	}
@@ -142,14 +184,16 @@ func (stack *Stack) Update(rosContext *Context, template *Template) error {
 	return nil
 }
 
-func (stack *Stack) Delete(rosContext *Context) error {
-	if stack.Id == DryRunFakeStack {
-		return nil
-	}
+func (s *Stack) Delete() error {
 	request := rosapi.CreateDeleteStackRequest()
 	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
-	request.StackId = stack.Id
-	_, err := rosContext.RosClient.DeleteStack(request)
+	request.StackId = s.Id
+
+	if s.Id == DryRunFakeStack {
+		return s.dryRunHandler(s, request)
+	}
+
+	_, err := s.Client.DeleteStack(request)
 	if err != nil {
 		return err
 	}
@@ -157,40 +201,45 @@ func (stack *Stack) Delete(rosContext *Context) error {
 	return nil
 }
 
-func (stack *Stack) Refresh(rosContext *Context) error {
-	if stack.Id == DryRunFakeStack {
-		stack.Status = string(CheckComplete)
-		return nil
-	}
+func (s *Stack) Refresh() error {
 	request := rosapi.CreateGetStackRequest()
 	request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
-	request.StackId = stack.Id
+	request.StackId = s.Id
 
-	resp, err := rosContext.RosClient.GetStack(request)
+	if s.Id == DryRunFakeStack {
+		return s.dryRunHandler(s, request)
+	}
+
+	resp, err := s.Client.GetStack(request)
 	if err != nil {
 		return err
 	}
 
-	stack.Name = resp.StackName
-	stack.Status = resp.Status
-	stack.StatusReason = resp.StatusReason
-	stack.Outputs = resp.Outputs
+	s.Name = resp.StackName
+	s.Status = resp.Status
+	s.StatusReason = resp.StatusReason
+	s.Outputs = resp.Outputs
 
 	return nil
 }
 
-func (stack *Stack) WaitUntilDone(rosContext *Context) (success bool, statusReason string) {
+func (s *Stack) IsInDeleteStatus() bool {
+	status := StackStatusType(s.Status)
+	return status == DeleteInProgress || status == DeleteFailed || status == DeleteComplete
+}
+
+func (s *Stack) WaitUntilDone() (success bool, statusReason string) {
 	for {
-		time.Sleep(5 * time.Second)
-		err := stack.Refresh(rosContext)
+		time.Sleep(time.Duration(config.RosCtrlConf.StackCheckInterval) * time.Second)
+		err := s.Refresh()
 		if err != nil {
-			logging.Default.Error(err, "Refresh stack error", StackId, stack.Id, StackName, stack.Name)
+			logging.Default.Error(err, "Refresh s error", StackId, s.Id, StackName, s.Name)
 			continue
 		}
 
-		logging.Default.Info("Stack info", StackId, stack.Id, StackName, stack.Name, StackStatus, stack.Status)
+		logging.Default.Info("Stack info", StackId, s.Id, StackName, s.Name, StackStatus, s.Status)
 
-		switch StackStatusType(stack.Status) {
+		switch StackStatusType(s.Status) {
 		// success
 		case CreateComplete:
 			fallthrough
@@ -199,7 +248,7 @@ func (stack *Stack) WaitUntilDone(rosContext *Context) (success bool, statusReas
 		case DeleteComplete:
 			fallthrough
 		case CheckComplete:
-			logging.Default.Info("Stack check done", StackId, stack.Id, StackName, stack.Name, StackStatus, stack.Status)
+			logging.Default.Info("Stack check done", StackId, s.Id, StackName, s.Name, StackStatus, s.Status)
 			return true, ""
 
 		// fail
@@ -218,8 +267,8 @@ func (stack *Stack) WaitUntilDone(rosContext *Context) (success bool, statusReas
 		case RollbackFailed:
 			fallthrough
 		case RollbackComplete:
-			logging.Default.Info("Stack check failed", StackId, stack.Id, StackName, stack.Name, StackStatus, stack.Status)
-			return false, stack.StatusReason
+			logging.Default.Info("Stack check failed", StackId, s.Id, StackName, s.Name, StackStatus, s.Status)
+			return false, s.StatusReason
 		}
 	}
 }

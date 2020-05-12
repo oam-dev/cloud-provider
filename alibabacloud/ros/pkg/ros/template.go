@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/appconf"
 	"strings"
 
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/component"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/config"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/logging"
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/rosapi"
-	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"github.com/oam-dev/oam-go-sdk/apis/core.oam.dev/v1alpha1"
 )
 
@@ -42,8 +42,53 @@ type Output struct {
 	Value       interface{} `json:"Value,omitempty"`
 }
 
+// templateOption defines template option
+type templateOption struct {
+	CompSchematicGetter func(namespace, name string) (*v1alpha1.ComponentSchematic, error)
+}
+
+// TemplateOption has methods to work with template option.
+type TemplateOption interface {
+	apply(*templateOption)
+}
+
+// funcOption defines function used for secret option
+type funcOption struct {
+	f func(*templateOption)
+}
+
+// apply executes funcOption's func
+func (fdo *funcOption) apply(do *templateOption) {
+	fdo.f(do)
+}
+
+// newFuncOption returns function option
+func newFuncOption(f func(*templateOption)) *funcOption {
+	return &funcOption{
+		f: f,
+	}
+}
+
+// WithCompSchematicGetter sets component getter in template option
+func WithCompSchematicGetter(compSchematicGetter func(namespace, name string) (*v1alpha1.ComponentSchematic, error)) TemplateOption {
+	return newFuncOption(func(o *templateOption) {
+		o.CompSchematicGetter = compSchematicGetter
+	})
+}
+
 // NewTemplate parses application configuration and returns ROS template
-func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfiguration) (*Template, error) {
+func NewTemplate(appContext *appconf.Context, appConf *appconf.AppConf, opts ...TemplateOption) (*Template, error) {
+	// init option
+	o := &templateOption{}
+	for _, opt := range opts {
+		opt.apply(o)
+	}
+
+	if o.CompSchematicGetter == nil {
+		o.CompSchematicGetter = component.Get
+	}
+
+	// new template
 	template := Template{
 		ROSTemplateFormatVersion: "2015-09-01",
 		Parameters:               make(map[string]Parameter),
@@ -53,7 +98,7 @@ func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfigurat
 	for _, compConf := range appConf.Spec.Components {
 		// get component
 		instanceName := compConf.InstanceName
-		compSchematic, err := component.Get(appConf.Namespace, compConf.ComponentName)
+		compSchematic, err := o.CompSchematicGetter(appConf.Namespace, compConf.ComponentName)
 		if err != nil {
 			return nil, err
 		}
@@ -77,17 +122,17 @@ func NewTemplate(rosContext *Context, appConf *rosv1alpha1.ApplicationConfigurat
 		}
 
 		// generate template parts
-		err = template.genParametersAndResource(resourceType, compConf, compSchematic.Spec, appConf.Spec.Components)
+		err = template.genResource(resourceType, compConf, compSchematic.Spec, appConf.Spec.Components)
 		if err != nil {
 			return nil, err
 		}
 		// TODO(Prodesire): dry run mode also need to add outputs
-		if !rosContext.DryRun {
+		if !appContext.DryRun {
 			// get resource type detail
 			request := rosapi.CreateGetResourceTypeRequest()
 			request.AppendUserAgent("Service", config.RosCtrlConf.UserAgent)
 			request.ResourceType = resourceType
-			response, err := rosContext.RosClient.GetResourceType(request)
+			response, err := appContext.RosClient.GetResourceType(request)
 			if err != nil {
 				return nil, err
 			}
@@ -103,8 +148,8 @@ func (t *Template) Marshal() ([]byte, error) {
 	return json.Marshal(t)
 }
 
-// genParametersAndResources generates Parameters and Resource in template
-func (t *Template) genParametersAndResource(
+// genResource generates Resource in template
+func (t *Template) genResource(
 	resourceType string,
 	compConf v1alpha1.ComponentConfiguration,
 	compSpec v1alpha1.ComponentSpec,
@@ -210,8 +255,12 @@ func (t *Template) genParametersAndResource(
 func (t *Template) genOutputs(instanceName string, resourceAttributes map[string]interface{}) {
 	logicalId := instanceName
 	for name, attribute := range resourceAttributes {
+		var description string
 		attribute := attribute.(map[string]interface{})
-		description := attribute["Description"].(string)
+		d := attribute["Description"]
+		if d != nil {
+			description = d.(string)
+		}
 		outputName := logicalId + "." + name
 		output := Output{
 			Description: description,
@@ -231,7 +280,8 @@ func getResourceType(workloadType string) (string, error) {
 
 	group := split[0]
 	if group != config.ROS_GROUP {
-		return "", errors.New(fmt.Sprintf("Group %s in workloadType is not supported", group))
+		return "", errors.New(fmt.Sprintf(
+			"Group '%s' in workloadType is not supported. Support group: %s", group, config.ROS_GROUP))
 	}
 
 	split = strings.Split(split[1], ".")
@@ -241,12 +291,15 @@ func getResourceType(workloadType string) (string, error) {
 
 	version := split[0]
 	if version != "v1alpha1" {
-		return "", errors.New(fmt.Sprintf("Version %s in workloadType is not supported", version))
+		return "", errors.New(fmt.Sprintf(
+			"Version '%s' in workloadType is not supported. Support version: v1alpha1", version))
 	}
 
-	split = strings.Split(split[1], "_")
+	type_ := split[1]
+	split = strings.Split(type_, "_")
 	if len(split) != 2 {
-		return "", errors.New("{type} in workloadType must be format of {product}_{restype}")
+		return "", errors.New(fmt.Sprintf(
+			"Type '%s' in workloadType must be format of {product}_{restype}", type_))
 	}
 
 	resourceType := fmt.Sprintf("ALIYUN::%s::%s", split[0], split[1])
