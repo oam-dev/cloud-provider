@@ -1,8 +1,8 @@
-# ROS OAM Framework
+# ROS OAM Controller
 
 ## Introduction
 
-`ROS OAM Framework` is an implementation of Alibaba Cloud resource orchestration
+`ROS OAM Controller` is an implementation of Alibaba Cloud resource orchestration
 that follows OAM standards. It is based on [ROS](https://www.alibabacloud.com/help/doc-detail/28852.html),
 and you can easily orchestrate various service resources of Alibaba Cloud through OAM spec.
 
@@ -60,7 +60,7 @@ and you will see the stack and related SLS resources are deleted.
 
 ## Usage
 ### Application Cmdline
-The ROS OAM Framework application supports many options to run with:
+The ROS OAM Controller application supports many options to run with:
 ```
 Usage of ./main:
   -access-key-id string
