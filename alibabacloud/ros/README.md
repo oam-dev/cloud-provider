@@ -27,7 +27,8 @@ After installation and running, let's start with an example which creates
 Alibaba Cloud [SLS](https://www.alibabacloud.com/help/doc-detail/48869.htm) project, logstore and index.
 
 ### Write OAM Configurations
-In `example/sls`, there are server yaml files which follow OAM standards:
+#### Basic
+In `example/sls`, there are several yaml files which follow OAM standards:
 - `appconf_sls.yaml` is an OAM application which specify three SLS components
 - `comp_sls_project.yaml` is an OAM component which indicates Alibaba Cloud SLS project
 - `comp_sls_logstore.yaml` is an OAM component which indicates Alibaba Cloud SLS logstore
@@ -35,6 +36,39 @@ In `example/sls`, there are server yaml files which follow OAM standards:
 
 These files will convert to a ROS template by this controller and create
 the Alibaba Cloud resources you want.
+
+#### Specify credential by scopes
+If you want to specify specific Alibaba Cloud access credentials for each application configuration creation, 
+you can configure as follows:
+- Specify `scopes` in `ApplicationConfiguration`, includes `appName`, `aliyunAccountUid` and `regionId`.
+```yaml
+apiVersion: core.oam.dev/v1alpha1
+kind: ApplicationConfiguration
+metadata:
+  name: sls-demo
+spec:
+  scopes:
+    - name: resource-identity
+      type: oam.alibaba.dev/v1.ResourceIdentity
+      properties:
+        appName: myapp  # Your app name
+        aliyunAccountUid: 1234567890123456  # Alibaba Cloud user ID
+        regionId: cn-beijing  # Region to deploy
+```
+
+- Create a k8s secret named `${appName}.${regionId}.${aliyunAccountUid}` with below content:
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${appName}.${regionId}.${aliyunAccountUid}
+type: Opaque
+data:
+  AccessKeyId: ${AccessKeyId}  # Required, access key ID
+  AccessKeySecret: ${AccessKeySecret}  # Required, access key secret
+  SecurityToken: ${SecurityToken}  # Optional, should be specified when using STS Token
+  Expiration: ${Expiration}  # Optional, should be specified when using STS Token
+```
 
 ### Create Resources by OAM Configurations
 By applying OAM configurations, you can create SLS resources.
