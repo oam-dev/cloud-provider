@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry.cn-hangzhou.aliyuncs.com/apphub/ros
+  repository: oamdev/ros
   tag: latest
   pullPolicy: Always
 
